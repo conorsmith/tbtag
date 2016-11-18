@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ConorSmith\Tbtag\Console;
 
 use ConorSmith\Tbtag\ExitGame;
+use ConorSmith\Tbtag\Handler;
 use ConorSmith\Tbtag\Input;
 use ConorSmith\Tbtag\Interpreter;
 use Illuminate\Console\Command;
@@ -16,17 +17,24 @@ class PlayGame extends Command
     protected $description = "Play the game";
 
     private $interpreter;
+    private $handler;
 
-    public function __construct(Interpreter $interpreter)
+    public function __construct(Interpreter $interpreter, Handler $handler)
     {
         parent::__construct();
         $this->interpreter = $interpreter;
+        $this->handler = $handler;
     }
 
     public function handle()
     {
         $this->line("");
         $this->parseCommand("look");
+    }
+
+    private function getInput(): string
+    {
+        return $this->ask("What do you want to do?");
     }
 
     private function parseCommand(string $input)
@@ -38,13 +46,13 @@ class PlayGame extends Command
 
         } catch (InvalidArgumentException $e) {
             $this->printMessage("I don't understand what you mean.");
-            $this->parseCommand($this->ask("What do you want to do?"));
+            $this->parseCommand($this->getInput());
             return;
         }
 
         try {
-            $this->printMessage($command($input));
-            $this->parseCommand($this->ask("What do you want to do?"));
+            $this->printMessage($this->handler->__invoke($command, $input));
+            $this->parseCommand($this->getInput());
             return;
 
         } catch (ExitGame $e) {
