@@ -72,13 +72,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(CommandRepository::class, function ($app) {
             return new CommandRepository([
-                'look'  => LookCommand::class,
-                'exit'  => ExitCommand::class,
-                'north' => MoveCommand::class,
-                'south' => MoveCommand::class,
-                'east'  => MoveCommand::class,
-                'west'  => MoveCommand::class,
-                'help'  => HelpCommand::class,
+                ExitCommand::class,
+                HelpCommand::class,
+                LookCommand::class,
+                MoveCommand::class,
             ]);
         });
     }

@@ -11,20 +11,29 @@ class CommandRepository
 
     public function __construct(array $commands)
     {
-        $this->commands = $commands;
+        $this->commands = collect($commands)
+            ->keyBy(function ($command) {
+                return $command::SLUG;
+            })
+            ->toArray();
     }
 
-    public function find(Input $input)
+    public function getSlugs()
     {
-        if (!array_key_exists(strval($input), $this->commands)) {
+        return array_keys($this->commands);
+    }
+
+    public function getCommands()
+    {
+        return $this->commands;
+    }
+
+    public function find(string $commandSlug)
+    {
+        if (!array_key_exists($commandSlug, $this->commands)) {
             throw new InvalidArgumentException;
         }
 
-        return $this->commands[strval($input)];
-    }
-
-    public function getUnique(): array
-    {
-        return array_unique(array_values($this->commands));
+        return $this->commands[$commandSlug];
     }
 }

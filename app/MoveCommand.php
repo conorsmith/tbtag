@@ -5,7 +5,8 @@ namespace ConorSmith\Tbtag;
 
 class MoveCommand extends Command
 {
-    const DESCRIPTION = "\033[1mnorth\033[0m|\033[1msouth\033[0m|\033[1meast\033[0m|\033[1mwest\033[0m Move in a direction.";
+    const SLUG = "move";
+    const DESCRIPTION = "\033[1mmove\e[0m [\e[1mdirection\033[0m] Move in a direction.";
 
     private $direction;
 

@@ -5,5 +5,6 @@ namespace ConorSmith\Tbtag;
 
 class LookCommand extends Command
 {
+    const SLUG = "look";
     const DESCRIPTION = "\033[1mlook\033[0m Look at your current surroundings.";
 }
