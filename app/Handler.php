@@ -17,7 +17,7 @@ class Handler
         $this->interpreter = $interpreter;
     }
 
-    public function __invoke(Command $command, Input $input): string
+    public function __invoke(Command $command, Input $input): Payload
     {
         if ($command instanceof ExitCommand) {
             throw new ExitGame;
@@ -27,23 +27,23 @@ class Handler
             $output = [];
 
             foreach ($command->getCommandClasses() as $commandClass) {
-                $output[] = $commandClass::DESCRIPTION;
+                $output[] = [$commandClass::DESCRIPTION];
             }
 
-            return implode("\n", $output);
+            return new TabularPayload($output);
         }
 
         if ($command instanceof LookCommand) {
-            return $this->game->getCurrentLocation()->describe();
+            return new Payload($this->game->getCurrentLocation()->describe());
         }
 
         if ($command instanceof MoveCommand) {
             try {
                 $this->game->move($command->getDirection());
-                return $this->game->getCurrentLocation()->describe();
+                return new Payload($this->game->getCurrentLocation()->describe());
 
             } catch (DomainException $e) {
-                return "You cannot go that way.";
+                return new Payload("You cannot go that way.");
             }
         }
 

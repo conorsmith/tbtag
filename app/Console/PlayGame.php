@@ -7,6 +7,8 @@ use ConorSmith\Tbtag\ExitGame;
 use ConorSmith\Tbtag\Handler;
 use ConorSmith\Tbtag\Input;
 use ConorSmith\Tbtag\Interpreter;
+use ConorSmith\Tbtag\Payload;
+use ConorSmith\Tbtag\TabularPayload;
 use Illuminate\Console\Command;
 use InvalidArgumentException;
 
@@ -51,7 +53,7 @@ class PlayGame extends Command
         }
 
         try {
-            $this->printMessage($this->handler->__invoke($command, $input));
+            $this->printPayload($this->handler->__invoke($command, $input));
             $this->parseCommand($this->getInput());
             return;
 
@@ -59,6 +61,16 @@ class PlayGame extends Command
             $this->printMessage("Goodbye!");
             return;
         }
+    }
+
+    private function printPayload(Payload $payload)
+    {
+        if ($payload instanceof TabularPayload) {
+            $this->table([], $payload->getData());
+            return;
+        }
+
+        $this->printMessage(strval($payload));
     }
 
     private function printMessage(string $message)
