@@ -3,23 +3,19 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
-use DomainException;
-
 class MoveCommand extends Command
 {
-    public function __invoke(Input $input): string
-    {
-        try {
-            $this->game->move(new Direction(strval($input)));
-            return $this->game->getCurrentLocation()->describe();
+    const DESCRIPTION = "\033[1mnorth\033[0m|\033[1msouth\033[0m|\033[1meast\033[0m|\033[1mwest\033[0m Move in a direction.";
 
-        } catch (DomainException $e) {
-            return "You cannot go that way.";
-        }
+    private $direction;
+
+    public function __construct(Direction $direction)
+    {
+        $this->direction = $direction;
     }
 
-    public function describe(): string
+    public function getDirection(): Direction
     {
-        return "\033[1mnorth\033[0m|\033[1msouth\033[0m|\033[1meast\033[0m|\033[1mwest\033[0m Move in a direction.";
+        return $this->direction;
     }
 }

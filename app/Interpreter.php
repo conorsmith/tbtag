@@ -16,10 +16,26 @@ class Interpreter
 
     public function __invoke(Input $input)
     {
-        $commandClass = $this->commands->find($input);
+        return $this->createCommand($this->commands->find($input), $input);
+    }
+
+    public function createCommand(string $commandClass, Input $input)
+    {
+        if ($commandClass === ExitCommand::class)
+        {
+            return new ExitCommand;
+        }
 
         if ($commandClass === HelpCommand::class) {
-            return new HelpCommand($this->game, $this->commands);
+            return new HelpCommand($this->commands->getUnique());
+        }
+
+        if ($commandClass === LookCommand::class) {
+            return new LookCommand;
+        }
+
+        if ($commandClass === MoveCommand::class) {
+            return new MoveCommand(new Direction(strval($input)));
         }
 
         return new $commandClass($this->game);
