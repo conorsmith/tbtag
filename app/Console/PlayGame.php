@@ -3,14 +3,15 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Console;
 
+use ConorSmith\Tbtag\Controller;
 use ConorSmith\Tbtag\ExitGame;
 use ConorSmith\Tbtag\Handler;
 use ConorSmith\Tbtag\Input;
 use ConorSmith\Tbtag\Interpreter;
+use ConorSmith\Tbtag\LookCommand;
 use ConorSmith\Tbtag\Payload;
 use ConorSmith\Tbtag\TabularPayload;
 use Illuminate\Console\Command;
-use InvalidArgumentException;
 
 class PlayGame extends Command
 {
@@ -20,46 +21,31 @@ class PlayGame extends Command
 
     private $interpreter;
     private $handler;
+    private $controller;
 
-    public function __construct(Interpreter $interpreter, Handler $handler)
+    public function __construct(Interpreter $interpreter, Handler $handler, Controller $controller)
     {
         parent::__construct();
         $this->interpreter = $interpreter;
         $this->handler = $handler;
+        $this->controller = $controller;
     }
 
     public function handle()
     {
         $this->line("");
-        $this->parseCommand("look");
+        $this->handleInput(LookCommand::SLUG);
     }
 
-    private function getInput(): string
+    private function handleInput(string $input)
     {
-        return $this->ask("What do you want to do?");
-    }
-
-    private function parseCommand(string $input)
-    {
-        $input = new Input($input);
-
         try {
-            $command = $this->interpreter->__invoke($input);
+            $this->printPayload($this->controller->__invoke(new Input($input)));
 
-        } catch (InvalidArgumentException $e) {
-            $this->printMessage("I don't understand what you mean.");
-            $this->parseCommand($this->getInput());
-            return;
-        }
-
-        try {
-            $this->printPayload($this->handler->__invoke($command, $input));
-            $this->parseCommand($this->getInput());
-            return;
+            $this->handleInput($this->ask("What do you want to do?"));
 
         } catch (ExitGame $e) {
-            $this->printMessage("Goodbye!");
-            return;
+            $this->printMessage($e->getMessage());
         }
     }
 
