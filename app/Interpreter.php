@@ -7,21 +7,26 @@ use InvalidArgumentException;
 
 class Interpreter
 {
-    private $game;
+    /** @var Dispatcher */
+    private $dispatcher;
+
+    /** @var CommandRepository */
     private $commands;
 
-    public function __construct(Game $game, CommandRepository $commands)
+    public function __construct(Dispatcher $dispatcher, CommandRepository $commands)
     {
-        $this->game = $game;
+        $this->dispatcher = $dispatcher;
         $this->commands = $commands;
     }
 
     public function __invoke(Input $input)
     {
         $commandSlug = $this->findCommandSlug($input);
-        $arguments = $this->findArguments($input, $commandSlug);
 
-        return $this->createCommand($this->commands->find($commandSlug), $arguments);
+        return $this->dispatcher->__invoke(
+            $this->commands->find($commandSlug),
+            $this->findArguments($input, $commandSlug)
+        );
     }
 
     private function findCommandSlug(Input $input)
@@ -38,27 +43,5 @@ class Interpreter
     private function findArguments(Input $input, string $commandSlug)
     {
         return explode(" ", str_replace($commandSlug . " ", "", strval($input)));
-    }
-
-    public function createCommand(string $commandClass, array $args)
-    {
-        if ($commandClass === ExitCommand::class)
-        {
-            return new ExitCommand;
-        }
-
-        if ($commandClass === HelpCommand::class) {
-            return new HelpCommand($this->commands->getCommands());
-        }
-
-        if ($commandClass === LookCommand::class) {
-            return new LookCommand;
-        }
-
-        if ($commandClass === MoveCommand::class && count($args) === 1) {
-            return new MoveCommand(new Direction($args[0]));
-        }
-
-        throw new InvalidArgumentException;
     }
 }
