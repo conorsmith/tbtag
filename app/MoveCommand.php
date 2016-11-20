@@ -6,7 +6,9 @@ namespace ConorSmith\Tbtag;
 class MoveCommand extends Command
 {
     const SLUG = "move";
-    const DESCRIPTION = "\033[1mmove\e[0m [\e[1mdirection\033[0m] Move in a direction.";
+    const ALIASES = ["go", "walk", "run"];
+    const ARGUMENTS = ["direction"];
+    const DESCRIPTION = "Move in a direction.";
 
     private $direction;
 

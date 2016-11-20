@@ -22,5 +22,9 @@ class Game
     public function move(Direction $direction)
     {
         $this->currentLocation = $this->map->findDestination($this->currentLocation, $direction);
+
+        foreach ($this->currentLocation->getIngressEvents() as $event) {
+            $event();
+        }
     }
 }

@@ -5,6 +5,7 @@ namespace ConorSmith\Tbtag;
 
 class Direction
 {
+    /** @var string */
     private $value;
 
     public function __construct(string $value)
@@ -15,5 +16,10 @@ class Direction
     public function equals(self $other): bool
     {
         return $this->value === $other->value;
+    }
+
+    public function __toString(): string
+    {
+        return $this->value;
     }
 }

@@ -4,6 +4,7 @@ namespace ConorSmith\Tbtag\Providers;
 
 use ConorSmith\Tbtag\CommandRepository;
 use ConorSmith\Tbtag\Direction;
+use ConorSmith\Tbtag\DirectionFactory;
 use ConorSmith\Tbtag\Egress;
 use ConorSmith\Tbtag\ExitCommand;
 use ConorSmith\Tbtag\Game;
@@ -13,6 +14,7 @@ use ConorSmith\Tbtag\LocationId;
 use ConorSmith\Tbtag\LookCommand;
 use ConorSmith\Tbtag\Map;
 use ConorSmith\Tbtag\MoveCommand;
+use ConorSmith\Tbtag\PlayerSustainsHeadInjury;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -37,32 +39,50 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(Game::class, function ($app) {
             return new Game(
                 new Map([
-                    "top-left" => $startingLocation = new Location(
-                        new LocationId("top-left"),
+                    "1,0" => $startingLocation = new Location(
+                        new LocationId("1,0"),
                         [
-                            new Egress(new Direction("east"), new LocationId("top-right")),
-                            new Egress(new Direction("south"), new LocationId("bottom-left")),
-                        ]
+                            new Egress(new Direction("east"), new LocationId("1,1")),
+                            new Egress(new Direction("south"), new LocationId("0,0")),
+                        ],
+                        "Foster Place",
+                        "???"
                     ),
-                    "top-right" => new Location(
-                        new LocationId("top-right"),
+                    "1,1" => new Location(
+                        new LocationId("1,1"),
                         [
-                            new Egress(new Direction("west"), new LocationId("top-left")),
-                            new Egress(new Direction("south"), new LocationId("bottom-right")),
-                        ]
+                            new Egress(new Direction("north"), new LocationId("1,2")),
+                            new Egress(new Direction("west"), new LocationId("1,0")),
+                            new Egress(new Direction("south"), new LocationId("0,1")),
+                        ],
+                        "College Green",
+                        "???"
                     ),
-                    "bottom-left" => new Location(
-                        new LocationId("bottom-left"),
+                    "0,0" => new Location(
+                        new LocationId("0,0"),
                         [
-                            new Egress(new Direction("east"), new LocationId("bottom-right")),
-                            new Egress(new Direction("north"), new LocationId("top-left")),
-                        ]
+                            new Egress(new Direction("east"), new LocationId("0,1")),
+                            new Egress(new Direction("north"), new LocationId("1,0")),
+                        ],
+                        "St Andrew's Church",
+                        "???"
                     ),
-                    "bottom-right" => new Location(
-                        new LocationId("bottom-right"),
+                    "0,1" => new Location(
+                        new LocationId("0,1"),
                         [
-                            new Egress(new Direction("west"), new LocationId("bottom-left")),
-                            new Egress(new Direction("north"), new LocationId("top-right")),
+                            new Egress(new Direction("west"), new LocationId("0,0")),
+                            new Egress(new Direction("north"), new LocationId("1,1")),
+                        ],
+                        "No 1 Grafton Street",
+                        "???"
+                    ),
+                    "1,2" => new Location(
+                        new LocationId("1,2"),
+                        [],
+                        "Public Toilet Pit",
+                        "You fail to keep an eye on where you're going and fall into a pit where the College Street public toilets once stood. You attempt to crawl back out, but lose your footing.",
+                        [
+                            new PlayerSustainsHeadInjury
                         ]
                     ),
                 ]),
@@ -76,6 +96,15 @@ class AppServiceProvider extends ServiceProvider
                 HelpCommand::class,
                 LookCommand::class,
                 MoveCommand::class,
+            ]);
+        });
+
+        $this->app->bind(DirectionFactory::class, function ($app) {
+            return new DirectionFactory([
+                "north",
+                "south",
+                "east",
+                "west",
             ]);
         });
     }

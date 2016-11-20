@@ -6,7 +6,9 @@ namespace ConorSmith\Tbtag;
 class HelpCommand extends Command
 {
     const SLUG = "help";
-    const DESCRIPTION = "\033[1mhelp\033[0m Show these instructions.";
+    const ALIASES = ["h", "?"];
+    const ARGUMENTS = [];
+    const DESCRIPTION = "Show these instructions.";
 
     private $commandClasses;
 

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ConorSmith\Tbtag;
+namespace ConorSmith\Tbtag\Ui;
 
 class TabularPayload extends Payload
 {

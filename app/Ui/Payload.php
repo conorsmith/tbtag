@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace ConorSmith\Tbtag;
+namespace ConorSmith\Tbtag\Ui;
 
 class Payload
 {
+    /** @var string */
     private $value;
 
     public function __construct(string $value)

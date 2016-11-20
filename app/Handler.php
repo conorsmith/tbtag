@@ -3,7 +3,15 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
+use ConorSmith\Tbtag\Ui\Input;
+use ConorSmith\Tbtag\Ui\InteractionsPayload;
+use ConorSmith\Tbtag\Ui\Interpreter;
+use ConorSmith\Tbtag\Ui\LocationPayload;
+use ConorSmith\Tbtag\Ui\Payload;
+use ConorSmith\Tbtag\Ui\PlayerDeathPayload;
+use ConorSmith\Tbtag\Ui\TabularPayload;
 use DomainException;
+use InvalidArgumentException;
 use LogicException;
 
 class Handler
@@ -17,7 +25,7 @@ class Handler
         $this->interpreter = $interpreter;
     }
 
-    public function __invoke(Command $command, Input $input): Payload
+    public function __invoke(Command $command, Input $input): array
     {
         if ($command instanceof ExitCommand) {
             throw new ExitGame;
@@ -27,23 +35,39 @@ class Handler
             $output = [];
 
             foreach ($command->getCommandClasses() as $commandClass) {
-                $output[] = [$commandClass::DESCRIPTION];
+                $input = $commandClass::SLUG;
+                foreach ($commandClass::ARGUMENTS as $arg) {
+                    $input .= sprintf(" [%s]", $arg);
+                }
+                $output[] = [$input, $commandClass::DESCRIPTION];
             }
 
-            return new TabularPayload($output);
+            return [new TabularPayload($output)];
         }
 
         if ($command instanceof LookCommand) {
-            return new Payload($this->game->getCurrentLocation()->describe());
+            return [
+                LocationPayload::fromLocation($this->game->getCurrentLocation()),
+                InteractionsPayload::fromLocation($this->game->getCurrentLocation()),
+            ];
         }
 
         if ($command instanceof MoveCommand) {
             try {
                 $this->game->move($command->getDirection());
-                return new Payload($this->game->getCurrentLocation()->describe());
+                return [
+                    LocationPayload::fromLocation($this->game->getCurrentLocation()),
+                    InteractionsPayload::fromLocation($this->game->getCurrentLocation()),
+                ];
 
             } catch (DomainException $e) {
-                return new Payload("You cannot go that way.");
+                return [new Payload("You cannot go that way.")];
+
+            } catch (PlayerDied $e) {
+                return [
+                    LocationPayload::fromLocation($this->game->getCurrentLocation()),
+                    new PlayerDeathPayload($e->getMessage()),
+                ];
             }
         }
 
