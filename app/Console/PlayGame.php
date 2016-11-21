@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Console;
 
+use ConorSmith\Tbtag\Events\PlayerRequestsHelp;
+use ConorSmith\Tbtag\Listener;
 use ConorSmith\Tbtag\Ui\Controller;
 use ConorSmith\Tbtag\ExitGame;
 use ConorSmith\Tbtag\Handler;
@@ -15,6 +17,7 @@ use ConorSmith\Tbtag\Ui\Payload;
 use ConorSmith\Tbtag\Ui\PlayerDeathPayload;
 use ConorSmith\Tbtag\Ui\TabularPayload;
 use Illuminate\Console\Command;
+use Illuminate\Events\Dispatcher;
 
 class PlayGame extends Command
 {
@@ -25,17 +28,20 @@ class PlayGame extends Command
     private $interpreter;
     private $handler;
     private $controller;
+    private $listener;
 
-    public function __construct(Interpreter $interpreter, Handler $handler, Controller $controller)
+    public function __construct(Interpreter $interpreter, Handler $handler, Controller $controller, Listener $listener)
     {
         parent::__construct();
         $this->interpreter = $interpreter;
         $this->handler = $handler;
         $this->controller = $controller;
+        $this->listener = $listener;
     }
 
     public function handle()
     {
+        $this->listener->setCli($this);
         $this->handleInput(LookCommand::SLUG);
     }
 
@@ -89,5 +95,11 @@ class PlayGame extends Command
     private function printMessage(string $message)
     {
         $this->line("\033[1m" . $message . "\033[0m\n");
+    }
+
+    public function handleEvent($event)
+    {
+        $this->printPayload($event->toPayload());
+        $this->handleInput($this->ask("What do you want to do?"));
     }
 }

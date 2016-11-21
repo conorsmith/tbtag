@@ -2,7 +2,11 @@
 
 namespace ConorSmith\Tbtag\Providers;
 
-use Illuminate\Support\Facades\Event;
+use ConorSmith\Tbtag\Console\PlayGame;
+use ConorSmith\Tbtag\Events\PlayerRequestsHelp;
+use ConorSmith\Tbtag\Events\PlayerLooksAround;
+use ConorSmith\Tbtag\Listener;
+use Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -13,9 +17,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'ConorSmith\Tbtag\Events\SomeEvent' => [
-            'ConorSmith\Tbtag\Listeners\EventListener',
-        ],
+        PlayerRequestsHelp::class => [Listener::class],
+        PlayerLooksAround::class  => [Listener::class],
     ];
 
     /**
@@ -26,7 +29,5 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         parent::boot();
-
-        //
     }
 }

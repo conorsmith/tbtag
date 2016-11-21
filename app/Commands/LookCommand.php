@@ -3,12 +3,23 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Commands;
 
-use ConorSmith\Tbtag\Commands\Command;
+use ConorSmith\Tbtag\Events\PlayerLooksAround;
+use ConorSmith\Tbtag\Game;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
-class LookCommand extends Command
+class LookCommand extends Command implements ShouldQueue
 {
+    use InteractsWithQueue, Queueable;
+
     const SLUG = "look";
     const ALIASES = ["l", "look around", "see"];
     const ARGUMENTS = [];
     const DESCRIPTION = "Look at your current surroundings.";
+
+    public function handle(Game $game)
+    {
+        event(new PlayerLooksAround($game->getCurrentLocation()));
+    }
 }

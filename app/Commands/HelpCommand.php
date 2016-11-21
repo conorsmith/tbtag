@@ -3,10 +3,15 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Commands;
 
-use ConorSmith\Tbtag\Commands\Command;
+use ConorSmith\Tbtag\Events\PlayerRequestsHelp;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
-class HelpCommand extends Command
+class HelpCommand extends Command implements ShouldQueue
 {
+    use InteractsWithQueue, Queueable;
+
     const SLUG = "help";
     const ALIASES = ["h", "?"];
     const ARGUMENTS = [];
@@ -19,8 +24,8 @@ class HelpCommand extends Command
         $this->commandClasses = $commandClasses;
     }
 
-    public function getCommandClasses(): array
+    public function handle()
     {
-        return $this->commandClasses;
+        event(new PlayerRequestsHelp($this->commandClasses));
     }
 }

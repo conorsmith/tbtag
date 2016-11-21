@@ -9,6 +9,7 @@ use ConorSmith\Tbtag\Egress;
 use ConorSmith\Tbtag\Commands\ExitCommand;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Commands\HelpCommand;
+use ConorSmith\Tbtag\Listener;
 use ConorSmith\Tbtag\Location;
 use ConorSmith\Tbtag\LocationId;
 use ConorSmith\Tbtag\Commands\LookCommand;
@@ -106,6 +107,10 @@ class AppServiceProvider extends ServiceProvider
                 "east",
                 "west",
             ]);
+        });
+
+        $this->app->singleton(Listener::class, function ($app) {
+            return new Listener;
         });
     }
 }

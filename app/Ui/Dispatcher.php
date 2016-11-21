@@ -33,11 +33,13 @@ class Dispatcher
         }
 
         if ($commandClass === HelpCommand::class) {
-            return new HelpCommand($this->commands->getCommands());
+            dispatch(new HelpCommand($this->commands->getCommands()));
+            return;
         }
 
         if ($commandClass === LookCommand::class) {
-            return new LookCommand;
+            dispatch(new LookCommand);
+            return;
         }
 
         if ($commandClass === MoveCommand::class) {

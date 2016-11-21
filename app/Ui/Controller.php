@@ -23,8 +23,8 @@ class Controller
     public function __invoke(Input $input): array
     {
         try {
-            $command = $this->interpreter->__invoke($input);
-            return $this->handler->__invoke($command, $input);
+            $this->interpreter->__invoke($input);
+            return [];
 
         } catch (MissingArgument $e) {
             return [new Payload($e->getMessage())];
