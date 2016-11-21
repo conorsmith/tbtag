@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace ConorSmith\TbtagTest\Unit\Ui;
 
 use ConorSmith\Tbtag\CommandRepository;
-use ConorSmith\Tbtag\ExitCommand;
-use ConorSmith\Tbtag\HelpCommand;
-use ConorSmith\Tbtag\LookCommand;
-use ConorSmith\Tbtag\MoveCommand;
+use ConorSmith\Tbtag\Commands\ExitCommand;
+use ConorSmith\Tbtag\Commands\HelpCommand;
+use ConorSmith\Tbtag\Commands\LookCommand;
+use ConorSmith\Tbtag\Commands\MoveCommand;
 use ConorSmith\Tbtag\Ui\Dispatcher;
 use ConorSmith\Tbtag\Ui\Input;
 use ConorSmith\Tbtag\Ui\Interpreter;

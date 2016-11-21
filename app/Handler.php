@@ -3,6 +3,11 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
+use ConorSmith\Tbtag\Commands\Command;
+use ConorSmith\Tbtag\Commands\ExitCommand;
+use ConorSmith\Tbtag\Commands\HelpCommand;
+use ConorSmith\Tbtag\Commands\LookCommand;
+use ConorSmith\Tbtag\Commands\MoveCommand;
 use ConorSmith\Tbtag\Ui\Input;
 use ConorSmith\Tbtag\Ui\InteractionsPayload;
 use ConorSmith\Tbtag\Ui\Interpreter;

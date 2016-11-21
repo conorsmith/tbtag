@@ -6,14 +6,14 @@ use ConorSmith\Tbtag\CommandRepository;
 use ConorSmith\Tbtag\Direction;
 use ConorSmith\Tbtag\DirectionFactory;
 use ConorSmith\Tbtag\Egress;
-use ConorSmith\Tbtag\ExitCommand;
+use ConorSmith\Tbtag\Commands\ExitCommand;
 use ConorSmith\Tbtag\Game;
-use ConorSmith\Tbtag\HelpCommand;
+use ConorSmith\Tbtag\Commands\HelpCommand;
 use ConorSmith\Tbtag\Location;
 use ConorSmith\Tbtag\LocationId;
-use ConorSmith\Tbtag\LookCommand;
+use ConorSmith\Tbtag\Commands\LookCommand;
 use ConorSmith\Tbtag\Map;
-use ConorSmith\Tbtag\MoveCommand;
+use ConorSmith\Tbtag\Commands\MoveCommand;
 use ConorSmith\Tbtag\PlayerSustainsHeadInjury;
 use Illuminate\Support\ServiceProvider;
 

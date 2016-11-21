@@ -9,7 +9,7 @@ use ConorSmith\Tbtag\Handler;
 use ConorSmith\Tbtag\Ui\Input;
 use ConorSmith\Tbtag\Ui\InteractionsPayload;
 use ConorSmith\Tbtag\Ui\Interpreter;
-use ConorSmith\Tbtag\LookCommand;
+use ConorSmith\Tbtag\Commands\LookCommand;
 use ConorSmith\Tbtag\Ui\LocationPayload;
 use ConorSmith\Tbtag\Ui\Payload;
 use ConorSmith\Tbtag\Ui\PlayerDeathPayload;

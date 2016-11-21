@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace ConorSmith\Tbtag\Ui;
 
 use ConorSmith\Tbtag\CommandRepository;
-use ConorSmith\Tbtag\MoveCommand;
+use ConorSmith\Tbtag\Commands\MoveCommand;
 
 class Interpreter
 {

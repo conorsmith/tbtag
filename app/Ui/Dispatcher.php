@@ -5,10 +5,10 @@ namespace ConorSmith\Tbtag\Ui;
 
 use ConorSmith\Tbtag\CommandRepository;
 use ConorSmith\Tbtag\DirectionFactory;
-use ConorSmith\Tbtag\ExitCommand;
-use ConorSmith\Tbtag\HelpCommand;
-use ConorSmith\Tbtag\LookCommand;
-use ConorSmith\Tbtag\MoveCommand;
+use ConorSmith\Tbtag\Commands\ExitCommand;
+use ConorSmith\Tbtag\Commands\HelpCommand;
+use ConorSmith\Tbtag\Commands\LookCommand;
+use ConorSmith\Tbtag\Commands\MoveCommand;
 use InvalidArgumentException;
 
 class Dispatcher

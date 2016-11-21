@@ -1,7 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace ConorSmith\Tbtag;
+namespace ConorSmith\Tbtag\Commands;
+
+use ConorSmith\Tbtag\Commands\Command;
+use ConorSmith\Tbtag\Direction;
 
 class MoveCommand extends Command
 {
