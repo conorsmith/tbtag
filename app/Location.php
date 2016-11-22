@@ -19,15 +19,25 @@ class Location
     /** @var string */
     private $description;
 
+    /** @var Inventory */
+    private $inventory;
+
     /** @var array */
     private $ingressEvents;
 
-    public function __construct(LocationId $id, array $egresses, string $name, string $description, array $ingressEvents = [])
-    {
+    public function __construct(
+        LocationId $id,
+        array $egresses,
+        string $name,
+        string $description,
+        Inventory $inventory,
+        array $ingressEvents = []
+    ) {
         $this->id = $id;
         $this->egresses = $egresses;
         $this->name = $name;
         $this->description = $description;
+        $this->inventory = $inventory;
         $this->ingressEvents = $ingressEvents;
     }
 
@@ -56,6 +66,11 @@ class Location
         return $this->egresses;
     }
 
+    public function getInventory(): Inventory
+    {
+        return $this->inventory;
+    }
+
     public function getIngressEvents(): array
     {
         return $this->ingressEvents;
@@ -70,5 +85,15 @@ class Location
         }
 
         throw new DomainException("Egress not found");
+    }
+
+    public function removeFromInventory(Holdable $holdable)
+    {
+        $this->inventory->remove($holdable);
+    }
+
+    public function addToInventory(Holdable $holdable)
+    {
+        $this->inventory->add($holdable);
     }
 }

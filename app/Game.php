@@ -5,7 +5,12 @@ namespace ConorSmith\Tbtag;
 
 use ConorSmith\Tbtag\Events\PlayerCanInteract;
 use ConorSmith\Tbtag\Events\PlayerCannotCompleteMove;
+use ConorSmith\Tbtag\Events\PlayerCannotGetHoldable;
+use ConorSmith\Tbtag\Events\PlayerDoesNotHaveHoldable;
+use ConorSmith\Tbtag\Events\PlayerDropsHoldable;
 use ConorSmith\Tbtag\Events\PlayerEntersLocation;
+use ConorSmith\Tbtag\Events\PlayerGetsHoldable;
+use ConorSmith\Tbtag\Events\PlayerInspectsInventory;
 use ConorSmith\Tbtag\Events\PlayerLooksAround;
 use DomainException;
 
@@ -17,10 +22,17 @@ class Game
     /** @var Location */
     private $currentLocation;
 
-    public function __construct(Map $map, Location $currentLocation)
-    {
+    /** @var Inventory */
+    private $playerInventory;
+
+    public function __construct(
+        Map $map,
+        Location $currentLocation,
+        Inventory $playerInventory
+    ) {
         $this->map = $map;
         $this->currentLocation = $currentLocation;
+        $this->playerInventory = $playerInventory;
     }
 
     public function getCurrentLocation(): Location
@@ -51,5 +63,48 @@ class Game
         foreach ($this->currentLocation->getIngressEvents() as $event) {
             event($event);
         }
+    }
+
+    public function addToPlayerInventory(Holdable $holdable)
+    {
+        try {
+            $this->currentLocation->removeFromInventory($holdable);
+
+        } catch (DomainException $e) {
+            event(new PlayerCannotGetHoldable);
+            return;
+        }
+
+        foreach ($holdable->getPickUpEvents() as $event) {
+            event($event);
+        }
+
+        $this->playerInventory->add($holdable);
+
+        event(new PlayerGetsHoldable($holdable));
+    }
+
+    public function removeFromPlayerInventory(Holdable $holdable)
+    {
+        try {
+            $this->playerInventory->remove($holdable);
+
+        } catch (DomainException $e) {
+            event(new PlayerDoesNotHaveHoldable);
+            return;
+        }
+
+        foreach ($holdable->getDropEvents() as $event) {
+            event($event);
+        }
+
+        $this->currentLocation->addToInventory($holdable);
+
+        event(new PlayerDropsHoldable($holdable));
+    }
+
+    public function inspectPlayerInventory()
+    {
+        event(new PlayerInspectsInventory($this->playerInventory));
     }
 }

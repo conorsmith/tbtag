@@ -12,12 +12,13 @@ use ConorSmith\Tbtag\ExitGame;
 use ConorSmith\Tbtag\Ui\Input;
 use ConorSmith\Tbtag\Ui\InteractionsPayload;
 use ConorSmith\Tbtag\Ui\Interpreter;
-use ConorSmith\Tbtag\Commands\LookCommand;
+use ConorSmith\Tbtag\Ui\InventoryPayload;
 use ConorSmith\Tbtag\Ui\LocationPayload;
 use ConorSmith\Tbtag\Ui\MissingArgument;
 use ConorSmith\Tbtag\Ui\Payload;
 use ConorSmith\Tbtag\Ui\PlayerDeathPayload;
 use ConorSmith\Tbtag\Ui\TabularPayload;
+use DomainException;
 use Illuminate\Console\Command;
 use InvalidArgumentException;
 
@@ -43,7 +44,6 @@ class PlayGame extends Command implements Output
     {
         $this->listener->setOutput($this);
         $this->line("");
-        //$this->handleInput(LookCommand::SLUG);
         event(new PlayerEntersLocation($this->game->getCurrentLocation()));
         $this->awaitInput();
     }
@@ -60,6 +60,10 @@ class PlayGame extends Command implements Output
             $this->awaitInput();
 
         } catch (MissingArgument $e) {
+            $this->printPayload(new Payload($e->getMessage()));
+            $this->awaitInput();
+
+        } catch (DomainException $e) {
             $this->printPayload(new Payload($e->getMessage()));
             $this->awaitInput();
 
@@ -92,8 +96,28 @@ class PlayGame extends Command implements Output
         }
 
         if ($payload instanceof InteractionsPayload) {
+            if (count($payload->getItems()) > 0) {
+                $this->line("");
+                $this->line(sprintf("The items here are: %s", implode(", ", $payload->getItems())));
+            }
             $this->line("");
             $this->line(sprintf("You can go: %s", implode(", ", $payload->getEgressDirections())));
+            return;
+        }
+
+        if ($payload instanceof InventoryPayload) {
+            $this->line("\033[1mYour Inventory\033[0m");
+            $this->line("\033[1m--------------\033[0m");
+            $this->line("");
+
+            foreach ($payload->getContents() as $item) {
+                $this->line(sprintf("* %s", $item));
+            }
+
+            if (count($payload->getContents()) === 0) {
+                $this->line("Your inventory is empty");
+            }
+
             return;
         }
 
