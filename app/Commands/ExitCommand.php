@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Commands;
 
-use ConorSmith\Tbtag\ExitGame;
+use ConorSmith\Tbtag\Events\PlayerQuits;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -19,6 +19,6 @@ class ExitCommand extends Command implements ShouldQueue
 
     public function handle()
     {
-        throw new ExitGame;
+        event(new PlayerQuits);
     }
 }

@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Commands;
 
+use ConorSmith\Tbtag\Events\PlayerCanInteract;
 use ConorSmith\Tbtag\Events\PlayerLooksAround;
+use ConorSmith\Tbtag\Events\PlayerSeesWhereTheyAre;
 use ConorSmith\Tbtag\Game;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,6 +22,8 @@ class LookCommand extends Command implements ShouldQueue
 
     public function handle(Game $game)
     {
+        event(new PlayerSeesWhereTheyAre($game->getCurrentLocation()));
         event(new PlayerLooksAround($game->getCurrentLocation()));
+        event(new PlayerCanInteract($game->getCurrentLocation()));
     }
 }

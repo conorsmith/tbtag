@@ -5,7 +5,11 @@ namespace ConorSmith\Tbtag;
 
 class Map
 {
+    /** @var array */
     private $locations;
+
+    /** @var array */
+    private $locationHistory = [];
 
     public function __construct(array $locations)
     {
@@ -17,5 +21,14 @@ class Map
         $destination = $location->findEgress($direction);
 
         return $this->locations[strval($destination)];
+    }
+
+    public function isFirstVisitTo(Location $location): bool
+    {
+        $isFirstVisit = !in_array($location->getId(), $this->locationHistory);
+
+        $this->locationHistory[] = $location->getId();
+
+        return $isFirstVisit;
     }
 }

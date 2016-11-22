@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Events;
 
+use ConorSmith\Tbtag\Ui\Payload;
 use ConorSmith\Tbtag\Ui\TabularPayload;
 
-class PlayerRequestsHelp
+class PlayerRequestsHelp extends GameEvent implements Printable
 {
     private $commandClasses;
 
@@ -14,7 +15,7 @@ class PlayerRequestsHelp
         $this->commandClasses = $commandClasses;
     }
 
-    public function toPayload()
+    public function toPayload(): Payload
     {
         $output = [];
 

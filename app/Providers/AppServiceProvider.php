@@ -7,6 +7,7 @@ use ConorSmith\Tbtag\Direction;
 use ConorSmith\Tbtag\DirectionFactory;
 use ConorSmith\Tbtag\Egress;
 use ConorSmith\Tbtag\Commands\ExitCommand;
+use ConorSmith\Tbtag\Events\PlayerIsBlindedByTheSun;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Commands\HelpCommand;
 use ConorSmith\Tbtag\Listener;
@@ -15,7 +16,6 @@ use ConorSmith\Tbtag\LocationId;
 use ConorSmith\Tbtag\Commands\LookCommand;
 use ConorSmith\Tbtag\Map;
 use ConorSmith\Tbtag\Commands\MoveCommand;
-use ConorSmith\Tbtag\PlayerSustainsHeadInjury;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -37,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(Game::class, function ($app) {
+        $this->app->singleton(Game::class, function ($app) {
             return new Game(
                 new Map([
                     "1,0" => $startingLocation = new Location(
@@ -81,9 +81,9 @@ class AppServiceProvider extends ServiceProvider
                         new LocationId("1,2"),
                         [],
                         "Public Toilet Pit",
-                        "You fail to keep an eye on where you're going and fall into a pit where the College Street public toilets once stood. You attempt to crawl back out, but lose your footing.",
+                        "You stand above a pit where the College Street public toilets once stood.",
                         [
-                            new PlayerSustainsHeadInjury
+                            new PlayerIsBlindedByTheSun
                         ]
                     ),
                 ]),
@@ -110,7 +110,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(Listener::class, function ($app) {
-            return new Listener;
+            return new Listener($app[Game::class]);
         });
     }
 }

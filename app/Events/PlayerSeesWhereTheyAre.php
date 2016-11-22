@@ -4,9 +4,10 @@ declare(strict_types=1);
 namespace ConorSmith\Tbtag\Events;
 
 use ConorSmith\Tbtag\Location;
+use ConorSmith\Tbtag\Ui\LocationPayload;
 use ConorSmith\Tbtag\Ui\Payload;
 
-class PlayerLooksAround extends GameEvent implements Printable
+class PlayerSeesWhereTheyAre extends GameEvent implements Printable
 {
     private $location;
 
@@ -17,6 +18,6 @@ class PlayerLooksAround extends GameEvent implements Printable
 
     public function toPayload(): Payload
     {
-        return new Payload($this->location->getDescription());
+        return LocationPayload::fromLocation($this->location);
     }
 }

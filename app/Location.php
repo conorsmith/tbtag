@@ -36,6 +36,11 @@ class Location
         return sprintf("You are at %s", $this->id);
     }
 
+    public function getId(): LocationId
+    {
+        return $this->id;
+    }
+
     public function getName(): string
     {
         return $this->name;

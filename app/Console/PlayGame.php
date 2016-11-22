@@ -3,64 +3,78 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Console;
 
-use ConorSmith\Tbtag\Events\PlayerRequestsHelp;
+use ConorSmith\Tbtag\Events\PlayerEntersLocation;
+use ConorSmith\Tbtag\Events\Printable;
+use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Listener;
-use ConorSmith\Tbtag\Ui\Controller;
+use ConorSmith\Tbtag\Output;
 use ConorSmith\Tbtag\ExitGame;
-use ConorSmith\Tbtag\Handler;
 use ConorSmith\Tbtag\Ui\Input;
 use ConorSmith\Tbtag\Ui\InteractionsPayload;
 use ConorSmith\Tbtag\Ui\Interpreter;
 use ConorSmith\Tbtag\Commands\LookCommand;
 use ConorSmith\Tbtag\Ui\LocationPayload;
+use ConorSmith\Tbtag\Ui\MissingArgument;
 use ConorSmith\Tbtag\Ui\Payload;
 use ConorSmith\Tbtag\Ui\PlayerDeathPayload;
 use ConorSmith\Tbtag\Ui\TabularPayload;
 use Illuminate\Console\Command;
-use Illuminate\Events\Dispatcher;
+use InvalidArgumentException;
 
-class PlayGame extends Command
+class PlayGame extends Command implements Output
 {
     protected $signature = "play";
 
     protected $description = "Play the game";
 
     private $interpreter;
-    private $handler;
-    private $controller;
     private $listener;
+    private $game;
 
-    public function __construct(Interpreter $interpreter, Handler $handler, Controller $controller, Listener $listener)
+    public function __construct(Interpreter $interpreter, Listener $listener, Game $game)
     {
         parent::__construct();
         $this->interpreter = $interpreter;
-        $this->handler = $handler;
-        $this->controller = $controller;
         $this->listener = $listener;
+        $this->game = $game;
     }
 
     public function handle()
     {
-        $this->listener->setCli($this);
-        $this->handleInput(LookCommand::SLUG);
+        $this->listener->setOutput($this);
+        $this->line("");
+        //$this->handleInput(LookCommand::SLUG);
+        event(new PlayerEntersLocation($this->game->getCurrentLocation()));
+        $this->awaitInput();
+    }
+
+    private function awaitInput()
+    {
+        $this->handleInput($this->ask("What do you want to do?"));
     }
 
     private function handleInput(string $input)
     {
         try {
-            collect(
-                $this->controller->__invoke(new Input($input))
-            )
-                ->each(function ($payload) {
-                    $this->line("");
-                    $this->printPayload($payload);
-                });
+            $this->interpreter->__invoke(new Input($input));
+            $this->awaitInput();
 
-            $this->handleInput($this->ask("What do you want to do?"));
+        } catch (MissingArgument $e) {
+            $this->printPayload(new Payload($e->getMessage()));
+            $this->awaitInput();
+
+        } catch (InvalidArgumentException $e) {
+            $this->printPayload(new Payload("I don't understand what you mean."));
+            $this->awaitInput();
 
         } catch (ExitGame $e) {
-            $this->printMessage($e->getMessage());
+            //
         }
+    }
+
+    public function outputEvent(Printable $event)
+    {
+        $this->printPayload($event->toPayload());
     }
 
     private function printPayload(Payload $payload)
@@ -74,32 +88,28 @@ class PlayGame extends Command
             $this->line("\033[1m" . $payload->getTitle() . "\033[0m");
             $this->line("\033[1m" . str_repeat("=", strlen($payload->getTitle())) . "\033[0m");
             $this->line("");
-            $this->line($payload->getDescription());
             return;
         }
 
         if ($payload instanceof InteractionsPayload) {
+            $this->line("");
             $this->line(sprintf("You can go: %s", implode(", ", $payload->getEgressDirections())));
             return;
         }
 
-
         if ($payload instanceof PlayerDeathPayload) {
+            $this->line("");
             $this->line(strval($payload));
-            throw new ExitGame("\nCare to try again?");
+            $this->line("");
+            $this->printMessage("Care to try again?");
+            return;
         }
 
-        $this->printMessage(strval($payload));
+        $this->line(strval($payload));
     }
 
     private function printMessage(string $message)
     {
         $this->line("\033[1m" . $message . "\033[0m\n");
-    }
-
-    public function handleEvent($event)
-    {
-        $this->printPayload($event->toPayload());
-        $this->handleInput($this->ask("What do you want to do?"));
     }
 }

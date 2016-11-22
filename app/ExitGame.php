@@ -7,5 +7,5 @@ use Exception;
 
 class ExitGame extends Exception
 {
-    protected $message = "Goodbye!";
+    //
 }

@@ -3,20 +3,38 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
-use ConorSmith\Tbtag\Console\PlayGame;
+use ConorSmith\Tbtag\Events\EndsGame;
+use ConorSmith\Tbtag\Events\GameEvent;
+use ConorSmith\Tbtag\Events\Printable;
 
 class Listener
 {
-    /** @var PlayGame */
-    private $cli;
+    /** @var Game */
+    private $game;
 
-    public function setCli(PlayGame $cli)
+    /** @var Output */
+    private $output;
+
+    public function __construct(Game $game)
     {
-        $this->cli = $cli;
+        $this->game = $game;
     }
 
-    public function handle($event)
+    public function setOutput(Output $output)
     {
-        $this->cli->handleEvent($event);
+        $this->output = $output;
+    }
+
+    public function handle(GameEvent $event)
+    {
+        if ($event instanceof Printable) {
+            $this->output->outputEvent($event);
+        }
+
+        $event->handle($this->game);
+
+        if ($event instanceof EndsGame) {
+            throw new ExitGame;
+        }
     }
 }

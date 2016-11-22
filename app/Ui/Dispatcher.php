@@ -29,25 +29,23 @@ class Dispatcher
     {
         if ($commandClass === ExitCommand::class)
         {
-            return new ExitCommand;
+            return dispatch(new ExitCommand);
         }
 
         if ($commandClass === HelpCommand::class) {
-            dispatch(new HelpCommand($this->commands->getCommands()));
-            return;
+            return dispatch(new HelpCommand($this->commands->getCommands()));
         }
 
         if ($commandClass === LookCommand::class) {
-            dispatch(new LookCommand);
-            return;
+            return dispatch(new LookCommand);
         }
 
         if ($commandClass === MoveCommand::class) {
             if (count($args) !== 1) {
-                throw new MissingArgument("Where do you want to go?");
+                throw new MissingArgument("Huh? Where do you want to go?");
             }
 
-            return new MoveCommand($this->directionFactory->fromSlug($args[0]));
+            return dispatch(new MoveCommand($this->directionFactory->fromSlug($args[0])));
         }
 
         throw new InvalidArgumentException;
