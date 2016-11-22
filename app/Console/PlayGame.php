@@ -42,6 +42,7 @@ class PlayGame extends Command implements Output
 
     public function handle()
     {
+        $this->printIntro();
         $this->listener->setOutput($this);
         $this->line("");
         event(new PlayerEntersLocation($this->game->getCurrentLocation()));
@@ -134,5 +135,16 @@ class PlayGame extends Command implements Output
     private function printMessage(string $message)
     {
         $this->line("\033[1m" . $message . "\033[0m\n");
+    }
+
+    private function printIntro()
+    {
+        $this->line('   ______                     ____                  __');
+        $this->line('  / ____/___ _____ ___  ___  / __ \__  _____  _____/ /_');
+        $this->line(' / / __/ __ `/ __ `__ \/ _ \/ / / / / / / _ \/ ___/ __/');
+        $this->line('/ /_/ / /_/ / / / / / /  __/ /_/ / /_/ /  __(__  ) /_');
+        $this->line('\____/\__,_/_/ /_/ /_/\___/\___\_\__,_/\___/____/\__/');
+        $this->line("");
+        $this->line("\033[33mType 'help' for, well, help.\033[0m");
     }
 }
