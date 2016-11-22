@@ -97,10 +97,9 @@ class PlayGame extends Command implements Output
 
         if ($payload instanceof InteractionsPayload) {
             if (count($payload->getItems()) > 0) {
-                $this->line("");
                 $this->line(sprintf("The items here are: %s", implode(", ", $payload->getItems())));
+                $this->line("");
             }
-            $this->line("");
             $this->line(sprintf("You can go: %s", implode(", ", $payload->getEgressDirections())));
             return;
         }
@@ -122,7 +121,6 @@ class PlayGame extends Command implements Output
         }
 
         if ($payload instanceof PlayerDeathPayload) {
-            $this->line("");
             $this->line(strval($payload));
             $this->line("");
             $this->printMessage("Care to try again?");
@@ -130,6 +128,7 @@ class PlayGame extends Command implements Output
         }
 
         $this->line(strval($payload));
+        $this->line("");
     }
 
     private function printMessage(string $message)

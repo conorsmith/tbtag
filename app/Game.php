@@ -43,7 +43,9 @@ class Game
     public function move(Direction $direction)
     {
         try {
-            $this->currentLocation = $this->map->findDestination($this->currentLocation, $direction);
+            $newLocation = $this->map->findDestination($this->currentLocation, $direction);
+            $this->map->addToHistory($this->currentLocation);
+            $this->currentLocation = $newLocation;
 
         } catch (DomainException $e) {
             event(new PlayerCannotCompleteMove);
@@ -101,6 +103,11 @@ class Game
         $this->currentLocation->addToInventory($holdable);
 
         event(new PlayerDropsHoldable($holdable));
+    }
+
+    public function playerIsHolding(Holdable $holdable)
+    {
+        return $this->playerInventory->contains($holdable);
     }
 
     public function inspectPlayerInventory()

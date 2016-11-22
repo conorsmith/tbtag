@@ -50,4 +50,15 @@ class Inventory
 
         throw new DomainException("That item is not here.");
     }
+
+    public function contains(Holdable $holdable)
+    {
+        foreach ($this->contents as $content) {
+            if ($content->getSlug() === $holdable->getSlug()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

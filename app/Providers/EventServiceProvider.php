@@ -16,6 +16,8 @@ use ConorSmith\Tbtag\Events\PlayerQuits;
 use ConorSmith\Tbtag\Events\PlayerRequestsHelp;
 use ConorSmith\Tbtag\Events\PlayerLooksAround;
 use ConorSmith\Tbtag\Events\PlayerSeesWhereTheyAre;
+use ConorSmith\Tbtag\Events\PlayerWins;
+use ConorSmith\Tbtag\Events\SomethingHappens;
 use ConorSmith\Tbtag\Listener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -41,6 +43,8 @@ class EventServiceProvider extends ServiceProvider
         PlayerSeesWhereTheyAre::class    => [Listener::class],
         PlayerLooksAround::class         => [Listener::class],
         PlayerQuits::class               => [Listener::class],
+        PlayerWins::class                => [Listener::class],
+        SomethingHappens::class          => [Listener::class],
     ];
 
     /**

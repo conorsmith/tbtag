@@ -11,6 +11,7 @@ use ConorSmith\Tbtag\DirectionFactory;
 use ConorSmith\Tbtag\Egress;
 use ConorSmith\Tbtag\Commands\ExitCommand;
 use ConorSmith\Tbtag\Events\PlayerIsBlindedByTheSun;
+use ConorSmith\Tbtag\Events\PlayerWins;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Commands\HelpCommand;
 use ConorSmith\Tbtag\HoldableFactory;
@@ -60,7 +61,7 @@ class AppServiceProvider extends ServiceProvider
                             new Egress(new Direction("south"), new LocationId("0,0")),
                         ],
                         "Foster Place",
-                        "???",
+                        "You are standing outside the Wax Museum. A number of wax figures are arranged outside the building, as if they are trying to escape. Wax Bono is giving you the stink eye.",
                         Inventory::unoccupied()
                     ),
                     "1,1" => new Location(
@@ -71,7 +72,7 @@ class AppServiceProvider extends ServiceProvider
                             new Egress(new Direction("south"), new LocationId("0,1")),
                         ],
                         "College Green",
-                        "???",
+                        "You are amidst the wreckage of two Luas trams. It looks like there was some sort of head on collision.",
                         new Inventory([
                             HoldableFactory::sunglasses(),
                         ])
@@ -83,7 +84,7 @@ class AppServiceProvider extends ServiceProvider
                             new Egress(new Direction("north"), new LocationId("1,0")),
                         ],
                         "St Andrew's Church",
-                        "???",
+                        "Despite being moved back to her usual spot on Grafton Street, the statue of Molly Malone is back outside the church and also she's thirty feet tall.",
                         Inventory::unoccupied()
                     ),
                     "0,1" => new Location(
@@ -93,12 +94,15 @@ class AppServiceProvider extends ServiceProvider
                             new Egress(new Direction("north"), new LocationId("1,1")),
                         ],
                         "No 1 Grafton Street",
-                        "???",
+                        "The gates to the house of Trinity College's Provost are open. A low rumbling sound can be heard from inside the property. It's a little too close to brown noise for your liking.",
                         Inventory::unoccupied()
                     ),
                     "1,2" => new Location(
                         new LocationId("1,2"),
-                        [],
+                        [
+                            new Egress(new Direction("south"), new LocationId("1,1")),
+                            new Egress(new Direction("north"), new LocationId("1,3")),
+                        ],
                         "Public Toilet Pit",
                         "You stand above a pit where the College Street public toilets once stood.",
                         Inventory::unoccupied(),
@@ -106,6 +110,16 @@ class AppServiceProvider extends ServiceProvider
                             new PlayerIsBlindedByTheSun
                         ]
                     ),
+                    "1,3" => new Location(
+                        new LocationId("1,3"),
+                        [],
+                        "KFC, Westmoreland Street",
+                        "It's finger lickin' good.",
+                        Inventory::unoccupied(),
+                        [
+                            new PlayerWins("You have reached your goal: KFC. Whatever else is going on in this crazy world you now have access to the best gravy known to humanity. Enjoy.")
+                        ]
+                    )
                 ]),
                 $startingLocation,
                 Inventory::unoccupied()

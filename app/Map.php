@@ -23,12 +23,13 @@ class Map
         return $this->locations[strval($destination)];
     }
 
+    public function addToHistory(Location $location)
+    {
+        $this->locationHistory[] = $location->getId();
+    }
+
     public function isFirstVisitTo(Location $location): bool
     {
-        $isFirstVisit = !in_array($location->getId(), $this->locationHistory);
-
-        $this->locationHistory[] = $location->getId();
-
-        return $isFirstVisit;
+        return !in_array($location->getId(), $this->locationHistory);
     }
 }
