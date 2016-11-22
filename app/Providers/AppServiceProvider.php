@@ -47,7 +47,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(HoldableRegistry::class, function ($app) {
             return new HoldableRegistry(
-                HoldableFactory::sunglasses()
+                HoldableFactory::sunglasses(),
+                HoldableFactory::phone()
             );
         });
 
@@ -122,7 +123,7 @@ class AppServiceProvider extends ServiceProvider
                     )
                 ]),
                 $startingLocation,
-                Inventory::unoccupied()
+                new Inventory([HoldableFactory::phone()])
             );
         });
 

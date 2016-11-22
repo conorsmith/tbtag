@@ -9,4 +9,9 @@ class HoldableFactory
     {
         return new Item("Sunglasses");
     }
+
+    public static function phone(): Holdable
+    {
+        return new Item("Phone");
+    }
 }
