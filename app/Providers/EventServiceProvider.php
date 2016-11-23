@@ -37,7 +37,6 @@ class EventServiceProvider extends ServiceProvider
         PlayerDoesNotHaveHoldable::class => [Listener::class],
         PlayerDropsHoldable::class       => [Listener::class],
         PlayerEntersLocation::class      => [Listener::class],
-        PlayerFirstEntersLocation::class => [Listener::class],
         PlayerGetsHoldable::class        => [Listener::class],
         PlayerInspectsInventory::class   => [Listener::class],
         PlayerIsBlindedByTheSun::class   => [Listener::class],

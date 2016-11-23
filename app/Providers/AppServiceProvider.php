@@ -10,9 +10,9 @@ use ConorSmith\Tbtag\Direction;
 use ConorSmith\Tbtag\DirectionFactory;
 use ConorSmith\Tbtag\Egress;
 use ConorSmith\Tbtag\Commands\ExitCommand;
-use ConorSmith\Tbtag\Events\PlayerFirstEntersLocation;
 use ConorSmith\Tbtag\Events\PlayerIsBlindedByTheSun;
 use ConorSmith\Tbtag\Events\PlayerWins;
+use ConorSmith\Tbtag\Events\SomethingHappens;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Commands\HelpCommand;
 use ConorSmith\Tbtag\HoldableFactory;
@@ -87,8 +87,13 @@ class AppServiceProvider extends ServiceProvider
                         new Inventory([
                             HoldableFactory::rifle()
                         ]),
+                        [],
                         [
-                            new PlayerFirstEntersLocation("You spot in Wax Dev's arms the rifle with which he shot and killed Michael Collins.")
+                            [
+                                'holdable' => HoldableFactory::rifle(),
+                                'event'    => new SomethingHappens("You spot in Wax Dev's arms the rifle with which he shot and killed Michael Collins."),
+                                'trigger'  => "static",
+                            ]
                         ]
                     ),
                     "1,1" => new Location(

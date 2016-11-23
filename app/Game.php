@@ -65,6 +65,8 @@ class Game
         foreach ($this->currentLocation->getIngressEvents() as $event) {
             event($event);
         }
+
+        $this->currentLocation->triggerStaticInventoryEvents();
     }
 
     public function addToPlayerInventory(Holdable $holdable)
@@ -84,6 +86,8 @@ class Game
         $this->playerInventory->add($holdable);
 
         event(new PlayerGetsHoldable($holdable));
+
+        $this->currentLocation->triggerRemoveFromInventoryEvents();
     }
 
     public function removeFromPlayerInventory(Holdable $holdable)
@@ -103,6 +107,8 @@ class Game
         $this->currentLocation->addToInventory($holdable);
 
         event(new PlayerDropsHoldable($holdable));
+
+        $this->currentLocation->triggerAddToInventoryEvents();
     }
 
     public function playerIsHolding(Holdable $holdable)

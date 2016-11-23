@@ -25,13 +25,17 @@ class Location
     /** @var array */
     private $ingressEvents;
 
+    /** @var array */
+    private $inventoryEvents;
+
     public function __construct(
         LocationId $id,
         array $egresses,
         string $name,
         string $description,
         Inventory $inventory,
-        array $ingressEvents = []
+        array $ingressEvents = [],
+        array $inventoryEvents = []
     ) {
         $this->id = $id;
         $this->egresses = $egresses;
@@ -39,6 +43,7 @@ class Location
         $this->description = $description;
         $this->inventory = $inventory;
         $this->ingressEvents = $ingressEvents;
+        $this->inventoryEvents = $inventoryEvents;
     }
 
     public function describe(): string
@@ -74,6 +79,39 @@ class Location
     public function getIngressEvents(): array
     {
         return $this->ingressEvents;
+    }
+
+    public function triggerStaticInventoryEvents()
+    {
+        foreach ($this->inventoryEvents as $eventContainer) {
+            if ($eventContainer['trigger'] === 'static'
+                && $this->inventory->contains($eventContainer['holdable'])
+            ) {
+                event($eventContainer['event']);
+            }
+        }
+    }
+
+    public function triggerAddToInventoryEvents()
+    {
+        foreach ($this->inventoryEvents as $eventContainer) {
+            if ($eventContainer['trigger'] === 'add'
+                && $this->inventory->contains($eventContainer['holdable'])
+            ) {
+                event($eventContainer['event']);
+            }
+        }
+    }
+
+    public function triggerRemoveFromInventoryEvents()
+    {
+        foreach ($this->inventoryEvents as $eventContainer) {
+            if ($eventContainer['trigger'] === 'remove'
+                && $this->inventory->contains($eventContainer['holdable'])
+            ) {
+                event($eventContainer['event']);
+            }
+        }
     }
 
     public function findEgress(Direction $direction): LocationId
