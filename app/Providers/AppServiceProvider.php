@@ -58,11 +58,21 @@ class AppServiceProvider extends ServiceProvider
                     "1,0" => $startingLocation = new Location(
                         new LocationId("1,0"),
                         [
+                            new Egress(new Direction("in"), new LocationId("wax:0,0")),
                             new Egress(new Direction("east"), new LocationId("1,1")),
                             new Egress(new Direction("south"), new LocationId("0,0")),
                         ],
                         "Foster Place",
                         "You are standing outside the Wax Museum. A number of wax figures are arranged outside the building, as if they are trying to escape. Wax Bono is giving you the stink eye.",
+                        Inventory::unoccupied()
+                    ),
+                    "wax:0,0" => new Location(
+                        new LocationId("wax:0,0"),
+                        [
+                            new Egress(new Direction("out"), new LocationId("1,0")),
+                        ],
+                        "Wax Museum",
+                        "???",
                         Inventory::unoccupied()
                     ),
                     "1,1" => new Location(
@@ -145,6 +155,8 @@ class AppServiceProvider extends ServiceProvider
                 "south",
                 "east",
                 "west",
+                "in",
+                "out",
             ]);
         });
 
