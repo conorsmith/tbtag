@@ -10,6 +10,7 @@ use ConorSmith\Tbtag\Direction;
 use ConorSmith\Tbtag\DirectionFactory;
 use ConorSmith\Tbtag\Egress;
 use ConorSmith\Tbtag\Commands\ExitCommand;
+use ConorSmith\Tbtag\Events\PlayerFirstEntersLocation;
 use ConorSmith\Tbtag\Events\PlayerIsBlindedByTheSun;
 use ConorSmith\Tbtag\Events\PlayerWins;
 use ConorSmith\Tbtag\Game;
@@ -17,7 +18,6 @@ use ConorSmith\Tbtag\Commands\HelpCommand;
 use ConorSmith\Tbtag\HoldableFactory;
 use ConorSmith\Tbtag\HoldableRegistry;
 use ConorSmith\Tbtag\Inventory;
-use ConorSmith\Tbtag\Item;
 use ConorSmith\Tbtag\Listener;
 use ConorSmith\Tbtag\Location;
 use ConorSmith\Tbtag\LocationId;
@@ -48,7 +48,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(HoldableRegistry::class, function ($app) {
             return new HoldableRegistry(
                 HoldableFactory::sunglasses(),
-                HoldableFactory::phone()
+                HoldableFactory::phone(),
+                HoldableFactory::rifle()
             );
         });
 
@@ -70,10 +71,25 @@ class AppServiceProvider extends ServiceProvider
                         new LocationId("wax:0,0"),
                         [
                             new Egress(new Direction("out"), new LocationId("1,0")),
+                            new Egress(new Direction("east"), new LocationId("wax:0,1")),
                         ],
                         "Wax Museum",
                         "???",
                         Inventory::unoccupied()
+                    ),
+                    "wax:0,1" => new Location(
+                        new LocationId("wax:0,1"),
+                        [
+                            new Egress(new Direction("west"), new LocationId("wax:0,0")),
+                        ],
+                        "Civil War Exhibit",
+                        "???",
+                        new Inventory([
+                            HoldableFactory::rifle()
+                        ]),
+                        [
+                            new PlayerFirstEntersLocation("You spot in Wax Dev's arms the rifle with which he shot and killed Michael Collins.")
+                        ]
                     ),
                     "1,1" => new Location(
                         new LocationId("1,1"),

@@ -14,4 +14,9 @@ class HoldableFactory
     {
         return new Item("Phone");
     }
+
+    public static function rifle(): Holdable
+    {
+        return new Item("Rifle");
+    }
 }
