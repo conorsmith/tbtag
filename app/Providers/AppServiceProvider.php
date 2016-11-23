@@ -22,6 +22,7 @@ use ConorSmith\Tbtag\Listener;
 use ConorSmith\Tbtag\Location;
 use ConorSmith\Tbtag\LocationId;
 use ConorSmith\Tbtag\Commands\LookCommand;
+use ConorSmith\Tbtag\LocationInventoryEventConfig;
 use ConorSmith\Tbtag\Map;
 use ConorSmith\Tbtag\Commands\MoveCommand;
 use Illuminate\Support\ServiceProvider;
@@ -89,11 +90,10 @@ class AppServiceProvider extends ServiceProvider
                         ]),
                         [],
                         [
-                            [
-                                'holdable' => HoldableFactory::rifle(),
-                                'event'    => new SomethingHappens("You spot in Wax Dev's arms the rifle with which he shot and killed Michael Collins."),
-                                'trigger'  => "static",
-                            ]
+                            LocationInventoryEventConfig::ingress(
+                                HoldableFactory::rifle(),
+                                new SomethingHappens("You spot in Wax Dev's arms the rifle with which he shot and killed Michael Collins.")
+                            )
                         ]
                     ),
                     "1,1" => new Location(

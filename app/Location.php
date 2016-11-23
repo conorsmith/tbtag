@@ -81,35 +81,29 @@ class Location
         return $this->ingressEvents;
     }
 
-    public function triggerStaticInventoryEvents()
+    public function triggerIngressInventoryEvents()
     {
-        foreach ($this->inventoryEvents as $eventContainer) {
-            if ($eventContainer['trigger'] === 'static'
-                && $this->inventory->contains($eventContainer['holdable'])
-            ) {
-                event($eventContainer['event']);
+        foreach ($this->inventoryEvents as $eventConfig) {
+            if ($eventConfig->isIngress()) {
+                $eventConfig->trigger($this->inventory);
             }
         }
     }
 
     public function triggerAddToInventoryEvents()
     {
-        foreach ($this->inventoryEvents as $eventContainer) {
-            if ($eventContainer['trigger'] === 'add'
-                && $this->inventory->contains($eventContainer['holdable'])
-            ) {
-                event($eventContainer['event']);
+        foreach ($this->inventoryEvents as $eventConfig) {
+            if ($eventConfig->isAdd()) {
+                $eventConfig->trigger($this->inventory);
             }
         }
     }
 
     public function triggerRemoveFromInventoryEvents()
     {
-        foreach ($this->inventoryEvents as $eventContainer) {
-            if ($eventContainer['trigger'] === 'remove'
-                && $this->inventory->contains($eventContainer['holdable'])
-            ) {
-                event($eventContainer['event']);
+        foreach ($this->inventoryEvents as $eventConfig) {
+            if ($eventConfig->isRemove()) {
+                $eventConfig->trigger($this->inventory);
             }
         }
     }

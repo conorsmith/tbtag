@@ -66,7 +66,7 @@ class Game
             event($event);
         }
 
-        $this->currentLocation->triggerStaticInventoryEvents();
+        $this->currentLocation->triggerIngressInventoryEvents();
     }
 
     public function addToPlayerInventory(Holdable $holdable)
