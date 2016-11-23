@@ -22,6 +22,9 @@ class Location
     /** @var Inventory */
     private $inventory;
 
+    /** @var Manifest */
+    private $manifest;
+
     /** @var array */
     private $ingressEvents;
 
@@ -33,7 +36,8 @@ class Location
         array $egresses,
         string $name,
         string $description,
-        Inventory $inventory,
+        Inventory $inventory = null,
+        Manifest $manifest = null,
         array $ingressEvents = [],
         array $inventoryEvents = []
     ) {
@@ -41,7 +45,8 @@ class Location
         $this->egresses = $egresses;
         $this->name = $name;
         $this->description = $description;
-        $this->inventory = $inventory;
+        $this->inventory = $inventory ?? Inventory::unoccupied();
+        $this->manifest = $manifest ?? Manifest::unoccupied();
         $this->ingressEvents = $ingressEvents;
         $this->inventoryEvents = $inventoryEvents;
     }
