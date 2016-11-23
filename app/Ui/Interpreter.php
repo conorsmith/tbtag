@@ -39,7 +39,11 @@ class Interpreter
     private function findCommandSlug(Input $input)
     {
         foreach ($this->commands->getSlugs() as $commandSlug) {
-            if (preg_match(sprintf("/^%s/", preg_quote ($commandSlug)), strval($input)) === 1) {
+            if (preg_match(
+                    sprintf("/(^%s$|^%s )/", preg_quote($commandSlug), preg_quote($commandSlug)),
+                    strval($input)
+                ) === 1
+            ) {
                 return $commandSlug;
             }
         }
