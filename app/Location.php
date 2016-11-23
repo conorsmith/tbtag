@@ -108,6 +108,15 @@ class Location
         }
     }
 
+    public function triggerLookInventoryEvents()
+    {
+        foreach ($this->inventoryEvents as $eventConfig) {
+            if ($eventConfig->isLook()) {
+                $eventConfig->trigger($this->inventory);
+            }
+        }
+    }
+
     public function findEgress(Direction $direction): LocationId
     {
         foreach ($this->egresses as $egress) {

@@ -24,6 +24,7 @@ class LookCommand extends Command implements ShouldQueue
     {
         event(new PlayerSeesWhereTheyAre($game->getCurrentLocation()));
         event(new PlayerLooksAround($game->getCurrentLocation()));
+        $game->getCurrentLocation()->triggerLookInventoryEvents();
         event(new PlayerCanInteract($game->getCurrentLocation()));
     }
 }

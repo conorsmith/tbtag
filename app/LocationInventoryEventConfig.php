@@ -7,6 +7,11 @@ use ConorSmith\Tbtag\Events\GameEvent;
 
 class LocationInventoryEventConfig
 {
+    public static function noticeable(Holdable $holdable, GameEvent $event)
+    {
+        return new self(["ingress", "look"], $holdable, $event);
+    }
+
     public static function ingress(Holdable $holdable, GameEvent $event)
     {
         return new self(["ingress"], $holdable, $event);
@@ -46,6 +51,11 @@ class LocationInventoryEventConfig
     public function isRemove()
     {
         return in_array("remove", $this->triggers);
+    }
+
+    public function isLook()
+    {
+        return in_array("look", $this->triggers);
     }
 
     public function trigger(Inventory $inventory)
