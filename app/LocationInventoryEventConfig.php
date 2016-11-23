@@ -12,6 +12,11 @@ class LocationInventoryEventConfig
         return new self(["ingress"], $holdable, $event);
     }
 
+    public static function add(Holdable $holdable, GameEvent $event)
+    {
+        return new self(["add"], $holdable, $event);
+    }
+
     /** @var array */
     private $triggers;
 

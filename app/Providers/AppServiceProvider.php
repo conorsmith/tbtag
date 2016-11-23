@@ -10,6 +10,7 @@ use ConorSmith\Tbtag\Direction;
 use ConorSmith\Tbtag\DirectionFactory;
 use ConorSmith\Tbtag\Egress;
 use ConorSmith\Tbtag\Commands\ExitCommand;
+use ConorSmith\Tbtag\Events\PlayerDies;
 use ConorSmith\Tbtag\Events\PlayerIsBlindedByTheSun;
 use ConorSmith\Tbtag\Events\PlayerWins;
 use ConorSmith\Tbtag\Events\SomethingHappens;
@@ -126,8 +127,15 @@ class AppServiceProvider extends ServiceProvider
                             new Egress(new Direction("north"), new LocationId("1,1")),
                         ],
                         "No 1 Grafton Street",
-                        "The gates to the house of Trinity College's Provost are open. A low rumbling sound can be heard from inside the property. It's a little too close to brown noise for your liking.",
-                        Inventory::unoccupied()
+                        "The gates to the house of Trinity College's Provost are open. A low rumbling sound can be heard from inside the property. It's a little too close to the brown note for your liking.",
+                        Inventory::unoccupied(),
+                        [],
+                        [
+                            LocationInventoryEventConfig::add(
+                                HoldableFactory::phone(),
+                                new PlayerDies("As you put your phone down it starts to ring, but with the same sound coming from the Provost's House. You answer and the phone emits a high-powered, high-pitch noise that causes your head to explode instantly. You are no longer alive.")
+                            )
+                        ]
                     ),
                     "1,2" => new Location(
                         new LocationId("1,2"),
