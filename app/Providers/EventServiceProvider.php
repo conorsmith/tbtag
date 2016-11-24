@@ -2,6 +2,7 @@
 
 namespace ConorSmith\Tbtag\Providers;
 
+use ConorSmith\Tbtag\Events\PigeonAttemptsToLeaveWithSandwich;
 use ConorSmith\Tbtag\Events\PlayerCanInteract;
 use ConorSmith\Tbtag\Events\PlayerCannotCompleteMove;
 use ConorSmith\Tbtag\Events\PlayerCannotGetHoldable;
@@ -30,22 +31,23 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        PlayerCanInteract::class         => [Listener::class],
-        PlayerCannotCompleteMove::class  => [Listener::class],
-        PlayerCannotGetHoldable::class   => [Listener::class],
-        PlayerDies::class                => [Listener::class],
-        PlayerDoesNotHaveHoldable::class => [Listener::class],
-        PlayerDropsHoldable::class       => [Listener::class],
-        PlayerEntersLocation::class      => [Listener::class],
-        PlayerGetsHoldable::class        => [Listener::class],
-        PlayerInspectsInventory::class   => [Listener::class],
-        PlayerIsBlindedByTheSun::class   => [Listener::class],
-        PlayerRequestsHelp::class        => [Listener::class],
-        PlayerSeesWhereTheyAre::class    => [Listener::class],
-        PlayerLooksAround::class         => [Listener::class],
-        PlayerQuits::class               => [Listener::class],
-        PlayerWins::class                => [Listener::class],
-        SomethingHappens::class          => [Listener::class],
+        PigeonAttemptsToLeaveWithSandwich::class => [Listener::class],
+        PlayerCanInteract::class                 => [Listener::class],
+        PlayerCannotCompleteMove::class          => [Listener::class],
+        PlayerCannotGetHoldable::class           => [Listener::class],
+        PlayerDies::class                        => [Listener::class],
+        PlayerDoesNotHaveHoldable::class         => [Listener::class],
+        PlayerDropsHoldable::class               => [Listener::class],
+        PlayerEntersLocation::class              => [Listener::class],
+        PlayerGetsHoldable::class                => [Listener::class],
+        PlayerInspectsInventory::class           => [Listener::class],
+        PlayerIsBlindedByTheSun::class           => [Listener::class],
+        PlayerRequestsHelp::class                => [Listener::class],
+        PlayerSeesWhereTheyAre::class            => [Listener::class],
+        PlayerLooksAround::class                 => [Listener::class],
+        PlayerQuits::class                       => [Listener::class],
+        PlayerWins::class                        => [Listener::class],
+        SomethingHappens::class                  => [Listener::class],
     ];
 
     /**

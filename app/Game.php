@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
-use ConorSmith\Tbtag\Events\PlayerCanInteract;
 use ConorSmith\Tbtag\Events\PlayerCannotCompleteMove;
 use ConorSmith\Tbtag\Events\PlayerCannotGetHoldable;
 use ConorSmith\Tbtag\Events\PlayerDoesNotHaveHoldable;
@@ -11,13 +10,15 @@ use ConorSmith\Tbtag\Events\PlayerDropsHoldable;
 use ConorSmith\Tbtag\Events\PlayerEntersLocation;
 use ConorSmith\Tbtag\Events\PlayerGetsHoldable;
 use ConorSmith\Tbtag\Events\PlayerInspectsInventory;
-use ConorSmith\Tbtag\Events\PlayerLooksAround;
 use DomainException;
 
 class Game
 {
     /** @var Map */
     private $map;
+
+    /** @var AutonomousRegistry */
+    private $autonomousRegistry;
 
     /** @var Location */
     private $currentLocation;
@@ -27,10 +28,12 @@ class Game
 
     public function __construct(
         Map $map,
+        AutonomousRegistry $autonomousRegistry,
         Location $currentLocation,
         Inventory $playerInventory
     ) {
         $this->map = $map;
+        $this->autonomousRegistry = $autonomousRegistry;
         $this->currentLocation = $currentLocation;
         $this->playerInventory = $playerInventory;
     }
@@ -119,5 +122,15 @@ class Game
     public function inspectPlayerInventory()
     {
         event(new PlayerInspectsInventory($this->playerInventory));
+    }
+
+    public function processAutonomousActions()
+    {
+        $this->autonomousRegistry->processActions();
+    }
+
+    public function findLocationOf(string $slug): Location
+    {
+        return $this->map->findLocationOf($slug);
     }
 }

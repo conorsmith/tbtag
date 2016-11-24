@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
+use OutOfBoundsException;
+
 class Map
 {
     /** @var array */
@@ -31,5 +33,16 @@ class Map
     public function isFirstVisitTo(Location $location): bool
     {
         return !in_array($location->getId(), $this->locationHistory);
+    }
+
+    public function findLocationOf(string $slug): Location
+    {
+        foreach ($this->locations as $location) {
+            if ($location->houses($slug)) {
+                return $location;
+            }
+        }
+
+        throw new OutOfBoundsException("The Autonomous entity cannot be found in any location.");
     }
 }

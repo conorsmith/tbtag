@@ -2,6 +2,8 @@
 
 namespace ConorSmith\Tbtag\Providers;
 
+use ConorSmith\Tbtag\Autonomous;
+use ConorSmith\Tbtag\AutonomousRegistry;
 use ConorSmith\Tbtag\CommandRepository;
 use ConorSmith\Tbtag\Commands\DropCommand;
 use ConorSmith\Tbtag\Commands\GetCommand;
@@ -11,6 +13,7 @@ use ConorSmith\Tbtag\DirectionFactory;
 use ConorSmith\Tbtag\Egress;
 use ConorSmith\Tbtag\Commands\ExitCommand;
 use ConorSmith\Tbtag\Entity;
+use ConorSmith\Tbtag\Events\PigeonAttemptsToLeaveWithSandwich;
 use ConorSmith\Tbtag\Events\PlayerDies;
 use ConorSmith\Tbtag\Events\PlayerIsBlindedByTheSun;
 use ConorSmith\Tbtag\Events\PlayerWins;
@@ -53,7 +56,21 @@ class AppServiceProvider extends ServiceProvider
             return new HoldableRegistry(
                 HoldableFactory::sunglasses(),
                 HoldableFactory::phone(),
-                HoldableFactory::rifle()
+                HoldableFactory::rifle(),
+                HoldableFactory::sandwich()
+            );
+        });
+
+        $this->app->singleton(AutonomousRegistry::class, function ($app) {
+            return new AutonomousRegistry(
+                new Entity(Entity::MOLLY_MALONE),
+                new Entity(
+                    Entity::PIGEON,
+                    $pigeonInventory = new Inventory([HoldableFactory::sandwich()]),
+                    [
+                        new PigeonAttemptsToLeaveWithSandwich($pigeonInventory)
+                    ]
+                )
             );
         });
 
@@ -177,7 +194,7 @@ class AppServiceProvider extends ServiceProvider
                         "Despite being moved back to her usual spot on Grafton Street after the Luas Cross City works were completed, the statue of Molly Malone is back outside the church.",
                         Inventory::unoccupied(),
                         new Manifest([
-                            new Entity("Molly Malone"),
+                            $app[AutonomousRegistry::class]->find(Entity::MOLLY_MALONE),
                         ])
                     ),
                     "1,0" => new Location(
@@ -240,9 +257,14 @@ class AppServiceProvider extends ServiceProvider
                             new Egress(new Direction("north"), new LocationId("1,0")),
                         ],
                         "Grafton Street",
-                        "The way south is impassable. A mound of chicken nuggets two stories high has spilled out of McDonald's and is blocking the junction with Wicklow Street."
+                        "The way south is impassable. A mound of chicken nuggets two stories high has spilled out of McDonald's and is blocking the junction with Wicklow Street.",
+                        Inventory::unoccupied(),
+                        new Manifest([
+                            $app[AutonomousRegistry::class]->find(Entity::PIGEON),
+                        ])
                     ),
                 ]),
+                $app[AutonomousRegistry::class],
                 $startingLocation,
                 new Inventory([HoldableFactory::phone()])
             );

@@ -16,4 +16,15 @@ class Manifest
     {
         $this->contents = $contents;
     }
+
+    public function has(string $slug): bool
+    {
+        foreach ($this->contents as $content) {
+            if (strval($content) === $slug) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

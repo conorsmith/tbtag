@@ -19,4 +19,9 @@ class HoldableFactory
     {
         return new Item("Rifle");
     }
+
+    public static function sandwich(): Holdable
+    {
+        return new Item("Sandwich");
+    }
 }

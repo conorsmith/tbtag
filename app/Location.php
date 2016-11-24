@@ -142,4 +142,14 @@ class Location
     {
         $this->inventory->add($holdable);
     }
+
+    public function houses(string $slug): bool
+    {
+        return $this->manifest->has($slug);
+    }
+
+    public function equals(self $other): bool
+    {
+        return strval($this->id) === strval($other->id);
+    }
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
+use ConorSmith\Tbtag\Events\Autonomous;
 use ConorSmith\Tbtag\Events\EndsGame;
 use ConorSmith\Tbtag\Events\GameEvent;
 use ConorSmith\Tbtag\Events\Printable;
@@ -28,7 +29,15 @@ class Listener
     public function handle(GameEvent $event)
     {
         if ($event instanceof Printable) {
-            $this->output->outputEvent($event);
+
+            if (!$event instanceof Autonomous
+                || (
+                    $event instanceof Autonomous
+                    && $event->doesPlayerShareTheLocation($this->game)
+                )
+            ) {
+                $this->output->outputEvent($event);
+            }
         }
 
         $event->handle($this->game);

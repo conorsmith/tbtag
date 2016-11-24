@@ -58,23 +58,23 @@ class PlayGame extends Command implements Output
     {
         try {
             $this->interpreter->__invoke(new Input($input));
-            $this->awaitInput();
 
         } catch (MissingArgument $e) {
             $this->printPayload(new Payload($e->getMessage()));
-            $this->awaitInput();
 
         } catch (DomainException $e) {
             $this->printPayload(new Payload($e->getMessage()));
-            $this->awaitInput();
 
         } catch (InvalidArgumentException $e) {
             $this->printPayload(new Payload("I don't understand what you mean."));
-            $this->awaitInput();
 
         } catch (ExitGame $e) {
-            //
+            return;
         }
+
+        $this->game->processAutonomousActions();
+
+        $this->awaitInput();
     }
 
     public function outputEvent(Printable $event)

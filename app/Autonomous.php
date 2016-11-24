@@ -5,5 +5,10 @@ namespace ConorSmith\Tbtag;
 
 interface Autonomous
 {
-    //
+    public function __toString(): string;
+
+    /**
+     * @return void
+     */
+    public function takeAction();
 }
