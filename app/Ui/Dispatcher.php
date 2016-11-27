@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ConorSmith\Tbtag\Ui;
 
 use ConorSmith\Tbtag\CommandRepository;
+use ConorSmith\Tbtag\Commands\Command;
 use ConorSmith\Tbtag\Commands\DropCommand;
 use ConorSmith\Tbtag\Commands\GetCommand;
 use ConorSmith\Tbtag\Commands\InspectInventoryCommand;
@@ -37,19 +38,28 @@ class Dispatcher
         $this->holdableRegistry = $holdableRegistry;
     }
 
-    public function __invoke(string $commandClass, array $args)
+    public function __invoke(string $commandClass, array $args): Command
+    {
+        $command = $this->createCommand($commandClass, $args);
+
+        dispatch($command);
+
+        return $command;
+    }
+
+    private function createCommand(string $commandClass, array $args): Command
     {
         if ($commandClass === ExitCommand::class)
         {
-            return dispatch(new ExitCommand);
+            return new ExitCommand;
         }
 
         if ($commandClass === HelpCommand::class) {
-            return dispatch(new HelpCommand($this->commands->getCommands()));
+            return new HelpCommand($this->commands->getCommands());
         }
 
         if ($commandClass === LookCommand::class) {
-            return dispatch(new LookCommand);
+            return new LookCommand;
         }
 
         if ($commandClass === MoveCommand::class) {
@@ -57,11 +67,11 @@ class Dispatcher
                 throw new MissingArgument("Huh? Where do you want to go?");
             }
 
-            return dispatch(new MoveCommand($this->directionFactory->fromSlug($args[0])));
+            return new MoveCommand($this->directionFactory->fromSlug($args[0]));
         }
 
         if ($commandClass === InspectInventoryCommand::class) {
-            return dispatch(new InspectInventoryCommand);
+            return new InspectInventoryCommand;
         }
 
         if ($commandClass === GetCommand::class) {
@@ -69,7 +79,7 @@ class Dispatcher
                 throw new MissingArgument("Huh? What do you want to get?");
             }
 
-            return dispatch(new GetCommand($this->holdableRegistry->find($args[0])));
+            return new GetCommand($this->holdableRegistry->find($args[0]));
         }
 
         if ($commandClass === DropCommand::class) {
@@ -77,7 +87,7 @@ class Dispatcher
                 throw new MissingArgument("Huh? What do you want to drop?");
             }
 
-            return dispatch(new DropCommand($this->holdableRegistry->find($args[0])));
+            return new DropCommand($this->holdableRegistry->find($args[0]));
         }
 
         throw new InvalidArgumentException;

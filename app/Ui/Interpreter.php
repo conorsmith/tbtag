@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ConorSmith\Tbtag\Ui;
 
 use ConorSmith\Tbtag\CommandRepository;
+use ConorSmith\Tbtag\Commands\Command;
 use ConorSmith\Tbtag\Commands\MoveCommand;
 
 class Interpreter
@@ -20,7 +21,7 @@ class Interpreter
         $this->commands = $commands;
     }
 
-    public function __invoke(Input $input)
+    public function __invoke(Input $input): Command
     {
         $commandSlug = $this->findCommandSlug($input);
 

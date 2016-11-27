@@ -35,11 +35,13 @@ class PigeonAttemptsToLeaveWithSandwich extends GameEvent implements Autonomous,
             $this->givenUp = false;
             $this->inventory->remove($sandwich);
             $location->addToInventory($sandwich);
+
         } else if ($location->getInventory()->contains($sandwich)) {
             $this->dropped = false;
             $this->givenUp = false;
             $location->removeFromInventory($sandwich);
             $this->inventory->add($sandwich);
+
         } else {
             $this->givenUp = true;
         }
@@ -58,9 +60,9 @@ class PigeonAttemptsToLeaveWithSandwich extends GameEvent implements Autonomous,
         }
 
         if ($this->dropped) {
-            return new Payload("You see a determined pigeon drop a sandwich while attempting to fly.");
-        } else {
             return new Payload("You notice a pigeon picking a sandwich up off the ground.");
+        } else {
+            return new Payload("You see a determined pigeon drop a sandwich while attempting to fly.");
         }
     }
 }

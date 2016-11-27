@@ -9,7 +9,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class MoveCommand extends Command implements ShouldQueue
+class MoveCommand extends Command implements ShouldQueue, InspectsArea
 {
     use InteractsWithQueue, Queueable;
 

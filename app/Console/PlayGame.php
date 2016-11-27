@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Console;
 
+use ConorSmith\Tbtag\Commands\InspectsArea;
 use ConorSmith\Tbtag\Events\PlayerEntersLocation;
 use ConorSmith\Tbtag\Events\Printable;
 use ConorSmith\Tbtag\Game;
@@ -46,6 +47,7 @@ class PlayGame extends Command implements Output
         $this->listener->setOutput($this);
         $this->line("");
         event(new PlayerEntersLocation($this->game->getCurrentLocation()));
+        $this->printPayload(InteractionsPayload::fromLocation($this->game->getCurrentLocation()));
         $this->awaitInput();
     }
 
@@ -56,8 +58,10 @@ class PlayGame extends Command implements Output
 
     private function handleInput(string $input)
     {
+        $command = null;
+
         try {
-            $this->interpreter->__invoke(new Input($input));
+            $command = $this->interpreter->__invoke(new Input($input));
 
         } catch (MissingArgument $e) {
             $this->printPayload(new Payload($e->getMessage()));
@@ -73,6 +77,10 @@ class PlayGame extends Command implements Output
         }
 
         $this->game->processAutonomousActions();
+
+        if (!is_null($command) && $command instanceof InspectsArea) {
+            $this->printPayload(InteractionsPayload::fromLocation($this->game->getCurrentLocation()));
+        }
 
         $this->awaitInput();
     }

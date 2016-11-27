@@ -11,7 +11,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class LookCommand extends Command implements ShouldQueue
+class LookCommand extends Command implements ShouldQueue, InspectsArea
 {
     use InteractsWithQueue, Queueable;
 
@@ -25,6 +25,5 @@ class LookCommand extends Command implements ShouldQueue
         event(new PlayerSeesWhereTheyAre($game->getCurrentLocation()));
         event(new PlayerLooksAround($game->getCurrentLocation()));
         $game->getCurrentLocation()->triggerLookInventoryEvents();
-        event(new PlayerCanInteract($game->getCurrentLocation()));
     }
 }

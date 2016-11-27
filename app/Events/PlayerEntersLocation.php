@@ -24,7 +24,5 @@ class PlayerEntersLocation extends GameEvent
         }
 
         $game->triggerLocationIngressEvents();
-
-        event(new PlayerCanInteract($game->getCurrentLocation()));
     }
 }
