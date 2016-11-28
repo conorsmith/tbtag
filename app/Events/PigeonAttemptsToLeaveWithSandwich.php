@@ -7,18 +7,11 @@ use ConorSmith\Tbtag\Entity;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\HoldableFactory;
 use ConorSmith\Tbtag\Inventory;
-use ConorSmith\Tbtag\Ui\Payload;
 
-class PigeonAttemptsToLeaveWithSandwich extends GameEvent implements Autonomous, Printable
+class PigeonAttemptsToLeaveWithSandwich extends GameEvent
 {
     /** @var Inventory */
     private $inventory;
-
-    /** @var bool */
-    private $dropped = false;
-
-    /** @var bool */
-    private $givenUp = false;
 
     public function __construct(Inventory $inventory)
     {
@@ -29,40 +22,28 @@ class PigeonAttemptsToLeaveWithSandwich extends GameEvent implements Autonomous,
     {
         $sandwich = HoldableFactory::sandwich();
         $location = $game->findLocationOf(Entity::PIGEON);
+        $playerIsHere = $game->getCurrentLocation()->equals($location);
 
         if ($this->inventory->contains($sandwich)) {
-            $this->dropped = true;
-            $this->givenUp = false;
             $this->inventory->remove($sandwich);
             $location->addToInventory($sandwich);
 
+            if ($playerIsHere) {
+                event(new PlayerSeesPigeonDropSandwich);
+            }
+
         } else if ($location->getInventory()->contains($sandwich)) {
-            $this->dropped = false;
-            $this->givenUp = false;
             $location->removeFromInventory($sandwich);
             $this->inventory->add($sandwich);
 
+            if ($playerIsHere) {
+                event(new PlayerSeesPigeonPickUpSandwich);
+            }
+
         } else {
-            $this->givenUp = true;
-        }
-    }
-
-    public function doesPlayerShareTheLocation(Game $game): bool
-    {
-        $location = $game->findLocationOf(Entity::PIGEON);
-        return $game->getCurrentLocation()->equals($location);
-    }
-
-    public function toPayload(): Payload
-    {
-        if ($this->givenUp) {
-            return new Payload("You see a despondent pigeon.");
-        }
-
-        if ($this->dropped) {
-            return new Payload("You notice a pigeon picking a sandwich up off the ground.");
-        } else {
-            return new Payload("You see a determined pigeon drop a sandwich while attempting to fly.");
+            if ($playerIsHere) {
+                event(new PlayerSeesPigeonWithoutASandwich);
+            }
         }
     }
 }

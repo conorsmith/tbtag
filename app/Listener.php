@@ -29,15 +29,7 @@ class Listener
     public function handle(GameEvent $event)
     {
         if ($event instanceof Printable) {
-
-            if (!$event instanceof Autonomous
-                || (
-                    $event instanceof Autonomous
-                    && $event->doesPlayerShareTheLocation($this->game)
-                )
-            ) {
-                $this->output->outputEvent($event);
-            }
+            $this->output->outputEvent($event);
         }
 
         $event->handle($this->game);

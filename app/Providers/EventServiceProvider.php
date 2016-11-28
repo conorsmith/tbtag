@@ -17,6 +17,9 @@ use ConorSmith\Tbtag\Events\PlayerIsBlindedByTheSun;
 use ConorSmith\Tbtag\Events\PlayerQuits;
 use ConorSmith\Tbtag\Events\PlayerRequestsHelp;
 use ConorSmith\Tbtag\Events\PlayerLooksAround;
+use ConorSmith\Tbtag\Events\PlayerSeesPigeonDropSandwich;
+use ConorSmith\Tbtag\Events\PlayerSeesPigeonPickUpSandwich;
+use ConorSmith\Tbtag\Events\PlayerSeesPigeonWithoutASandwich;
 use ConorSmith\Tbtag\Events\PlayerSeesWhereTheyAre;
 use ConorSmith\Tbtag\Events\PlayerWins;
 use ConorSmith\Tbtag\Events\SomethingHappens;
@@ -43,6 +46,9 @@ class EventServiceProvider extends ServiceProvider
         PlayerInspectsInventory::class           => [Listener::class],
         PlayerIsBlindedByTheSun::class           => [Listener::class],
         PlayerRequestsHelp::class                => [Listener::class],
+        PlayerSeesPigeonDropSandwich::class      => [Listener::class],
+        PlayerSeesPigeonPickUpSandwich::class    => [Listener::class],
+        PlayerSeesPigeonWithoutASandwich::class  => [Listener::class],
         PlayerSeesWhereTheyAre::class            => [Listener::class],
         PlayerLooksAround::class                 => [Listener::class],
         PlayerQuits::class                       => [Listener::class],
