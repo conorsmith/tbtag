@@ -13,6 +13,7 @@ use ConorSmith\Tbtag\DirectionFactory;
 use ConorSmith\Tbtag\Egress;
 use ConorSmith\Tbtag\Commands\ExitCommand;
 use ConorSmith\Tbtag\Entity;
+use ConorSmith\Tbtag\Events\MollyMaloneScansHerSurroundings;
 use ConorSmith\Tbtag\Events\PigeonAttemptsToLeaveWithSandwich;
 use ConorSmith\Tbtag\Events\PlayerDies;
 use ConorSmith\Tbtag\Events\PlayerIsBlindedByTheSun;
@@ -63,7 +64,13 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(AutonomousRegistry::class, function ($app) {
             return new AutonomousRegistry(
-                new Entity(Entity::MOLLY_MALONE),
+                new Entity(
+                    Entity::MOLLY_MALONE,
+                    Inventory::unoccupied(),
+                    [
+                        new MollyMaloneScansHerSurroundings
+                    ]
+                ),
                 new Entity(
                     Entity::PIGEON,
                     $pigeonInventory = new Inventory([HoldableFactory::sandwich()]),

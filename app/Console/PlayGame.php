@@ -46,9 +46,7 @@ class PlayGame extends Command implements Output
         $this->printIntro();
         $this->listener->setOutput($this);
         $this->line("");
-        event(new PlayerEntersLocation($this->game->getCurrentLocation()));
-        $this->printPayload(InteractionsPayload::fromLocation($this->game->getCurrentLocation()));
-        $this->awaitInput();
+        $this->handleInput("look");
     }
 
     private function awaitInput()
@@ -81,6 +79,8 @@ class PlayGame extends Command implements Output
         if (!is_null($command) && $command instanceof InspectsArea) {
             $this->printPayload(InteractionsPayload::fromLocation($this->game->getCurrentLocation()));
         }
+
+        $this->game->turnComplete();
 
         $this->awaitInput();
     }

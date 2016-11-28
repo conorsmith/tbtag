@@ -23,6 +23,9 @@ class Game
     /** @var Location */
     private $currentLocation;
 
+    /** @var Location */
+    private $locationOnPreviousTurn;
+
     /** @var Inventory */
     private $playerInventory;
 
@@ -38,9 +41,19 @@ class Game
         $this->playerInventory = $playerInventory;
     }
 
+    public function turnComplete()
+    {
+        $this->locationOnPreviousTurn = $this->currentLocation;
+    }
+
     public function getCurrentLocation(): Location
     {
         return $this->currentLocation;
+    }
+
+    public function playerJustMovedHere(): bool
+    {
+        return !$this->currentLocation->equals($this->locationOnPreviousTurn);
     }
 
     public function move(Direction $direction)

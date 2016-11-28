@@ -2,6 +2,7 @@
 
 namespace ConorSmith\Tbtag\Providers;
 
+use ConorSmith\Tbtag\Events\MollyMaloneScansHerSurroundings;
 use ConorSmith\Tbtag\Events\PigeonAttemptsToLeaveWithSandwich;
 use ConorSmith\Tbtag\Events\PlayerCanInteract;
 use ConorSmith\Tbtag\Events\PlayerCannotCompleteMove;
@@ -10,7 +11,6 @@ use ConorSmith\Tbtag\Events\PlayerDies;
 use ConorSmith\Tbtag\Events\PlayerDoesNotHaveHoldable;
 use ConorSmith\Tbtag\Events\PlayerDropsHoldable;
 use ConorSmith\Tbtag\Events\PlayerEntersLocation;
-use ConorSmith\Tbtag\Events\PlayerFirstEntersLocation;
 use ConorSmith\Tbtag\Events\PlayerGetsHoldable;
 use ConorSmith\Tbtag\Events\PlayerInspectsInventory;
 use ConorSmith\Tbtag\Events\PlayerIsBlindedByTheSun;
@@ -34,6 +34,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
+        MollyMaloneScansHerSurroundings::class   => [Listener::class],
         PigeonAttemptsToLeaveWithSandwich::class => [Listener::class],
         PlayerCanInteract::class                 => [Listener::class],
         PlayerCannotCompleteMove::class          => [Listener::class],
