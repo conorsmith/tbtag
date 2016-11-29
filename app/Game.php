@@ -12,6 +12,7 @@ use ConorSmith\Tbtag\Events\PlayerEntersLocation;
 use ConorSmith\Tbtag\Events\PlayerGetsHoldable;
 use ConorSmith\Tbtag\Events\PlayerInspectsInventory;
 use DomainException;
+use OutOfBoundsException;
 
 class Game
 {
@@ -64,8 +65,11 @@ class Game
             $this->map->addToHistory($this->currentLocation);
             $this->currentLocation = $newLocation;
 
-        } catch (DomainException $e) {
+        } catch (OutOfBoundsException $e) {
             event(new PlayerCannotCompleteMove);
+            return;
+
+        } catch (DomainException $e) {
             return;
         }
 

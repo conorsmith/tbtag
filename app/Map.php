@@ -20,9 +20,9 @@ class Map
 
     public function findDestination(Location $location, Direction $direction): Location
     {
-        $destination = $location->findEgress($direction);
+        $destinationId = $location->findEgress($direction);
 
-        return $this->locations[strval($destination)];
+        return $this->locations[strval($destinationId)];
     }
 
     public function addToHistory(Location $location)

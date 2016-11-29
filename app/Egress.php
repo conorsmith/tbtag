@@ -23,4 +23,14 @@ class Egress
     {
         return $this->destination;
     }
+
+    public function isNavigable(): bool
+    {
+        return true;
+    }
+
+    public function getUnnavigableMessage(): string
+    {
+        return "";
+    }
 }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace ConorSmith\Tbtag;
 
 use ConorSmith\Tbtag\Commands\Command;
+use ConorSmith\Tbtag\Events\SomethingHappens;
 use DomainException;
+use OutOfBoundsException;
 
 class Location
 {
@@ -127,11 +129,16 @@ class Location
     {
         foreach ($this->egresses as $egress) {
             if ($egress->getDirection()->equals($direction)) {
+                if (!$egress->isNavigable()) {
+                    event(new SomethingHappens($egress->getUnnavigableMessage()));
+                    throw new DomainException("Egress is not navigable");
+                }
+
                 return $egress->getDestination();
             }
         }
 
-        throw new DomainException("Egress not found");
+        throw new OutOfBoundsException("Egress not found");
     }
 
     public function removeFromInventory(Holdable $holdable)

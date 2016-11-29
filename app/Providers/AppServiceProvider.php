@@ -3,6 +3,7 @@
 namespace ConorSmith\Tbtag\Providers;
 
 use ConorSmith\Tbtag\AutonomousRegistry;
+use ConorSmith\Tbtag\Barrier;
 use ConorSmith\Tbtag\CommandRepository;
 use ConorSmith\Tbtag\Commands\DropCommand;
 use ConorSmith\Tbtag\Commands\GetCommand;
@@ -87,37 +88,29 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(Game::class, function ($app) {
             return new Game(
                 new Map([
-                    "1,3" => new Location(
-                        new LocationId("1,3"),
-                        [],
-                        "KFC, Westmoreland Street",
-                        "It's finger lickin' good.",
-                        Inventory::unoccupied(),
-                        Manifest::unoccupied(),
+                    "4,8" => new Location(
+                        new LocationId("4,8"),
                         [
-                            new PlayerWins("You have reached your goal: KFC. Whatever else is going on in this crazy world you now have access to the best gravy known to humanity. Enjoy.")
-                        ]
-                    ),
-                    "1,2" => new Location(
-                        new LocationId("1,2"),
-                        [
-                            new Egress(new Direction("north"), new LocationId("1,3")),
-                            new Egress(new Direction("south"), new LocationId("1,1")),
+                            new Egress(new Direction("south"), new LocationId("4,7")),
                         ],
-                        "Public Toilet Pit",
-                        "You stand above a pit where the College Street public toilets once stood.",
-                        Inventory::unoccupied(),
-                        Manifest::unoccupied(),
-                        [
-                            new PlayerIsBlindedByTheSun
-                        ]
+                        "Westmoreland Street",
+                        "You stand outside a KFC. Every other retail unit on the both sides of the street is now a Starbucks"
                     ),
-                    "0,1" => $startingLocation = new Location(
-                        new LocationId("0,1"),
+                    "2,7" => $startingLocation = new Location(
+                        new LocationId("2,7"),
+                        [
+                            new Egress(new Direction("east"), new LocationId("3,7")),
+                        ],
+                        "Central Bank",
+                        "..."
+                    ),
+                    "3,7" => $startingLocation = new Location(
+                        new LocationId("3,7"),
                         [
                             new Egress(new Direction("in"), new LocationId("wax:0,0")),
-                            new Egress(new Direction("south"), new LocationId("0,0")),
-                            new Egress(new Direction("east"), new LocationId("1,1")),
+                            new Egress(new Direction("south"), new LocationId("3,6")),
+                            new Egress(new Direction("east"), new LocationId("4,7")),
+                            new Barrier(new Direction("west"), new LocationId("2,7"), "You are stopped by an invisible energy barrier."),
                         ],
                         "Foster Place",
                         "You are standing outside the Wax Museum. A number of wax figures are arranged outside the building, as if they are trying to escape. These are truly the most life-like wax figures you've ever seen and each one has a horrified expression."
@@ -125,11 +118,25 @@ class AppServiceProvider extends ServiceProvider
                     "wax:0,0" => new Location(
                         new LocationId("wax:0,0"),
                         [
-                            new Egress(new Direction("out"), new LocationId("0,1")),
+                            new Egress(new Direction("out"), new LocationId("3,7")),
                             new Egress(new Direction("east"), new LocationId("wax:1,0")),
+                            new Egress(new Direction("west"), new LocationId("wax:-1,0")),
                         ],
                         "Wax Museum",
-                        "Most of the space in the museum's main hall is taken up by a wax rendition of a gargantuan snake-like monster. The celebrity figures surrounding it are either dying or dead. A bisected Joe Dolan can be seen trying to keep his realistically recreated internal organs inside his wax body."
+                        "Most of the space in the museum's main hall is taken up by a wax rendition of a gargantuan snake-like monster. The celebrity figures surrounding it are either dying or dead. A bisected Joe Dolan can be seen trying to keep his realistically recreated internal organs inside his wax body.\n\nTo the east you see a door marked \"Special Exhibit\". To the west a door that says \"DANGER: Deep Excavations\"."
+                    ),
+                    "wax:-1,0" => new Location(
+                        new LocationId("wax:-1,0"),
+                        [],
+                        "A Big Hole",
+                        "You fall into a big hole.",
+                        Inventory::unoccupied(),
+                        Manifest::unoccupied(),
+                        [
+                            new PlayerDies(
+                                "As you fall towards your messy death you have just enough time to wonder why such a deep hole would be dug indoors."
+                            ),
+                        ]
                     ),
                     "wax:1,0" => new Location(
                         new LocationId("wax:1,0"),
@@ -150,13 +157,13 @@ class AppServiceProvider extends ServiceProvider
                             )
                         ]
                     ),
-                    "1,1" => new Location(
-                        new LocationId("1,1"),
+                    "4,7" => new Location(
+                        new LocationId("4,7"),
                         [
-                            new Egress(new Direction("north"), new LocationId("1,2")),
-                            new Egress(new Direction("south"), new LocationId("1,0")),
-                            new Egress(new Direction("east"), new LocationId("2,1")),
-                            new Egress(new Direction("west"), new LocationId("0,1")),
+                            new Egress(new Direction("north"), new LocationId("4,8")),
+                            new Egress(new Direction("south"), new LocationId("4,6")),
+                            new Egress(new Direction("east"), new LocationId("5,7")),
+                            new Egress(new Direction("west"), new LocationId("3,7")),
                         ],
                         "College Green",
                         "You are amidst the wreckage of two Luas trams. It looks like there was some sort of head on collision.",
@@ -164,41 +171,41 @@ class AppServiceProvider extends ServiceProvider
                             HoldableFactory::sunglasses(),
                         ])
                     ),
-                    "2,1" => new Location(
-                        new LocationId("2,1"),
+                    "5,7" => new Location(
+                        new LocationId("5,7"),
                         [
-                            new Egress(new Direction("south"), new LocationId("2,0")),
-                            new Egress(new Direction("east"), new LocationId("3,1")),
-                            new Egress(new Direction("west"), new LocationId("1,1")),
+                            new Egress(new Direction("south"), new LocationId("5,6")),
+                            new Egress(new Direction("east"), new LocationId("6,7")),
+                            new Egress(new Direction("west"), new LocationId("4,7")),
                         ],
                         "Front Square",
                         "???"
                     ),
-                    "3,1" => new Location(
-                        new LocationId("3,1"),
+                    "6,7" => new Location(
+                        new LocationId("6,7"),
                         [
-                            new Egress(new Direction("south"), new LocationId("3,0")),
-                            new Egress(new Direction("east"), new LocationId("4,1")),
-                            new Egress(new Direction("west"), new LocationId("2,1")),
+                            new Egress(new Direction("south"), new LocationId("6,6")),
+                            new Egress(new Direction("east"), new LocationId("7,7")),
+                            new Egress(new Direction("west"), new LocationId("5,7")),
                         ],
                         "New Square",
                         "???"
                     ),
-                    "4,1" => new Location(
-                        new LocationId("4,1"),
+                    "7,7" => new Location(
+                        new LocationId("7,7"),
                         [
-                            new Egress(new Direction("south"), new LocationId("4,0")),
-                            new Egress(new Direction("west"), new LocationId("3,1")),
+                            new Egress(new Direction("south"), new LocationId("7,6")),
+                            new Egress(new Direction("west"), new LocationId("6,7")),
                         ],
                         "Rugby Pitch",
                         "???"
                     ),
-                    "0,0" => new Location(
-                        new LocationId("0,0"),
+                    "3,6" => new Location(
+                        new LocationId("3,6"),
                         [
-                            new Egress(new Direction("north"), new LocationId("0,1")),
-                            new Egress(new Direction("south"), new LocationId("0,-1")),
-                            new Egress(new Direction("east"), new LocationId("1,0")),
+                            new Egress(new Direction("north"), new LocationId("3,7")),
+                            new Egress(new Direction("south"), new LocationId("3,5")),
+                            new Egress(new Direction("east"), new LocationId("4,6")),
                         ],
                         "St Andrew's Church",
                         "Despite being moved back to her usual spot on Grafton Street after the Luas Cross City works were completed, the statue of Molly Malone is back outside the church.",
@@ -207,12 +214,12 @@ class AppServiceProvider extends ServiceProvider
                             $app[AutonomousRegistry::class]->find(Entity::MOLLY_MALONE),
                         ])
                     ),
-                    "1,0" => new Location(
-                        new LocationId("1,0"),
+                    "4,6" => new Location(
+                        new LocationId("4,6"),
                         [
-                            new Egress(new Direction("north"), new LocationId("1,1")),
-                            new Egress(new Direction("south"), new LocationId("1,-1")),
-                            new Egress(new Direction("west"), new LocationId("0,0")),
+                            new Egress(new Direction("north"), new LocationId("4,7")),
+                            new Egress(new Direction("south"), new LocationId("4,5")),
+                            new Egress(new Direction("west"), new LocationId("3,6")),
                         ],
                         "No 1 Grafton Street",
                         "The gates to the house of Trinity College's Provost are open. A low rumbling sound can be heard from inside the property. It's a little too close to the brown note for your liking.",
@@ -226,45 +233,45 @@ class AppServiceProvider extends ServiceProvider
                             )
                         ]
                     ),
-                    "2,0" => new Location(
-                        new LocationId("2,0"),
+                    "5,6" => new Location(
+                        new LocationId("5,6"),
                         [
-                            new Egress(new Direction("north"), new LocationId("2,1")),
-                            new Egress(new Direction("east"), new LocationId("3,0")),
+                            new Egress(new Direction("north"), new LocationId("5,7")),
+                            new Egress(new Direction("east"), new LocationId("6,6")),
                         ],
                         "Fellows Square",
                         "???"
                     ),
-                    "3,0" => new Location(
-                        new LocationId("3,0"),
+                    "6,6" => new Location(
+                        new LocationId("6,6"),
                         [
-                            new Egress(new Direction("north"), new LocationId("3,1")),
-                            new Egress(new Direction("west"), new LocationId("2,0")),
+                            new Egress(new Direction("north"), new LocationId("6,7")),
+                            new Egress(new Direction("west"), new LocationId("5,6")),
                         ],
                         "Pomedoro Sphere",
                         "???"
                     ),
-                    "4,0" => new Location(
-                        new LocationId("4,0"),
+                    "7,6" => new Location(
+                        new LocationId("7,6"),
                         [
-                            new Egress(new Direction("north"), new LocationId("4,1")),
-                            new Egress(new Direction("west"), new LocationId("3,0")),
+                            new Egress(new Direction("north"), new LocationId("7,7")),
+                            new Egress(new Direction("west"), new LocationId("6,6")),
                         ],
                         "Cricket Pitch",
                         "???"
                     ),
-                    "0,-1" => new Location(
-                        new LocationId("0,-1"),
+                    "3,5" => new Location(
+                        new LocationId("3,5"),
                         [
-                            new Egress(new Direction("north"), new LocationId("0,0")),
+                            new Egress(new Direction("north"), new LocationId("3,6")),
                         ],
                         "Murphy's Ice Cream",
                         "???"
                     ),
-                    "1,-1" => new Location(
-                        new LocationId("1,-1"),
+                    "4,5" => new Location(
+                        new LocationId("4,5"),
                         [
-                            new Egress(new Direction("north"), new LocationId("1,0")),
+                            new Egress(new Direction("north"), new LocationId("4,6")),
                         ],
                         "Grafton Street",
                         "The way south is impassable. A mound of chicken nuggets two stories high has spilled out of McDonald's and is blocking the junction with Wicklow Street.",
