@@ -13,8 +13,8 @@ use ConorSmith\Tbtag\Commands\ExitCommand;
 use ConorSmith\Tbtag\Commands\HelpCommand;
 use ConorSmith\Tbtag\Commands\LookCommand;
 use ConorSmith\Tbtag\Commands\MoveCommand;
+use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\HoldableRegistry;
-use ConorSmith\Tbtag\Item;
 use InvalidArgumentException;
 
 class Dispatcher
@@ -28,21 +28,28 @@ class Dispatcher
     /** @var HoldableRegistry */
     private $holdableRegistry;
 
+    /** @var Game */
+    private $game;
+
     public function __construct(
         CommandRepository $commands,
         DirectionFactory $directionFactory,
-        HoldableRegistry $holdableRegistry
+        HoldableRegistry $holdableRegistry,
+        Game $game
     ) {
         $this->commands = $commands;
         $this->directionFactory = $directionFactory;
         $this->holdableRegistry = $holdableRegistry;
+        $this->game = $game;
     }
 
     public function __invoke(string $commandClass, array $args): Command
     {
         $command = $this->createCommand($commandClass, $args);
 
-        dispatch($command);
+        if (!$this->game->processInteractiveInterceptions($command)) {
+            dispatch($command);
+        }
 
         return $command;
     }

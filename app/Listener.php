@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
-use ConorSmith\Tbtag\Events\Autonomous;
 use ConorSmith\Tbtag\Events\EndsGame;
 use ConorSmith\Tbtag\Events\GameEvent;
 use ConorSmith\Tbtag\Events\Printable;

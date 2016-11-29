@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
+use ConorSmith\Tbtag\Commands\Command;
+
 class Manifest
 {
     public static function unoccupied(): self
@@ -26,5 +28,18 @@ class Manifest
         }
 
         return false;
+    }
+
+    public function processInterceptions(Command $command): bool
+    {
+        $commandWasIntercepted = false;
+
+        foreach ($this->contents as $content) {
+            if ($content instanceof Interactive) {
+                $commandWasIntercepted = $commandWasIntercepted || $content->intercept($command);
+            }
+        }
+
+        return $commandWasIntercepted;
     }
 }

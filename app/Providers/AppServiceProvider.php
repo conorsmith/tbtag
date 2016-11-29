@@ -2,7 +2,6 @@
 
 namespace ConorSmith\Tbtag\Providers;
 
-use ConorSmith\Tbtag\Autonomous;
 use ConorSmith\Tbtag\AutonomousRegistry;
 use ConorSmith\Tbtag\CommandRepository;
 use ConorSmith\Tbtag\Commands\DropCommand;
@@ -32,6 +31,7 @@ use ConorSmith\Tbtag\LocationInventoryEventConfig;
 use ConorSmith\Tbtag\Manifest;
 use ConorSmith\Tbtag\Map;
 use ConorSmith\Tbtag\Commands\MoveCommand;
+use ConorSmith\Tbtag\Interceptions\MollyMaloneMove;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -69,6 +69,9 @@ class AppServiceProvider extends ServiceProvider
                     Inventory::unoccupied(),
                     [
                         new MollyMaloneScansHerSurroundings
+                    ],
+                    [
+                        new MollyMaloneMove
                     ]
                 ),
                 new Entity(

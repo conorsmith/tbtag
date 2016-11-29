@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
+use ConorSmith\Tbtag\Commands\Command;
 use DomainException;
 
 class Location
@@ -151,5 +152,10 @@ class Location
     public function equals(self $other): bool
     {
         return strval($this->id) === strval($other->id);
+    }
+
+    public function processInteractiveInterceptions(Command $command): bool
+    {
+        return $this->manifest->processInterceptions($command);
     }
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
+use ConorSmith\Tbtag\Commands\Command;
 use ConorSmith\Tbtag\Events\PlayerCannotCompleteMove;
 use ConorSmith\Tbtag\Events\PlayerCannotGetHoldable;
 use ConorSmith\Tbtag\Events\PlayerDoesNotHaveHoldable;
@@ -145,5 +146,10 @@ class Game
     public function findLocationOf(string $slug): Location
     {
         return $this->map->findLocationOf($slug);
+    }
+
+    public function processInteractiveInterceptions(Command $command): bool
+    {
+        return $this->currentLocation->processInteractiveInterceptions($command);
     }
 }

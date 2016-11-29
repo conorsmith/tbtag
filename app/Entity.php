@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
-class Entity implements Autonomous
+use ConorSmith\Tbtag\Commands\Command;
+
+class Entity implements Autonomous, Interactive
 {
     const MOLLY_MALONE = "Molly Malone";
     const PIGEON = "Pigeon";
@@ -17,11 +19,19 @@ class Entity implements Autonomous
     /** @var array */
     private $actionEvents;
 
-    public function __construct(string $name, Inventory $inventory = null, array $actionEvents = [])
-    {
+    /** @var array */
+    private $interceptions;
+
+    public function __construct(
+        string $name,
+        Inventory $inventory = null,
+        array $actionEvents = [],
+        array $interceptions = []
+    ) {
         $this->name = $name;
         $this->inventory = $inventory ?? Inventory::unoccupied();
         $this->actionEvents = $actionEvents;
+        $this->interceptions = $interceptions;
     }
 
     public function __toString(): string
@@ -34,5 +44,16 @@ class Entity implements Autonomous
         foreach ($this->actionEvents as $event) {
             event($event);
         }
+    }
+
+    public function intercept(Command $command): bool
+    {
+        $commandWasIntercepted = false;
+
+        foreach ($this->interceptions as $interception) {
+            $commandWasIntercepted = $commandWasIntercepted || $interception->handle($command);
+        }
+
+        return $commandWasIntercepted;
     }
 }
