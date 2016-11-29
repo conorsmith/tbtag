@@ -8,6 +8,7 @@ use ConorSmith\Tbtag\Commands\Command;
 use ConorSmith\Tbtag\Commands\DropCommand;
 use ConorSmith\Tbtag\Commands\GetCommand;
 use ConorSmith\Tbtag\Commands\InspectInventoryCommand;
+use ConorSmith\Tbtag\Commands\UseCommand;
 use ConorSmith\Tbtag\DirectionFactory;
 use ConorSmith\Tbtag\Commands\ExitCommand;
 use ConorSmith\Tbtag\Commands\HelpCommand;
@@ -95,6 +96,14 @@ class Dispatcher
             }
 
             return new DropCommand($this->holdableRegistry->find($args[0]));
+        }
+
+        if ($commandClass === UseCommand::class) {
+            if (count($args) !== 1) {
+                throw new MissingArgument("Buh? Use what?");
+            }
+
+            return new UseCommand($this->holdableRegistry->find($args[0]));
         }
 
         throw new InvalidArgumentException;

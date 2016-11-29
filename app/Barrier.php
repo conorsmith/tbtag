@@ -7,8 +7,12 @@ class Barrier extends Egress
 {
     private $unnavigableMessage;
 
-    public function __construct(Direction $direction, LocationId $destination, string $unnavigableMessage)
-    {
+    public function __construct(
+        Direction $direction,
+        LocationId $destination,
+        string $unnavigableMessage,
+        array $events
+    ) {
         $this->unnavigableMessage = $unnavigableMessage;
         parent::__construct($direction, $destination);
     }

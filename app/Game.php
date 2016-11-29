@@ -156,4 +156,19 @@ class Game
     {
         return $this->currentLocation->processInteractiveInterceptions($command);
     }
+
+    public function playerUses(Usable $usable)
+    {
+        if ($usable instanceof Holdable) {
+
+            if (!$this->playerIsHolding($usable)) {
+                $this->addToPlayerInventory($usable);
+            }
+
+            $usable->triggerUse();
+            return;
+        }
+
+        throw new DomainException("Can't handle a non-holdable usuable.");
+    }
 }

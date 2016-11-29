@@ -2,6 +2,7 @@
 
 namespace ConorSmith\Tbtag\Providers;
 
+use ConorSmith\Tbtag\Events\EmpIsDetonated;
 use ConorSmith\Tbtag\Events\MollyMaloneScansHerSurroundings;
 use ConorSmith\Tbtag\Events\PigeonAttemptsToLeaveWithSandwich;
 use ConorSmith\Tbtag\Events\PlayerCanInteract;
@@ -21,6 +22,7 @@ use ConorSmith\Tbtag\Events\PlayerSeesPigeonDropSandwich;
 use ConorSmith\Tbtag\Events\PlayerSeesPigeonPickUpSandwich;
 use ConorSmith\Tbtag\Events\PlayerSeesPigeonWithoutASandwich;
 use ConorSmith\Tbtag\Events\PlayerSeesWhereTheyAre;
+use ConorSmith\Tbtag\Events\PlayerUsesEmp;
 use ConorSmith\Tbtag\Events\PlayerWins;
 use ConorSmith\Tbtag\Events\SomethingHappens;
 use ConorSmith\Tbtag\Listener;
@@ -34,6 +36,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
+        EmpIsDetonated::class                    => [Listener::class],
         MollyMaloneScansHerSurroundings::class   => [Listener::class],
         PigeonAttemptsToLeaveWithSandwich::class => [Listener::class],
         PlayerCanInteract::class                 => [Listener::class],
@@ -53,6 +56,7 @@ class EventServiceProvider extends ServiceProvider
         PlayerSeesWhereTheyAre::class            => [Listener::class],
         PlayerLooksAround::class                 => [Listener::class],
         PlayerQuits::class                       => [Listener::class],
+        PlayerUsesEmp::class                     => [Listener::class],
         PlayerWins::class                        => [Listener::class],
         SomethingHappens::class                  => [Listener::class],
     ];

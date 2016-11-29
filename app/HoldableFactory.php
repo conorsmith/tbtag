@@ -24,4 +24,9 @@ class HoldableFactory
     {
         return new Item("Sandwich");
     }
+
+    public static function emp(): Holdable
+    {
+        return new Item("EMP");
+    }
 }
