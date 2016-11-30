@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace ConorSmith\Tbtag\Console;
 
 use ConorSmith\Tbtag\Commands\InspectsArea;
-use ConorSmith\Tbtag\Events\PlayerEntersLocation;
 use ConorSmith\Tbtag\Events\Printable;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Listener;

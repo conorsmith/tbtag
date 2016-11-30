@@ -21,7 +21,6 @@ use ConorSmith\Tbtag\Events\MollyMaloneScansHerSurroundings;
 use ConorSmith\Tbtag\Events\PigeonAttemptsToLeaveWithSandwich;
 use ConorSmith\Tbtag\Events\PlayerDies;
 use ConorSmith\Tbtag\Events\PlayerUsesEmp;
-use ConorSmith\Tbtag\Events\PlayerWins;
 use ConorSmith\Tbtag\Events\SomethingHappens;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Commands\HelpCommand;
