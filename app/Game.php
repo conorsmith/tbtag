@@ -4,13 +4,11 @@ declare(strict_types=1);
 namespace ConorSmith\Tbtag;
 
 use ConorSmith\Tbtag\Commands\Command;
-use ConorSmith\Tbtag\Events\PlayerCannotCompleteMove;
-use ConorSmith\Tbtag\Events\PlayerCannotGetHoldable;
-use ConorSmith\Tbtag\Events\PlayerDoesNotHaveHoldable;
 use ConorSmith\Tbtag\Events\PlayerDropsHoldable;
 use ConorSmith\Tbtag\Events\PlayerEntersLocation;
 use ConorSmith\Tbtag\Events\PlayerGetsHoldable;
 use ConorSmith\Tbtag\Events\PlayerInspectsInventory;
+use ConorSmith\Tbtag\Events\SomethingHappens;
 use DomainException;
 use OutOfBoundsException;
 
@@ -66,7 +64,7 @@ class Game
             $this->currentLocation = $newLocation;
 
         } catch (OutOfBoundsException $e) {
-            event(new PlayerCannotCompleteMove);
+            event(new SomethingHappens("You cannot go that way."));
             return;
 
         } catch (DomainException $e) {
@@ -96,7 +94,7 @@ class Game
             $this->currentLocation->removeFromInventory($holdable);
 
         } catch (DomainException $e) {
-            event(new PlayerCannotGetHoldable);
+            event(new SomethingHappens("You can't get that."));
             return;
         }
 
@@ -117,7 +115,7 @@ class Game
             $this->playerInventory->remove($holdable);
 
         } catch (DomainException $e) {
-            event(new PlayerDoesNotHaveHoldable);
+            event(new SomethingHappens("You can't drop what you don't have."));
             return;
         }
 

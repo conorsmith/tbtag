@@ -29,7 +29,7 @@ class PigeonAttemptsToLeaveWithSandwich extends GameEvent
             $location->addToInventory($sandwich);
 
             if ($playerIsHere) {
-                event(new PlayerSeesPigeonDropSandwich);
+                event(new SomethingHappens("You see a determined pigeon drop a sandwich while attempting to fly."));
             }
 
         } else if ($location->getInventory()->contains($sandwich)) {
@@ -37,12 +37,12 @@ class PigeonAttemptsToLeaveWithSandwich extends GameEvent
             $this->inventory->add($sandwich);
 
             if ($playerIsHere) {
-                event(new PlayerSeesPigeonPickUpSandwich);
+                event(new SomethingHappens("You notice a pigeon picking a sandwich up off the ground."));
             }
 
         } else {
             if ($playerIsHere) {
-                event(new PlayerSeesPigeonWithoutASandwich);
+                event(new SomethingHappens("You see a despondent pigeon."));
             }
         }
     }

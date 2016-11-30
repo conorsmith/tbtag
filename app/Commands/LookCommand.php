@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Commands;
 
-use ConorSmith\Tbtag\Events\PlayerCanInteract;
 use ConorSmith\Tbtag\Events\PlayerLooksAround;
 use ConorSmith\Tbtag\Events\PlayerSeesWhereTheyAre;
 use ConorSmith\Tbtag\Game;
