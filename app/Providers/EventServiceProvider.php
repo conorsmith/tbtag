@@ -2,6 +2,7 @@
 
 namespace ConorSmith\Tbtag\Providers;
 
+use ConorSmith\Tbtag\Events\BarrierDrops;
 use ConorSmith\Tbtag\Events\EmpIsDetonated;
 use ConorSmith\Tbtag\Events\MollyMaloneScansHerSurroundings;
 use ConorSmith\Tbtag\Events\PigeonAttemptsToLeaveWithSandwich;
@@ -36,6 +37,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
+        BarrierDrops::class                      => [Listener::class],
         EmpIsDetonated::class                    => [Listener::class],
         MollyMaloneScansHerSurroundings::class   => [Listener::class],
         PigeonAttemptsToLeaveWithSandwich::class => [Listener::class],

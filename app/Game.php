@@ -147,9 +147,18 @@ class Game
         $this->autonomousRegistry->processActions();
     }
 
-    public function findLocationOf(string $slug): Location
+    public function findLocationOfAutonomous(string $slug): Location
     {
-        return $this->map->findLocationOf($slug);
+        return $this->map->findLocationOfAutonomous($slug);
+    }
+
+    public function findLocationOfHoldable(Holdable $holdable): Location
+    {
+        if ($this->playerIsHolding($holdable)) {
+            return $this->currentLocation;
+        }
+
+        return $this->map->findLocationOfHoldable($holdable);
     }
 
     public function processInteractiveInterceptions(Command $command): bool

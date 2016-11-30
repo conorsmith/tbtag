@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ConorSmith\Tbtag;
 
 use ConorSmith\Tbtag\Commands\Command;
+use ConorSmith\Tbtag\Events\GameEvent;
 use ConorSmith\Tbtag\Events\SomethingHappens;
 use DomainException;
 use OutOfBoundsException;
@@ -125,6 +126,13 @@ class Location
         }
     }
 
+    public function triggerUsableEvents(GameEvent $event)
+    {
+        foreach ($this->egresses as $egress) {
+            $egress->triggerUsableEvents($event);
+        }
+    }
+
     public function findEgress(Direction $direction): LocationId
     {
         foreach ($this->egresses as $egress) {
@@ -149,6 +157,11 @@ class Location
     public function addToInventory(Holdable $holdable)
     {
         $this->inventory->add($holdable);
+    }
+
+    public function hasInInventory(Holdable $holdable): bool
+    {
+        return $this->inventory->contains($holdable);
     }
 
     public function houses(string $slug): bool

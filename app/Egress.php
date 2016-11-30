@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
+use ConorSmith\Tbtag\Events\GameEvent;
+
 class Egress
 {
     private $direction;
@@ -32,5 +34,10 @@ class Egress
     public function getUnnavigableMessage(): string
     {
         return "";
+    }
+
+    public function triggerUsableEvents(GameEvent $event)
+    {
+        //
     }
 }

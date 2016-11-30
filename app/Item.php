@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
-use ConorSmith\Tbtag\Events\GameEvent;
-
 class Item implements Holdable, Usable
 {
     const EMP = "EMP";
@@ -17,10 +15,10 @@ class Item implements Holdable, Usable
     /** @var string */
     private $state;
 
-    /** @var GameEvent */
+    /** @var string */
     private $useEvent;
 
-    public function __construct(string $name, GameEvent $useEvent = null)
+    public function __construct(string $name, string $useEvent = null)
     {
         $this->name = $name;
         $this->useEvent = $useEvent;
@@ -48,7 +46,9 @@ class Item implements Holdable, Usable
 
     public function triggerUse()
     {
-        event($this->useEvent);
+        if (!is_null($this->useEvent)) {
+            event(new $this->useEvent($this));
+        }
     }
 
     public function hasState(string $state): bool

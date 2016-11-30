@@ -10,12 +10,16 @@ class Map
     /** @var array */
     private $locations;
 
+    /** @var HoldableRegistry */
+    private $holdableRegistry;
+
     /** @var array */
     private $locationHistory = [];
 
-    public function __construct(array $locations)
+    public function __construct(array $locations, HoldableRegistry $holdableRegistry)
     {
         $this->locations = $locations;
+        $this->holdableRegistry = $holdableRegistry;
     }
 
     public function findDestination(Location $location, Direction $direction): Location
@@ -35,7 +39,7 @@ class Map
         return !in_array($location->getId(), $this->locationHistory);
     }
 
-    public function findLocationOf(string $slug): Location
+    public function findLocationOfAutonomous(string $slug): Location
     {
         foreach ($this->locations as $location) {
             if ($location->houses($slug)) {
@@ -43,6 +47,17 @@ class Map
             }
         }
 
-        throw new OutOfBoundsException("The Autonomous entity cannot be found in any location.");
+        throw new OutOfBoundsException("The given slug cannot be found in any location.");
+    }
+
+    public function findLocationOfHoldable(Holdable $holdable)
+    {
+        foreach ($this->locations as $location) {
+            if ($location->hasInInventory($holdable)) {
+                return $location;
+            }
+        }
+
+        throw new OutOfBoundsException("The Holdable cannot be found in any location.");
     }
 }

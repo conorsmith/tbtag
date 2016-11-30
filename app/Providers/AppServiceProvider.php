@@ -4,6 +4,7 @@ namespace ConorSmith\Tbtag\Providers;
 
 use ConorSmith\Tbtag\AutonomousRegistry;
 use ConorSmith\Tbtag\Barrier;
+use ConorSmith\Tbtag\BarrierEventConfig;
 use ConorSmith\Tbtag\CommandRepository;
 use ConorSmith\Tbtag\Commands\DropCommand;
 use ConorSmith\Tbtag\Commands\GetCommand;
@@ -14,6 +15,7 @@ use ConorSmith\Tbtag\DirectionFactory;
 use ConorSmith\Tbtag\Egress;
 use ConorSmith\Tbtag\Commands\ExitCommand;
 use ConorSmith\Tbtag\Entity;
+use ConorSmith\Tbtag\Events\BarrierDrops;
 use ConorSmith\Tbtag\Events\EmpIsDetonated;
 use ConorSmith\Tbtag\Events\MollyMaloneScansHerSurroundings;
 use ConorSmith\Tbtag\Events\PigeonAttemptsToLeaveWithSandwich;
@@ -65,7 +67,7 @@ class AppServiceProvider extends ServiceProvider
                 HoldableFactory::sandwich(),
                 new Item(
                     Item::EMP,
-                    new PlayerUsesEmp
+                    PlayerUsesEmp::class
                 )
             );
         });
@@ -121,7 +123,9 @@ class AppServiceProvider extends ServiceProvider
                                 new Direction("west"),
                                 new LocationId("2,7"),
                                 "You are stopped by an invisible energy barrier.",
-                                [EmpIsDetonated::class]
+                                [
+                                    new BarrierEventConfig(EmpIsDetonated::class, BarrierDrops::class, "The EMP disables the invisible energy barrier to the west."),
+                                ]
                             ),
                         ],
                         "Foster Place",
@@ -295,7 +299,7 @@ class AppServiceProvider extends ServiceProvider
                             $app[AutonomousRegistry::class]->find(Entity::PIGEON),
                         ])
                     ),
-                ]),
+                ], $app[HoldableRegistry::class]),
                 $app[AutonomousRegistry::class],
                 $startingLocation,
                 new Inventory([HoldableFactory::phone()])
