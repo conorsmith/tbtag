@@ -8,6 +8,7 @@ use ConorSmith\Tbtag\BarrierEventConfig;
 use ConorSmith\Tbtag\CommandRepository;
 use ConorSmith\Tbtag\Commands\DropCommand;
 use ConorSmith\Tbtag\Commands\GetCommand;
+use ConorSmith\Tbtag\Commands\GiveCommand;
 use ConorSmith\Tbtag\Commands\InspectInventoryCommand;
 use ConorSmith\Tbtag\Commands\UseCommand;
 use ConorSmith\Tbtag\Direction;
@@ -59,6 +60,35 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(CommandRepository::class, function ($app) {
+            return new CommandRepository([
+                HelpCommand::class,
+                LookCommand::class,
+                InspectInventoryCommand::class,
+                MoveCommand::class,
+                GetCommand::class,
+                DropCommand::class,
+                UseCommand::class,
+                GiveCommand::class,
+                ExitCommand::class,
+            ]);
+        });
+
+        $this->app->bind(DirectionFactory::class, function ($app) {
+            return new DirectionFactory([
+                "north",
+                "south",
+                "east",
+                "west",
+                "in",
+                "out",
+            ]);
+        });
+
+        $this->app->singleton(Listener::class, function ($app) {
+            return new Listener($app[Game::class]);
+        });
+
         $this->app->singleton(Registry::class, function ($app) {
             $sandwich = new Item(Holdable::SANDWICH);
 
@@ -341,34 +371,6 @@ class AppServiceProvider extends ServiceProvider
                 $startingLocation,
                 new Inventory([$app[Registry::class]->findHoldable(Holdable::PHONE)])
             );
-        });
-
-        $this->app->bind(CommandRepository::class, function ($app) {
-            return new CommandRepository([
-                HelpCommand::class,
-                LookCommand::class,
-                InspectInventoryCommand::class,
-                MoveCommand::class,
-                GetCommand::class,
-                DropCommand::class,
-                UseCommand::class,
-                ExitCommand::class,
-            ]);
-        });
-
-        $this->app->bind(DirectionFactory::class, function ($app) {
-            return new DirectionFactory([
-                "north",
-                "south",
-                "east",
-                "west",
-                "in",
-                "out",
-            ]);
-        });
-
-        $this->app->singleton(Listener::class, function ($app) {
-            return new Listener($app[Game::class]);
         });
     }
 }

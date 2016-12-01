@@ -51,6 +51,11 @@ class Registry
         return $this->automatons[$slug];
     }
 
+    public function hasAutomaton(string $slug): bool
+    {
+        return $this->automatons->has($slug);
+    }
+
     public function findBarrier(string $slug): Barrier
     {
         $slug = strtolower($slug);
@@ -71,5 +76,10 @@ class Registry
         }
 
         return $this->holdables[$slug];
+    }
+
+    public function hasHoldable(string $slug): bool
+    {
+        return $this->holdables->has($slug);
     }
 }

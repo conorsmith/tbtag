@@ -80,6 +80,76 @@ class CommandFactory
             return new UseCommand($this->registry->findHoldable($args[0]));
         }
 
+        if ($commandName->is(GiveCommand::class)) {
+            if (count($args) < 2) {
+                throw new MissingArgument("What? Give what? Come on...");
+            }
+
+            $automatonArgs = $args;
+            $holdableArgs = $args;
+
+            $automaton = null;
+            $holdable = null;
+
+            $potentialAutomatonSlug = [];
+
+            while (is_null($automaton) && count($automatonArgs) > 0) {
+                $potentialAutomatonSlug[] = array_shift($automatonArgs);
+
+                if ($this->registry->hasAutomaton(implode(" ", $potentialAutomatonSlug))) {
+                    $automaton = $this->registry->findAutomaton(implode(" ", $potentialAutomatonSlug));
+                }
+            }
+
+            if (!is_null($automaton)) {
+                $potentialHoldableSlug = [];
+
+                while (is_null($holdable) && count($automatonArgs) > 0) {
+                    $potentialHoldableSlug[] = array_shift($automatonArgs);
+
+                    if ($this->registry->hasHoldable(implode(" ", $potentialHoldableSlug))) {
+                        $holdable = $this->registry->findHoldable(implode(" ", $potentialHoldableSlug));
+                    }
+                }
+            } else {
+                $potentialHoldableSlug = [];
+
+                while (is_null($holdable) && count($holdableArgs) > 0) {
+                    $potentialHoldableSlug[] = array_shift($holdableArgs);
+
+                    if ($this->registry->hasHoldable(implode(" ", $potentialHoldableSlug))) {
+                        $holdable = $this->registry->findHoldable(implode(" ", $potentialHoldableSlug));
+                    }
+                }
+
+                if (!is_null($holdable)) {
+                    $potentialConjunction = array_shift($holdableArgs);
+
+                    if ($potentialConjunction === "to") {
+                        $potentialAutomatonSlug = [];
+
+                        while (is_null($automaton) && count($holdableArgs) > 0) {
+                            $potentialAutomatonSlug[] = array_shift($holdableArgs);
+
+                            if ($this->registry->hasAutomaton(implode(" ", $potentialAutomatonSlug))) {
+                                $automaton = $this->registry->findAutomaton(implode(" ", $potentialAutomatonSlug));
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (is_null($automaton)) {
+                throw new MissingArgument("What? Give to who?");
+            }
+
+            if (is_null($holdable)) {
+                throw new MissingArgument("What? Give what?");
+            }
+
+            return new GiveCommand($automaton, $holdable);
+        }
+
         throw new InvalidArgumentException;
     }
 }
