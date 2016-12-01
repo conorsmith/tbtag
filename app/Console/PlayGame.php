@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Console;
 
+use ConorSmith\Tbtag\Commands\LookCommand;
 use ConorSmith\Tbtag\TurnProcessor;
 use ConorSmith\Tbtag\TurnProcessorFactory;
 use ConorSmith\Tbtag\Listener;
@@ -39,6 +40,8 @@ class PlayGame extends Command implements Output
         $this->listener = $listener;
         $this->printerBuilder = $printerBuilder;
         $this->turnProcessor = $turnProcessorFactory->create($this);
+
+        $this->listener->setOutput($this);
     }
 
     public function handle()
@@ -48,10 +51,8 @@ class PlayGame extends Command implements Output
             ->withTabularPrinter(new TabularPrinter($this))
             ->build();
 
-        $this->listener->setOutput($this);
-
         $this->printer->intro();
-        $this->processInput("look");
+        $this->processInput(LookCommand::SLUG);
     }
 
     public function payload(Payload $payload)
