@@ -4,33 +4,21 @@ declare(strict_types=1);
 namespace ConorSmith\Tbtag;
 
 use ConorSmith\Tbtag\Commands\Command;
-use ConorSmith\Tbtag\Commands\CommandFactory;
-use ConorSmith\Tbtag\Commands\CommandName;
 
 class Dispatcher
 {
-    /** @var CommandFactory */
-    private $commandFactory;
-
     /** @var Game */
     private $game;
 
-    public function __construct(
-        CommandFactory $commandFactory,
-        Game $game
-    ) {
-        $this->commandFactory = $commandFactory;
+    public function __construct(Game $game)
+    {
         $this->game = $game;
     }
 
-    public function __invoke(CommandName $commandName, array $args): Command
+    public function __invoke(Command $command)
     {
-        $command = $this->commandFactory->fromNameAndArguments($commandName, $args);
-
         if (!$this->game->processInteractiveInterceptions($command)) {
             dispatch($command);
         }
-
-        return $command;
     }
 }
