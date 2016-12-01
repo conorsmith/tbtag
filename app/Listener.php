@@ -6,6 +6,7 @@ namespace ConorSmith\Tbtag;
 use ConorSmith\Tbtag\Events\EndsGame;
 use ConorSmith\Tbtag\Events\GameEvent;
 use ConorSmith\Tbtag\Events\Printable;
+use ConorSmith\Tbtag\Ui\Output;
 
 class Listener
 {
@@ -28,7 +29,7 @@ class Listener
     public function handle(GameEvent $event)
     {
         if ($event instanceof Printable) {
-            $this->output->outputEvent($event);
+            $this->output->payload($event->toPayload());
         }
 
         $event->handle($this->game);

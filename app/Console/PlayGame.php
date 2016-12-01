@@ -7,7 +7,7 @@ use ConorSmith\Tbtag\Commands\InspectsArea;
 use ConorSmith\Tbtag\Events\Printable;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Listener;
-use ConorSmith\Tbtag\Output;
+use ConorSmith\Tbtag\Ui\Output;
 use ConorSmith\Tbtag\ExitGame;
 use ConorSmith\Tbtag\Ui\Input;
 use ConorSmith\Tbtag\Ui\InteractionsPayload;
@@ -61,9 +61,9 @@ class PlayGame extends Command implements Output
         $this->handleInput("look");
     }
 
-    public function outputEvent(Printable $event)
+    public function payload(Payload $payload)
     {
-        $this->printer->payload($event->toPayload());
+        $this->printer->payload($payload);
     }
 
     private function handleInput(string $input)
