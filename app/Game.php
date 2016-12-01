@@ -17,8 +17,8 @@ class Game
     /** @var Map */
     private $map;
 
-    /** @var AutonomousRegistry */
-    private $autonomousRegistry;
+    /** @var Registry */
+    private $registry;
 
     /** @var Location */
     private $currentLocation;
@@ -31,12 +31,12 @@ class Game
 
     public function __construct(
         Map $map,
-        AutonomousRegistry $autonomousRegistry,
+        Registry $registry,
         Location $currentLocation,
         Inventory $playerInventory
     ) {
         $this->map = $map;
-        $this->autonomousRegistry = $autonomousRegistry;
+        $this->registry = $registry;
         $this->currentLocation = $currentLocation;
         $this->playerInventory = $playerInventory;
     }
@@ -142,7 +142,10 @@ class Game
 
     public function processAutonomousActions()
     {
-        $this->autonomousRegistry->processActions();
+        $this->registry->allAutomatons()
+            ->each(function (Autonomous $automaton) {
+                $automaton->takeAction();
+            });
     }
 
     public function findLocationOfAutonomous(string $slug): Location

@@ -2,7 +2,6 @@
 
 namespace ConorSmith\Tbtag\Providers;
 
-use ConorSmith\Tbtag\AutonomousRegistry;
 use ConorSmith\Tbtag\Barrier;
 use ConorSmith\Tbtag\BarrierEventConfig;
 use ConorSmith\Tbtag\CommandRepository;
@@ -59,7 +58,31 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(Registry::class, function ($app) {
+            $sandwich = new Item(Holdable::SANDWICH);
+
             return new Registry(
+                [
+                    new Entity(
+                        Entity::MOLLY_MALONE,
+                        Inventory::unoccupied(),
+                        [
+                            new MollyMaloneScansHerSurroundings
+                        ],
+                        [
+                            new MollyMaloneMove
+                        ]
+                    ),
+                    new Entity(
+                        Entity::PIGEON,
+                        $pigeonInventory = new Inventory([$sandwich]),
+                        [
+                            new PigeonAttemptsToLeaveWithSandwich(
+                                $pigeonInventory,
+                                $sandwich
+                            )
+                        ]
+                    )
+                ],
                 [
                     new Barrier(
                         Barrier::BUS_GATE,
@@ -80,34 +103,9 @@ class AppServiceProvider extends ServiceProvider
                     ),
                     new Item(Holdable::PHONE),
                     new Item(Holdable::RIFLE),
-                    new Item(Holdable::SANDWICH),
+                    $sandwich,
                     new Item(Holdable::SUNGLASSES)
                 ]
-            );
-        });
-
-        $this->app->singleton(AutonomousRegistry::class, function ($app) {
-            return new AutonomousRegistry(
-                new Entity(
-                    Entity::MOLLY_MALONE,
-                    Inventory::unoccupied(),
-                    [
-                        new MollyMaloneScansHerSurroundings
-                    ],
-                    [
-                        new MollyMaloneMove
-                    ]
-                ),
-                new Entity(
-                    Entity::PIGEON,
-                    $pigeonInventory = new Inventory([$app[Registry::class]->findHoldable(Holdable::SANDWICH)]),
-                    [
-                        new PigeonAttemptsToLeaveWithSandwich(
-                            $pigeonInventory,
-                            $app[Registry::class]->findHoldable(Holdable::SANDWICH)
-                        )
-                    ]
-                )
             );
         });
 
@@ -248,7 +246,7 @@ class AppServiceProvider extends ServiceProvider
                         "Despite being moved back to her usual spot on Grafton Street after the Luas Cross City works were completed, the statue of Molly Malone is back outside the church.",
                         Inventory::unoccupied(),
                         new Manifest([
-                            $app[AutonomousRegistry::class]->find(Entity::MOLLY_MALONE),
+                            $app[Registry::class]->findAutomaton(Entity::MOLLY_MALONE),
                         ])
                     ),
                     "4,6" => new Location(
@@ -314,11 +312,11 @@ class AppServiceProvider extends ServiceProvider
                         "The way south is impassable. A mound of chicken nuggets two stories high has spilled out of McDonald's and is blocking the junction with Wicklow Street.",
                         Inventory::unoccupied(),
                         new Manifest([
-                            $app[AutonomousRegistry::class]->find(Entity::PIGEON),
+                            $app[Registry::class]->findAutomaton(Entity::PIGEON),
                         ])
                     ),
                 ]),
-                $app[AutonomousRegistry::class],
+                $app[Registry::class],
                 $startingLocation,
                 new Inventory([$app[Registry::class]->findHoldable(Holdable::PHONE)])
             );
