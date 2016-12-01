@@ -3,67 +3,27 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Ui;
 
-use ConorSmith\Tbtag\CommandRepository;
 use ConorSmith\Tbtag\Commands\Command;
-use ConorSmith\Tbtag\Commands\MoveCommand;
 
 class Interpreter
 {
     /** @var Dispatcher */
     private $dispatcher;
 
-    /** @var CommandRepository */
-    private $commands;
+    /** @var Parser */
+    private $parser;
 
-    public function __construct(Dispatcher $dispatcher, CommandRepository $commands)
+    public function __construct(Dispatcher $dispatcher, Parser $parser)
     {
         $this->dispatcher = $dispatcher;
-        $this->commands = $commands;
+        $this->parser = $parser;
     }
 
     public function __invoke(Input $input): Command
     {
-        $commandSlug = $this->findCommandSlug($input);
-
-        if (is_null($commandSlug)) {
-            $command = MoveCommand::class;
-        } else {
-            $command = $this->commands->find($commandSlug);
-        }
-
         return $this->dispatcher->__invoke(
-            $command,
-            $this->findArguments($input, $commandSlug)
+            $this->parser->parseCommand($input),
+            $this->parser->parseArguments($input)
         );
-    }
-
-    private function findCommandSlug(Input $input)
-    {
-        foreach ($this->commands->getSlugs() as $commandSlug) {
-            if (preg_match(
-                    sprintf("/(^%s$|^%s )/", preg_quote($commandSlug), preg_quote($commandSlug)),
-                    strval($input)
-                ) === 1
-            ) {
-                return $commandSlug;
-            }
-        }
-
-        return null;
-    }
-
-    private function findArguments(Input $input, string $commandSlug = null)
-    {
-        if (is_null($commandSlug)) {
-            return explode(" ", strval($input));
-        }
-
-        $remainingInput = str_replace($commandSlug, "", strval($input));
-
-        if ($remainingInput === "") {
-            return [];
-        }
-
-        return explode(" ", substr($remainingInput, 1));
     }
 }
