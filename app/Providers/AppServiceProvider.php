@@ -24,7 +24,7 @@ use ConorSmith\Tbtag\Events\PlayerUsesEmp;
 use ConorSmith\Tbtag\Events\SomethingHappens;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Commands\HelpCommand;
-use ConorSmith\Tbtag\HoldableFactory;
+use ConorSmith\Tbtag\Holdable;
 use ConorSmith\Tbtag\HoldableRegistry;
 use ConorSmith\Tbtag\Inventory;
 use ConorSmith\Tbtag\Item;
@@ -60,14 +60,14 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(HoldableRegistry::class, function ($app) {
             return new HoldableRegistry(
-                HoldableFactory::sunglasses(),
-                HoldableFactory::phone(),
-                HoldableFactory::rifle(),
-                HoldableFactory::sandwich(),
                 new Item(
-                    Item::EMP,
+                    Holdable::EMP,
                     PlayerUsesEmp::class
-                )
+                ),
+                new Item(Holdable::PHONE),
+                new Item(Holdable::RIFLE),
+                new Item(Holdable::SANDWICH),
+                new Item(Holdable::SUNGLASSES)
             );
         });
 
@@ -85,9 +85,12 @@ class AppServiceProvider extends ServiceProvider
                 ),
                 new Entity(
                     Entity::PIGEON,
-                    $pigeonInventory = new Inventory([HoldableFactory::sandwich()]),
+                    $pigeonInventory = new Inventory([$app[HoldableRegistry::class]->find(Holdable::SANDWICH)]),
                     [
-                        new PigeonAttemptsToLeaveWithSandwich($pigeonInventory)
+                        new PigeonAttemptsToLeaveWithSandwich(
+                            $pigeonInventory,
+                            $app[HoldableRegistry::class]->find(Holdable::SANDWICH)
+                        )
                     ]
                 )
             );
@@ -161,13 +164,13 @@ class AppServiceProvider extends ServiceProvider
                         "Civil War Exhibit",
                         "This special exhibit is untouched by the chaos from the front of the museum. It is very obvious that the historical figures here are just the wax figures of the actors who appeared in Neil Jordan's Michael Collins.",
                         new Inventory([
-                            HoldableFactory::rifle()
+                            $app[HoldableRegistry::class]->find(Holdable::RIFLE)
                         ]),
                         Manifest::unoccupied(),
                         [],
                         [
                             LocationInventoryEventConfig::noticeable(
-                                HoldableFactory::rifle(),
+                                $app[HoldableRegistry::class]->find(Holdable::RIFLE),
                                 new SomethingHappens("You can see in Wax Alan Rickman's arms the actual rifle with which Dev shot and killed the Big Fella.")
                             )
                         ]
@@ -183,7 +186,7 @@ class AppServiceProvider extends ServiceProvider
                         "College Green",
                         "You are amidst the wreckage of two Luas trams. It looks like there was some sort of head on collision.",
                         new Inventory([
-                            HoldableFactory::sunglasses(),
+                            $app[HoldableRegistry::class]->find(Holdable::SUNGLASSES),
                         ])
                     ),
                     "5,7" => new Location(
@@ -206,7 +209,7 @@ class AppServiceProvider extends ServiceProvider
                         "New Square",
                         "???",
                         new Inventory([
-                            HoldableFactory::emp(),
+                            $app[HoldableRegistry::class]->find(Holdable::EMP),
                         ])
                     ),
                     "7,7" => new Location(
@@ -246,7 +249,7 @@ class AppServiceProvider extends ServiceProvider
                         [],
                         [
                             LocationInventoryEventConfig::add(
-                                HoldableFactory::phone(),
+                                $app[HoldableRegistry::class]->find(Holdable::PHONE),
                                 new PlayerDies("As you put your phone down it starts to ring, but with the same sound coming from the Provost's House. You answer and the phone emits a high-powered, high-pitch noise that causes your head to explode instantly. You are no longer alive.")
                             )
                         ]
@@ -301,7 +304,7 @@ class AppServiceProvider extends ServiceProvider
                 ], $app[HoldableRegistry::class]),
                 $app[AutonomousRegistry::class],
                 $startingLocation,
-                new Inventory([HoldableFactory::phone()])
+                new Inventory([$app[HoldableRegistry::class]->find(Holdable::PHONE)])
             );
         });
 

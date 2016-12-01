@@ -11,16 +11,18 @@ class HoldableRegistry
 
     public function __construct(Holdable ...$holdables)
     {
-        $this->holdables = $holdables;
+        $this->holdables = collect($holdables)
+            ->keyBy(function ($holdable) {
+                return strtolower(strval($holdable));
+            });
     }
 
     public function find(string $slug)
     {
-        foreach ($this->holdables as $holdable)
-        {
-            if (strtolower(strval($holdable)) === strtolower($slug)) {
-                return $holdable;
-            }
+        $slug = strtolower($slug);
+
+        if ($this->holdables->has($slug)) {
+            return $this->holdables[$slug];
         }
 
         throw new DomainException("That item is not here.");

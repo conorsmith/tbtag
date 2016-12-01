@@ -5,8 +5,6 @@ namespace ConorSmith\Tbtag;
 
 class Item implements Holdable, Usable
 {
-    const EMP = "EMP";
-
     const EMP_USED = "EMP_USED";
 
     /** @var string */

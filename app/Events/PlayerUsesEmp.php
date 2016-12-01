@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ConorSmith\Tbtag\Events;
 
 use ConorSmith\Tbtag\Game;
+use ConorSmith\Tbtag\Holdable;
 use ConorSmith\Tbtag\HoldableRegistry;
 use ConorSmith\Tbtag\Item;
 
@@ -11,7 +12,7 @@ class PlayerUsesEmp extends GameEvent
 {
     public function handle(Game $game)
     {
-        $emp = app(HoldableRegistry::class)->find(Item::EMP);
+        $emp = app(HoldableRegistry::class)->find(Holdable::EMP);
 
         if ($emp->hasState(Item::EMP_USED)) {
             event(new SomethingHappens("The EMP was already detonated. It cannot be used again."));
