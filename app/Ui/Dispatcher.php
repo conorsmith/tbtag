@@ -5,6 +5,7 @@ namespace ConorSmith\Tbtag\Ui;
 
 use ConorSmith\Tbtag\CommandRepository;
 use ConorSmith\Tbtag\Commands\Command;
+use ConorSmith\Tbtag\Commands\CommandName;
 use ConorSmith\Tbtag\Commands\DropCommand;
 use ConorSmith\Tbtag\Commands\GetCommand;
 use ConorSmith\Tbtag\Commands\InspectInventoryCommand;
@@ -44,9 +45,9 @@ class Dispatcher
         $this->game = $game;
     }
 
-    public function __invoke(string $commandClass, array $args): Command
+    public function __invoke(CommandName $commandName, array $args): Command
     {
-        $command = $this->createCommand($commandClass, $args);
+        $command = $this->createCommand($commandName, $args);
 
         if (!$this->game->processInteractiveInterceptions($command)) {
             dispatch($command);
@@ -55,22 +56,21 @@ class Dispatcher
         return $command;
     }
 
-    private function createCommand(string $commandClass, array $args): Command
+    private function createCommand(CommandName $commandName, array $args): Command
     {
-        if ($commandClass === ExitCommand::class)
-        {
+        if ($commandName->is(ExitCommand::class)) {
             return new ExitCommand;
         }
 
-        if ($commandClass === HelpCommand::class) {
+        if ($commandName->is(HelpCommand::class)) {
             return new HelpCommand($this->commands->getCommands());
         }
 
-        if ($commandClass === LookCommand::class) {
+        if ($commandName->is(LookCommand::class)) {
             return new LookCommand;
         }
 
-        if ($commandClass === MoveCommand::class) {
+        if ($commandName->is(MoveCommand::class)) {
             if (count($args) !== 1) {
                 throw new MissingArgument("Huh? Where do you want to go?");
             }
@@ -78,11 +78,11 @@ class Dispatcher
             return new MoveCommand($this->directionFactory->fromSlug($args[0]));
         }
 
-        if ($commandClass === InspectInventoryCommand::class) {
+        if ($commandName->is(InspectInventoryCommand::class)) {
             return new InspectInventoryCommand;
         }
 
-        if ($commandClass === GetCommand::class) {
+        if ($commandName->is(GetCommand::class)) {
             if (count($args) !== 1) {
                 throw new MissingArgument("Huh? What do you want to get?");
             }
@@ -90,7 +90,7 @@ class Dispatcher
             return new GetCommand($this->holdableRegistry->find($args[0]));
         }
 
-        if ($commandClass === DropCommand::class) {
+        if ($commandName->is(DropCommand::class)) {
             if (count($args) !== 1) {
                 throw new MissingArgument("Huh? What do you want to drop?");
             }
@@ -98,7 +98,7 @@ class Dispatcher
             return new DropCommand($this->holdableRegistry->find($args[0]));
         }
 
-        if ($commandClass === UseCommand::class) {
+        if ($commandName->is(UseCommand::class)) {
             if (count($args) !== 1) {
                 throw new MissingArgument("Buh? Use what?");
             }

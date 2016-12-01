@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ConorSmith\Tbtag\Ui;
 
 use ConorSmith\Tbtag\CommandRepository;
+use ConorSmith\Tbtag\Commands\CommandName;
 use ConorSmith\Tbtag\Commands\MoveCommand;
 
 class Parser
@@ -16,15 +17,17 @@ class Parser
         $this->commands = $commands;
     }
 
-    public function parseCommand(Input $input): string
+    public function parseCommand(Input $input): CommandName
     {
         $commandSlug = $this->parseCommandSlug($input);
 
         if (is_null($commandSlug)) {
-            return MoveCommand::class;
+            return CommandName::fromClassName(MoveCommand::class);
         }
 
-        return $this->commands->find($commandSlug);
+        return CommandName::fromClassName(
+            $this->commands->find($commandSlug)
+        );
     }
 
     public function parseArguments(Input $input): array
