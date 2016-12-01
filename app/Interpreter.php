@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace ConorSmith\Tbtag\Ui;
+namespace ConorSmith\Tbtag;
 
 use ConorSmith\Tbtag\Commands\Command;
+use ConorSmith\Tbtag\Ui\Input;
+use ConorSmith\Tbtag\Ui\Parser;
 
 class Interpreter
 {

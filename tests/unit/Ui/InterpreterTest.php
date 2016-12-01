@@ -8,9 +8,9 @@ use ConorSmith\Tbtag\Commands\ExitCommand;
 use ConorSmith\Tbtag\Commands\HelpCommand;
 use ConorSmith\Tbtag\Commands\LookCommand;
 use ConorSmith\Tbtag\Commands\MoveCommand;
-use ConorSmith\Tbtag\Ui\Dispatcher;
+use ConorSmith\Tbtag\Dispatcher;
 use ConorSmith\Tbtag\Ui\Input;
-use ConorSmith\Tbtag\Ui\Interpreter;
+use ConorSmith\Tbtag\Interpreter;
 
 class InterpreterTest extends \TestCase
 {
@@ -22,7 +22,7 @@ class InterpreterTest extends \TestCase
     {
         $dispatcher = $this->prophesize(Dispatcher::class);
 
-        $interpreter = new Interpreter($dispatcher->reveal(), app(CommandRepository::class));
+        $interpreter = new \ConorSmith\Tbtag\Interpreter($dispatcher->reveal(), app(CommandRepository::class));
 
         $interpreter(new Input($input));
 

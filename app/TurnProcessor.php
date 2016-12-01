@@ -6,7 +6,6 @@ namespace ConorSmith\Tbtag;
 use ConorSmith\Tbtag\Commands\InspectsArea;
 use ConorSmith\Tbtag\Ui\Input;
 use ConorSmith\Tbtag\Ui\InteractionsPayload;
-use ConorSmith\Tbtag\Ui\Interpreter;
 use ConorSmith\Tbtag\Ui\MissingArgument;
 use ConorSmith\Tbtag\Ui\Output;
 use ConorSmith\Tbtag\Ui\Payload;

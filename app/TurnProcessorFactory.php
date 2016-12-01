@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
-use ConorSmith\Tbtag\Ui\Interpreter;
+use ConorSmith\Tbtag\Interpreter;
 use ConorSmith\Tbtag\Ui\Output;
 
 class TurnProcessorFactory

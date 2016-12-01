@@ -1,22 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace ConorSmith\Tbtag\Ui;
+namespace ConorSmith\Tbtag;
 
-use ConorSmith\Tbtag\CommandRepository;
 use ConorSmith\Tbtag\Commands\Command;
 use ConorSmith\Tbtag\Commands\CommandName;
 use ConorSmith\Tbtag\Commands\DropCommand;
 use ConorSmith\Tbtag\Commands\GetCommand;
 use ConorSmith\Tbtag\Commands\InspectInventoryCommand;
 use ConorSmith\Tbtag\Commands\UseCommand;
-use ConorSmith\Tbtag\DirectionFactory;
 use ConorSmith\Tbtag\Commands\ExitCommand;
 use ConorSmith\Tbtag\Commands\HelpCommand;
 use ConorSmith\Tbtag\Commands\LookCommand;
 use ConorSmith\Tbtag\Commands\MoveCommand;
-use ConorSmith\Tbtag\Game;
-use ConorSmith\Tbtag\HoldableRegistry;
+use ConorSmith\Tbtag\Ui\MissingArgument;
 use InvalidArgumentException;
 
 class Dispatcher
