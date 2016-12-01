@@ -7,13 +7,20 @@ use ConorSmith\Tbtag\Events\GameEvent;
 
 class Egress
 {
+    /** @var Direction  */
     private $direction;
+
+    /** @var LocationId */
     private $destination;
 
-    public function __construct(Direction $direction, LocationId $destination)
+    /** @var Barrier */
+    private $barrier;
+
+    public function __construct(Direction $direction, LocationId $destination, Barrier $barrier = null)
     {
         $this->direction = $direction;
         $this->destination = $destination;
+        $this->barrier = $barrier;
     }
 
     public function getDirection(): Direction
@@ -28,16 +35,22 @@ class Egress
 
     public function isNavigable(): bool
     {
-        return true;
+        return is_null($this->barrier) || $this->barrier->isNavigable();
     }
 
     public function getUnnavigableMessage(): string
     {
-        return "";
+        if (is_null($this->barrier)) {
+            return "";
+        }
+
+        return $this->barrier->getUnnavigableMessage();
     }
 
     public function triggerUsableEvents(GameEvent $event)
     {
-        //
+        if (!is_null($this->barrier)) {
+            $this->barrier->triggerUsableEvents($event);
+        }
     }
 }

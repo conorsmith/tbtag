@@ -5,8 +5,13 @@ namespace ConorSmith\Tbtag;
 
 use ConorSmith\Tbtag\Events\GameEvent;
 
-class Barrier extends Egress
+class Barrier
 {
+    const BUS_GATE = "Bus Gate";
+
+    /** @var string */
+    private $name;
+
     /** @var string */
     private $unnavigableMessage;
 
@@ -17,15 +22,19 @@ class Barrier extends Egress
     private $isNavigable;
 
     public function __construct(
-        Direction $direction,
-        LocationId $destination,
+        string $name,
         string $unnavigableMessage,
         array $eventConfigs
     ) {
+        $this->name = $name;
         $this->unnavigableMessage = $unnavigableMessage;
         $this->eventConfigs = $eventConfigs;
         $this->isNavigable = false;
-        parent::__construct($direction, $destination);
+    }
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 
     public function isNavigable(): bool

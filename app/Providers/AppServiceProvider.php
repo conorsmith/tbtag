@@ -37,6 +37,7 @@ use ConorSmith\Tbtag\Manifest;
 use ConorSmith\Tbtag\Map;
 use ConorSmith\Tbtag\Commands\MoveCommand;
 use ConorSmith\Tbtag\Interceptions\MollyMaloneMove;
+use ConorSmith\Tbtag\Registry;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -58,6 +59,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->singleton(Registry::class, function ($app) {
+            return new Registry([
+                new Barrier(
+                    Barrier::BUS_GATE,
+                    "You are stopped by an invisible energy barrier.",
+                    [
+                        new BarrierEventConfig(
+                            EmpIsDetonated::class,
+                            BarrierDrops::class,
+                            "The EMP disables the invisible energy barrier to the west."
+                        ),
+                    ]
+                )
+            ]);
+        });
+
         $this->app->singleton(HoldableRegistry::class, function ($app) {
             return new HoldableRegistry(
                 new Item(
@@ -110,7 +127,11 @@ class AppServiceProvider extends ServiceProvider
                     "2,7" => $startingLocation = new Location(
                         new LocationId("2,7"),
                         [
-                            new Egress(new Direction("east"), new LocationId("3,7")),
+                            new Egress(
+                                new Direction("east"),
+                                new LocationId("3,7"),
+                                $app[Registry::class]->findBarrier(Barrier::BUS_GATE)
+                            ),
                         ],
                         "Central Bank",
                         "..."
@@ -121,13 +142,10 @@ class AppServiceProvider extends ServiceProvider
                             new Egress(new Direction("in"), new LocationId("wax:0,0")),
                             new Egress(new Direction("south"), new LocationId("3,6")),
                             new Egress(new Direction("east"), new LocationId("4,7")),
-                            new Barrier(
+                            new Egress(
                                 new Direction("west"),
                                 new LocationId("2,7"),
-                                "You are stopped by an invisible energy barrier.",
-                                [
-                                    new BarrierEventConfig(EmpIsDetonated::class, BarrierDrops::class, "The EMP disables the invisible energy barrier to the west."),
-                                ]
+                                $app[Registry::class]->findBarrier(Barrier::BUS_GATE)
                             ),
                         ],
                         "Foster Place",
