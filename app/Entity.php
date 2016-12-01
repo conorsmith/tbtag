@@ -7,9 +7,6 @@ use ConorSmith\Tbtag\Commands\Command;
 
 class Entity implements Automaton, Interactive
 {
-    const MOLLY_MALONE = "Molly Malone";
-    const PIGEON = "Pigeon";
-
     /** @var string */
     private $name;
 

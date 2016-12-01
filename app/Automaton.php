@@ -5,6 +5,9 @@ namespace ConorSmith\Tbtag;
 
 interface Automaton
 {
+    const MOLLY_MALONE = "Molly Malone";
+    const PIGEON = "Pigeon";
+
     public function __toString(): string;
 
     /**

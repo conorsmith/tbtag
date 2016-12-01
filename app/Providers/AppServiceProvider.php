@@ -2,6 +2,7 @@
 
 namespace ConorSmith\Tbtag\Providers;
 
+use ConorSmith\Tbtag\Automaton;
 use ConorSmith\Tbtag\Barrier;
 use ConorSmith\Tbtag\BarrierEventConfig;
 use ConorSmith\Tbtag\CommandRepository;
@@ -63,7 +64,7 @@ class AppServiceProvider extends ServiceProvider
             return new Registry(
                 [
                     new Entity(
-                        Entity::MOLLY_MALONE,
+                        Automaton::MOLLY_MALONE,
                         Inventory::unoccupied(),
                         [
                             new MollyMaloneScansHerSurroundings
@@ -73,7 +74,7 @@ class AppServiceProvider extends ServiceProvider
                         ]
                     ),
                     new Entity(
-                        Entity::PIGEON,
+                        Automaton::PIGEON,
                         $pigeonInventory = new Inventory([$sandwich]),
                         [
                             new PigeonAttemptsToLeaveWithSandwich(
