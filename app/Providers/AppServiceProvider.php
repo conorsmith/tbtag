@@ -87,12 +87,12 @@ class AppServiceProvider extends ServiceProvider
                 [
                     new Barrier(
                         Barrier::BUS_GATE,
-                        "You are stopped by an invisible energy barrier.",
+                        "You are stopped by an invisible energy barrier. The College Green bus gate has advanced its technology.",
                         [
                             new BarrierEventConfig(
                                 EmpIsDetonated::class,
                                 BarrierDrops::class,
-                                "The EMP disables the invisible energy barrier to the west."
+                                "The EMP disables the bus gate energy barrier."
                             ),
                         ]
                     )
@@ -124,11 +124,7 @@ class AppServiceProvider extends ServiceProvider
                     "2,7" => $startingLocation = new Location(
                         new LocationId("2,7"),
                         [
-                            new Egress(
-                                new Direction("east"),
-                                new LocationId("3,7"),
-                                $app[Registry::class]->findBarrier(Barrier::BUS_GATE)
-                            ),
+                            new Egress(new Direction("east"), new LocationId("3,7")),
                         ],
                         "Central Bank",
                         "..."
@@ -138,12 +134,8 @@ class AppServiceProvider extends ServiceProvider
                         [
                             new Egress(new Direction("in"), new LocationId("wax:0,0")),
                             new Egress(new Direction("south"), new LocationId("3,6")),
-                            new Egress(new Direction("east"), new LocationId("4,7")),
-                            new Egress(
-                                new Direction("west"),
-                                new LocationId("2,7"),
-                                $app[Registry::class]->findBarrier(Barrier::BUS_GATE)
-                            ),
+                            new Egress(new Direction("east"), new LocationId("4,7"), $app[Registry::class]->findBarrier(Barrier::BUS_GATE)),
+                            new Egress(new Direction("west"), new LocationId("2,7")),
                         ],
                         "Foster Place",
                         "You are standing outside the Wax Museum. A number of wax figures are arranged outside the building, as if they are trying to escape. These are truly the most life-like wax figures you've ever seen and each one has a horrified expression."
@@ -196,7 +188,7 @@ class AppServiceProvider extends ServiceProvider
                             new Egress(new Direction("north"), new LocationId("4,8")),
                             new Egress(new Direction("south"), new LocationId("4,6")),
                             new Egress(new Direction("east"), new LocationId("5,7")),
-                            new Egress(new Direction("west"), new LocationId("3,7")),
+                            new Egress(new Direction("west"), new LocationId("3,7"), $app[Registry::class]->findBarrier(Barrier::BUS_GATE)),
                         ],
                         "College Green",
                         "You are amidst the wreckage of two Luas trams. It looks like there was some sort of head on collision.",
