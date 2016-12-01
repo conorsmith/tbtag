@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ConorSmith\Tbtag\Commands;
 
 use ConorSmith\Tbtag\Automaton;
+use ConorSmith\Tbtag\Events\SomethingHappens;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Holdable;
 use Illuminate\Bus\Queueable;
@@ -33,6 +34,19 @@ class GiveCommand extends Command implements ShouldQueue
 
     public function handle(Game $game)
     {
-        //
+        if (!$game->getCurrentLocation()->houses(strval($this->automaton))) {
+            event(new SomethingHappens(sprintf("%s is not here.", strval($this->automaton))));
+            return;
+        }
+
+        if (!$game->playerIsHolding($this->holdable)) {
+            $game->addToPlayerInventory($this->holdable);
+
+            if (!$game->playerIsHolding($this->holdable)) {
+                return;
+            }
+        }
+
+        $this->automaton->triggerGiveEvents($this->holdable);
     }
 }

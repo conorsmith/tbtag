@@ -14,4 +14,9 @@ interface Automaton
      * @return void
      */
     public function takeAction();
+
+    /**
+     * @return void
+     */
+    public function triggerGiveEvents(Holdable $holdable);
 }

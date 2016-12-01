@@ -101,6 +101,9 @@ class AppServiceProvider extends ServiceProvider
                             new MollyMaloneScansHerSurroundings
                         ],
                         [
+                            // PlayerGivesMollyMaloneGravy::class
+                        ],
+                        [
                             new MollyMaloneMove
                         ]
                     ),

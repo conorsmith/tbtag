@@ -94,7 +94,7 @@ class Game
             $this->currentLocation->removeFromInventory($holdable);
 
         } catch (DomainException $e) {
-            event(new SomethingHappens("You can't get that."));
+            event(new SomethingHappens(sprintf("You can't get %s.", $holdable)));
             return;
         }
 
