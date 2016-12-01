@@ -21,6 +21,7 @@ use ConorSmith\Tbtag\Events\MollyMaloneScansHerSurroundings;
 use ConorSmith\Tbtag\Events\PigeonAttemptsToLeaveWithSandwich;
 use ConorSmith\Tbtag\Events\PlayerDies;
 use ConorSmith\Tbtag\Events\PlayerUsesEmp;
+use ConorSmith\Tbtag\Events\PlayerWins;
 use ConorSmith\Tbtag\Events\SomethingHappens;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Commands\HelpCommand;
@@ -102,6 +103,7 @@ class AppServiceProvider extends ServiceProvider
                         Holdable::EMP,
                         PlayerUsesEmp::class
                     ),
+                    new Item(Holdable::GRAVY),
                     new Item(Holdable::PHONE),
                     new Item(Holdable::RIFLE),
                     $sandwich,
@@ -117,9 +119,30 @@ class AppServiceProvider extends ServiceProvider
                         new LocationId("4,8"),
                         [
                             new Egress(new Direction("south"), new LocationId("4,7")),
+                            new Egress(new Direction("in"), new LocationId("kfc:0,0")),
                         ],
                         "Westmoreland Street",
                         "You stand outside a KFC. Every other retail unit on the both sides of the street is now a Starbucks"
+                    ),
+                    "kfc:0,0" => new Location(
+                        new LocationId("kfc:0,0"),
+                        [
+                            new Egress(new Direction("out"), new LocationId("4,8")),
+                            new Egress(new Direction("west"), new LocationId("kfc:-1,0")),
+                        ],
+                        "KFC",
+                        "The restaurant is abandoned. Several tables near the door have empty Starbucks cups on them. The order screen just says \"RUN\" over and over again."
+                    ),
+                    "kfc:-1,0" => new Location(
+                        new LocationId("kfc:-1,0"),
+                        [
+                            new Egress(new Direction("east"), new LocationId("kfc:0,0")),
+                        ],
+                        "KFC Kitchen",
+                        "The grill in the centre of the kitchen is malformed. It almost looks like it has parts of an espresso machine welded to it. Several unused chicken buckets have the Starbucks logo on them.",
+                        new Inventory([
+                            $app[Registry::class]->findHoldable(Holdable::GRAVY),
+                        ])
                     ),
                     "2,7" => $startingLocation = new Location(
                         new LocationId("2,7"),
@@ -127,7 +150,10 @@ class AppServiceProvider extends ServiceProvider
                             new Egress(new Direction("east"), new LocationId("3,7")),
                         ],
                         "Central Bank",
-                        "..."
+                        "A massive Occupy Dame Street camp fills the plaza outside the Central Bank. It looks like the movement even took over the building itself. However, the camp appears to be deserted.",
+                        new Inventory([
+                            $app[Registry::class]->findHoldable(Holdable::EMP),
+                        ])
                     ),
                     "3,7" => $startingLocation = new Location(
                         new LocationId("3,7"),
@@ -187,7 +213,7 @@ class AppServiceProvider extends ServiceProvider
                         [
                             new Egress(new Direction("north"), new LocationId("4,8")),
                             new Egress(new Direction("south"), new LocationId("4,6")),
-                            new Egress(new Direction("east"), new LocationId("5,7")),
+                            /*new Egress(new Direction("east"), new LocationId("5,7")),*/
                             new Egress(new Direction("west"), new LocationId("3,7"), $app[Registry::class]->findBarrier(Barrier::BUS_GATE)),
                         ],
                         "College Green",
@@ -214,10 +240,7 @@ class AppServiceProvider extends ServiceProvider
                             new Egress(new Direction("west"), new LocationId("5,7")),
                         ],
                         "New Square",
-                        "???",
-                        new Inventory([
-                            $app[Registry::class]->findHoldable(Holdable::EMP),
-                        ])
+                        "???"
                     ),
                     "7,7" => new Location(
                         new LocationId("7,7"),
@@ -294,7 +317,12 @@ class AppServiceProvider extends ServiceProvider
                             new Egress(new Direction("north"), new LocationId("3,6")),
                         ],
                         "Murphy's Ice Cream",
-                        "???"
+                        "Somehow in this crazy world the ice cream is still frozen, still on sale and still delicious.",
+                        Inventory::unoccupied(),
+                        Manifest::unoccupied(),
+                        [
+                            new PlayerWins("Congratulations. You got your ice cream. You can go home now."),
+                        ]
                     ),
                     "4,5" => new Location(
                         new LocationId("4,5"),
