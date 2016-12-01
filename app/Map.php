@@ -10,16 +10,12 @@ class Map
     /** @var array */
     private $locations;
 
-    /** @var HoldableRegistry */
-    private $holdableRegistry;
-
     /** @var array */
     private $locationHistory = [];
 
-    public function __construct(array $locations, HoldableRegistry $holdableRegistry)
+    public function __construct(array $locations)
     {
         $this->locations = $locations;
-        $this->holdableRegistry = $holdableRegistry;
     }
 
     public function findDestination(Location $location, Direction $direction): Location

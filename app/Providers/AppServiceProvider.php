@@ -25,7 +25,6 @@ use ConorSmith\Tbtag\Events\SomethingHappens;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Commands\HelpCommand;
 use ConorSmith\Tbtag\Holdable;
-use ConorSmith\Tbtag\HoldableRegistry;
 use ConorSmith\Tbtag\Inventory;
 use ConorSmith\Tbtag\Item;
 use ConorSmith\Tbtag\Listener;
@@ -60,31 +59,30 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(Registry::class, function ($app) {
-            return new Registry([
-                new Barrier(
-                    Barrier::BUS_GATE,
-                    "You are stopped by an invisible energy barrier.",
-                    [
-                        new BarrierEventConfig(
-                            EmpIsDetonated::class,
-                            BarrierDrops::class,
-                            "The EMP disables the invisible energy barrier to the west."
-                        ),
-                    ]
-                )
-            ]);
-        });
-
-        $this->app->singleton(HoldableRegistry::class, function ($app) {
-            return new HoldableRegistry(
-                new Item(
-                    Holdable::EMP,
-                    PlayerUsesEmp::class
-                ),
-                new Item(Holdable::PHONE),
-                new Item(Holdable::RIFLE),
-                new Item(Holdable::SANDWICH),
-                new Item(Holdable::SUNGLASSES)
+            return new Registry(
+                [
+                    new Barrier(
+                        Barrier::BUS_GATE,
+                        "You are stopped by an invisible energy barrier.",
+                        [
+                            new BarrierEventConfig(
+                                EmpIsDetonated::class,
+                                BarrierDrops::class,
+                                "The EMP disables the invisible energy barrier to the west."
+                            ),
+                        ]
+                    )
+                ],
+                [
+                    new Item(
+                        Holdable::EMP,
+                        PlayerUsesEmp::class
+                    ),
+                    new Item(Holdable::PHONE),
+                    new Item(Holdable::RIFLE),
+                    new Item(Holdable::SANDWICH),
+                    new Item(Holdable::SUNGLASSES)
+                ]
             );
         });
 
@@ -102,11 +100,11 @@ class AppServiceProvider extends ServiceProvider
                 ),
                 new Entity(
                     Entity::PIGEON,
-                    $pigeonInventory = new Inventory([$app[HoldableRegistry::class]->find(Holdable::SANDWICH)]),
+                    $pigeonInventory = new Inventory([$app[Registry::class]->findHoldable(Holdable::SANDWICH)]),
                     [
                         new PigeonAttemptsToLeaveWithSandwich(
                             $pigeonInventory,
-                            $app[HoldableRegistry::class]->find(Holdable::SANDWICH)
+                            $app[Registry::class]->findHoldable(Holdable::SANDWICH)
                         )
                     ]
                 )
@@ -182,13 +180,13 @@ class AppServiceProvider extends ServiceProvider
                         "Civil War Exhibit",
                         "This special exhibit is untouched by the chaos from the front of the museum. It is very obvious that the historical figures here are just the wax figures of the actors who appeared in Neil Jordan's Michael Collins.",
                         new Inventory([
-                            $app[HoldableRegistry::class]->find(Holdable::RIFLE)
+                            $app[Registry::class]->findHoldable(Holdable::RIFLE)
                         ]),
                         Manifest::unoccupied(),
                         [],
                         [
                             LocationInventoryEventConfig::noticeable(
-                                $app[HoldableRegistry::class]->find(Holdable::RIFLE),
+                                $app[Registry::class]->findHoldable(Holdable::RIFLE),
                                 new SomethingHappens("You can see in Wax Alan Rickman's arms the actual rifle with which Dev shot and killed the Big Fella.")
                             )
                         ]
@@ -204,7 +202,7 @@ class AppServiceProvider extends ServiceProvider
                         "College Green",
                         "You are amidst the wreckage of two Luas trams. It looks like there was some sort of head on collision.",
                         new Inventory([
-                            $app[HoldableRegistry::class]->find(Holdable::SUNGLASSES),
+                            $app[Registry::class]->findHoldable(Holdable::SUNGLASSES),
                         ])
                     ),
                     "5,7" => new Location(
@@ -227,7 +225,7 @@ class AppServiceProvider extends ServiceProvider
                         "New Square",
                         "???",
                         new Inventory([
-                            $app[HoldableRegistry::class]->find(Holdable::EMP),
+                            $app[Registry::class]->findHoldable(Holdable::EMP),
                         ])
                     ),
                     "7,7" => new Location(
@@ -267,7 +265,7 @@ class AppServiceProvider extends ServiceProvider
                         [],
                         [
                             LocationInventoryEventConfig::add(
-                                $app[HoldableRegistry::class]->find(Holdable::PHONE),
+                                $app[Registry::class]->findHoldable(Holdable::PHONE),
                                 new PlayerDies("As you put your phone down it starts to ring, but with the same sound coming from the Provost's House. You answer and the phone emits a high-powered, high-pitch noise that causes your head to explode instantly. You are no longer alive.")
                             )
                         ]
@@ -319,10 +317,10 @@ class AppServiceProvider extends ServiceProvider
                             $app[AutonomousRegistry::class]->find(Entity::PIGEON),
                         ])
                     ),
-                ], $app[HoldableRegistry::class]),
+                ]),
                 $app[AutonomousRegistry::class],
                 $startingLocation,
-                new Inventory([$app[HoldableRegistry::class]->find(Holdable::PHONE)])
+                new Inventory([$app[Registry::class]->findHoldable(Holdable::PHONE)])
             );
         });
 

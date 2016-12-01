@@ -5,7 +5,7 @@ namespace ConorSmith\Tbtag\Commands;
 
 use ConorSmith\Tbtag\CommandRepository;
 use ConorSmith\Tbtag\DirectionFactory;
-use ConorSmith\Tbtag\HoldableRegistry;
+use ConorSmith\Tbtag\Registry;
 use ConorSmith\Tbtag\Ui\MissingArgument;
 use InvalidArgumentException;
 
@@ -17,17 +17,17 @@ class CommandFactory
     /** @var DirectionFactory */
     private $directionFactory;
 
-    /** @var HoldableRegistry */
-    private $holdableRegistry;
+    /** @var Registry */
+    private $registry;
 
     public function __construct(
         CommandRepository $commands,
         DirectionFactory $directionFactory,
-        HoldableRegistry $holdableRegistry
+        Registry $registry
     ) {
         $this->commands = $commands;
         $this->directionFactory = $directionFactory;
-        $this->holdableRegistry = $holdableRegistry;
+        $this->registry = $registry;
     }
 
     public function fromNameAndArguments(CommandName $commandName, array $args): Command
@@ -61,7 +61,7 @@ class CommandFactory
                 throw new MissingArgument("Huh? What do you want to get?");
             }
 
-            return new GetCommand($this->holdableRegistry->find($args[0]));
+            return new GetCommand($this->registry->findHoldable($args[0]));
         }
 
         if ($commandName->is(DropCommand::class)) {
@@ -69,7 +69,7 @@ class CommandFactory
                 throw new MissingArgument("Huh? What do you want to drop?");
             }
 
-            return new DropCommand($this->holdableRegistry->find($args[0]));
+            return new DropCommand($this->registry->findHoldable($args[0]));
         }
 
         if ($commandName->is(UseCommand::class)) {
@@ -77,7 +77,7 @@ class CommandFactory
                 throw new MissingArgument("Buh? Use what?");
             }
 
-            return new UseCommand($this->holdableRegistry->find($args[0]));
+            return new UseCommand($this->registry->findHoldable($args[0]));
         }
 
         throw new InvalidArgumentException;
