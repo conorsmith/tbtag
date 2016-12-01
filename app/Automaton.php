@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
-interface Autonomous
+interface Automaton
 {
     public function __toString(): string;
 

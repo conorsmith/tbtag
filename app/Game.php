@@ -140,17 +140,17 @@ class Game
         event(new PlayerInspectsInventory($this->playerInventory));
     }
 
-    public function processAutonomousActions()
+    public function processAutomatonActions()
     {
         $this->registry->allAutomatons()
-            ->each(function (Autonomous $automaton) {
+            ->each(function (Automaton $automaton) {
                 $automaton->takeAction();
             });
     }
 
-    public function findLocationOfAutonomous(string $slug): Location
+    public function findLocationOfAutomaton(string $slug): Location
     {
-        return $this->map->findLocationOfAutonomous($slug);
+        return $this->map->findLocationOfAutomaton($slug);
     }
 
     public function findLocationOfHoldable(Holdable $holdable): Location

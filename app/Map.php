@@ -35,7 +35,7 @@ class Map
         return !in_array($location->getId(), $this->locationHistory);
     }
 
-    public function findLocationOfAutonomous(string $slug): Location
+    public function findLocationOfAutomaton(string $slug): Location
     {
         foreach ($this->locations as $location) {
             if ($location->houses($slug)) {

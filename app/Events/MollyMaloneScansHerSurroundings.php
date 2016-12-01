@@ -10,7 +10,7 @@ class MollyMaloneScansHerSurroundings extends GameEvent
 {
     public function handle(Game $game)
     {
-        $location = $game->findLocationOfAutonomous(Entity::MOLLY_MALONE);
+        $location = $game->findLocationOfAutomaton(Entity::MOLLY_MALONE);
 
         if ($game->getCurrentLocation()->equals($location)) {
             if ($game->playerJustMovedHere()) {

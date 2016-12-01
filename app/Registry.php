@@ -20,7 +20,7 @@ class Registry
     public function __construct(array $automatons, array $barriers, array $holdables)
     {
         $this->automatons = collect($automatons)
-            ->keyBy(function (Autonomous $automaton) {
+            ->keyBy(function (Automaton $automaton) {
                 return strtolower(strval($automaton));
             });
 
@@ -40,7 +40,7 @@ class Registry
         return $this->automatons;
     }
 
-    public function findAutomaton(string $slug): Autonomous
+    public function findAutomaton(string $slug): Automaton
     {
         $slug = strtolower($slug);
 

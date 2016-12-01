@@ -24,7 +24,7 @@ class PigeonAttemptsToLeaveWithSandwich extends GameEvent
 
     public function handle(Game $game)
     {
-        $location = $game->findLocationOfAutonomous(Entity::PIGEON);
+        $location = $game->findLocationOfAutomaton(Entity::PIGEON);
         $playerIsHere = $game->getCurrentLocation()->equals($location);
 
         if ($this->inventory->contains($this->sandwich)) {

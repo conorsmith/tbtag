@@ -47,7 +47,7 @@ class TurnProcessor
             $this->output->payload(new Payload("I don't understand what you mean."));
         }
 
-        $this->game->processAutonomousActions();
+        $this->game->processAutomatonActions();
 
         if (!is_null($command) && $command instanceof InspectsArea) {
             $this->output->payload(InteractionsPayload::fromLocation($this->game->getCurrentLocation()));

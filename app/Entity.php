@@ -5,7 +5,7 @@ namespace ConorSmith\Tbtag;
 
 use ConorSmith\Tbtag\Commands\Command;
 
-class Entity implements Autonomous, Interactive
+class Entity implements Automaton, Interactive
 {
     const MOLLY_MALONE = "Molly Malone";
     const PIGEON = "Pigeon";
