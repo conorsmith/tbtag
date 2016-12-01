@@ -3,20 +3,14 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Console;
 
-use ConorSmith\Tbtag\Commands\InspectsArea;
-use ConorSmith\Tbtag\Events\Printable;
-use ConorSmith\Tbtag\Game;
+use ConorSmith\Tbtag\TurnProcessor;
+use ConorSmith\Tbtag\TurnProcessorFactory;
 use ConorSmith\Tbtag\Listener;
 use ConorSmith\Tbtag\Ui\Output;
 use ConorSmith\Tbtag\ExitGame;
 use ConorSmith\Tbtag\Ui\Input;
-use ConorSmith\Tbtag\Ui\InteractionsPayload;
-use ConorSmith\Tbtag\Ui\Interpreter;
-use ConorSmith\Tbtag\Ui\MissingArgument;
 use ConorSmith\Tbtag\Ui\Payload;
-use DomainException;
 use Illuminate\Console\Command;
-use InvalidArgumentException;
 
 class PlayGame extends Command implements Output
 {
@@ -24,14 +18,8 @@ class PlayGame extends Command implements Output
 
     protected $description = "Play the game";
 
-    /** @var Interpreter */
-    private $interpreter;
-
     /** @var Listener */
     private $listener;
-
-    /** @var Game */
-    private $game;
 
     /** @var PrinterBuilder */
     private $printerBuilder;
@@ -39,13 +27,18 @@ class PlayGame extends Command implements Output
     /** @var Printer */
     private $printer;
 
-    public function __construct(Interpreter $interpreter, Listener $listener, Game $game, PrinterBuilder $printerBuilder)
-    {
+    /** @var TurnProcessor */
+    private $turnProcessor;
+
+    public function __construct(
+        Listener $listener,
+        PrinterBuilder $printerBuilder,
+        TurnProcessorFactory $turnProcessorFactory
+    ) {
         parent::__construct();
-        $this->interpreter = $interpreter;
         $this->listener = $listener;
-        $this->game = $game;
         $this->printerBuilder = $printerBuilder;
+        $this->turnProcessor = $turnProcessorFactory->create($this);
     }
 
     public function handle()
@@ -58,7 +51,7 @@ class PlayGame extends Command implements Output
         $this->listener->setOutput($this);
 
         $this->printer->intro();
-        $this->handleInput("look");
+        $this->processInput("look");
     }
 
     public function payload(Payload $payload)
@@ -66,34 +59,15 @@ class PlayGame extends Command implements Output
         $this->printer->payload($payload);
     }
 
-    private function handleInput(string $input)
+    private function processInput(string $input)
     {
-        $command = null;
-
         try {
-            $command = $this->interpreter->__invoke(new Input($input));
-
-        } catch (MissingArgument $e) {
-            $this->printer->payload(new Payload($e->getMessage()));
-
-        } catch (DomainException $e) {
-            $this->printer->payload(new Payload($e->getMessage()));
-
-        } catch (InvalidArgumentException $e) {
-            $this->printer->payload(new Payload("I don't understand what you mean."));
+            $this->turnProcessor->__invoke(new Input($input));
 
         } catch (ExitGame $e) {
             return;
         }
 
-        $this->game->processAutonomousActions();
-
-        if (!is_null($command) && $command instanceof InspectsArea) {
-            $this->printer->payload(InteractionsPayload::fromLocation($this->game->getCurrentLocation()));
-        }
-
-        $this->game->turnComplete();
-
-        $this->handleInput($this->ask("What do you want to do?"));
+        $this->processInput($this->ask("What do you want to do?"));
     }
 }
