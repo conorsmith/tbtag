@@ -58,4 +58,9 @@ class Item implements Holdable, Usable
     {
         $this->state = $state;
     }
+
+    public function is(string $slug): bool
+    {
+        return $this->name === $slug;
+    }
 }

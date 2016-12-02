@@ -10,6 +10,7 @@ use ConorSmith\Tbtag\Events\PlayerDies;
 use ConorSmith\Tbtag\Events\PlayerDropsHoldable;
 use ConorSmith\Tbtag\Events\PlayerEntersLocation;
 use ConorSmith\Tbtag\Events\PlayerGetsHoldable;
+use ConorSmith\Tbtag\Events\PlayerGivesMollyMaloneGravy;
 use ConorSmith\Tbtag\Events\PlayerInspectsInventory;
 use ConorSmith\Tbtag\Events\PlayerQuits;
 use ConorSmith\Tbtag\Events\PlayerRequestsHelp;
@@ -37,6 +38,7 @@ class EventServiceProvider extends ServiceProvider
         PlayerDropsHoldable::class               => [Listener::class],
         PlayerEntersLocation::class              => [Listener::class],
         PlayerGetsHoldable::class                => [Listener::class],
+        PlayerGivesMollyMaloneGravy::class       => [Listener::class],
         PlayerInspectsInventory::class           => [Listener::class],
         PlayerRequestsHelp::class                => [Listener::class],
         PlayerSeesWhereTheyAre::class            => [Listener::class],

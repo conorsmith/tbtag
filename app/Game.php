@@ -130,6 +130,21 @@ class Game
         $this->currentLocation->triggerAddToInventoryEvents();
     }
 
+    public function moveFromPlayerToAutomatonInventory(Automaton $automaton, Holdable $holdable)
+    {
+        try {
+            $this->playerInventory->remove($holdable);
+
+        } catch (DomainException $e) {
+            event(new SomethingHappens(sprintf("You don't have %s.", strval($holdable))));
+            return;
+        }
+
+        $automaton->addToInventory($holdable);
+
+        event(new SomethingHappens(sprintf("You give %s to %s.", strval($holdable), strval($automaton))));
+    }
+
     public function playerIsHolding(Holdable $holdable)
     {
         return $this->playerInventory->contains($holdable);

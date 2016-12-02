@@ -56,8 +56,12 @@ class Entity implements Automaton, Interactive
         }
 
         foreach ($this->giveEvents as $event) {
-            event(new $event($holdable));
+            event(new $event($this, $holdable));
         }
+    }
+    public function addToInventory(Holdable $holdable)
+    {
+        $this->inventory->add($holdable);
     }
 
     public function intercept(Command $command): bool

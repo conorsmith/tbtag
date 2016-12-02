@@ -19,4 +19,9 @@ interface Automaton
      * @return void
      */
     public function triggerGiveEvents(Holdable $holdable);
+
+    /**
+     * @return void
+     */
+    public function addToInventory(Holdable $holdable);
 }

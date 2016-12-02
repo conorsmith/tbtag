@@ -21,6 +21,7 @@ use ConorSmith\Tbtag\Events\EmpIsDetonated;
 use ConorSmith\Tbtag\Events\MollyMaloneScansHerSurroundings;
 use ConorSmith\Tbtag\Events\PigeonAttemptsToLeaveWithSandwich;
 use ConorSmith\Tbtag\Events\PlayerDies;
+use ConorSmith\Tbtag\Events\PlayerGivesMollyMaloneGravy;
 use ConorSmith\Tbtag\Events\PlayerUsesEmp;
 use ConorSmith\Tbtag\Events\PlayerWins;
 use ConorSmith\Tbtag\Events\SomethingHappens;
@@ -101,7 +102,7 @@ class AppServiceProvider extends ServiceProvider
                             new MollyMaloneScansHerSurroundings
                         ],
                         [
-                            // PlayerGivesMollyMaloneGravy::class
+                            PlayerGivesMollyMaloneGravy::class
                         ],
                         [
                             new MollyMaloneMove
@@ -197,7 +198,10 @@ class AppServiceProvider extends ServiceProvider
                             new Egress(new Direction("west"), new LocationId("2,7")),
                         ],
                         "Foster Place",
-                        "You are standing outside the Wax Museum. A number of wax figures are arranged outside the building, as if they are trying to escape. These are truly the most life-like wax figures you've ever seen and each one has a horrified expression."
+                        "You are standing outside the Wax Museum. A number of wax figures are arranged outside the building, as if they are trying to escape. These are truly the most life-like wax figures you've ever seen and each one has a horrified expression.",
+                        new Inventory([
+                            $app[Registry::class]->findHoldable(Holdable::GRAVY),
+                        ])
                     ),
                     "wax:0,0" => new Location(
                         new LocationId("wax:0,0"),
