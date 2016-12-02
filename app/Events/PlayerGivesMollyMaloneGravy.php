@@ -25,6 +25,9 @@ class PlayerGivesMollyMaloneGravy extends GameEvent
     {
         if ($this->holdable->is(Holdable::GRAVY)) {
             $game->moveFromPlayerToAutomatonInventory($this->automaton, $this->holdable);
+            event(new SomethingHappens(
+                "She is pleased by your offer. Immediately she coats her brass cockles and muscles with the thick brown sauce. You have been granted free passage."
+            ));
             return;
         }
 

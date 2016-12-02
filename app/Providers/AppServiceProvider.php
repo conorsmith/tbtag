@@ -99,7 +99,7 @@ class AppServiceProvider extends ServiceProvider
                         Automaton::MOLLY_MALONE,
                         Inventory::unoccupied(),
                         [
-                            new MollyMaloneScansHerSurroundings
+                            MollyMaloneScansHerSurroundings::class
                         ],
                         [
                             PlayerGivesMollyMaloneGravy::class
@@ -110,12 +110,9 @@ class AppServiceProvider extends ServiceProvider
                     ),
                     new Entity(
                         Automaton::PIGEON,
-                        $pigeonInventory = new Inventory([$sandwich]),
+                        new Inventory([$sandwich]),
                         [
-                            new PigeonAttemptsToLeaveWithSandwich(
-                                $pigeonInventory,
-                                $sandwich
-                            )
+                            PigeonAttemptsToLeaveWithSandwich::class
                         ]
                     )
                 ],

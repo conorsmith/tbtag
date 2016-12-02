@@ -3,16 +3,30 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Events;
 
+use ConorSmith\Tbtag\Automaton;
 use ConorSmith\Tbtag\Entity;
 use ConorSmith\Tbtag\Game;
+use ConorSmith\Tbtag\Holdable;
+use ConorSmith\Tbtag\Registry;
 
 class MollyMaloneScansHerSurroundings extends GameEvent
 {
+    /** @var Automaton */
+    private $mollyMalone;
+
+    public function __construct(Automaton $mollyMalone)
+    {
+        $this->mollyMalone = $mollyMalone;
+    }
+
     public function handle(Game $game)
     {
         $location = $game->findLocationOfAutomaton(Entity::MOLLY_MALONE);
+        $gravy = app(Registry::class)->findHoldable(Holdable::GRAVY);
 
-        if ($game->getCurrentLocation()->equals($location)) {
+        if ($game->getCurrentLocation()->equals($location)
+            && !$this->mollyMalone->isHolding($gravy)
+        ) {
             if ($game->playerJustMovedHere()) {
                 event(new SomethingHappens("The statue of Molly Malone turns her head to look right at you. She looks pissed."));
             } else {

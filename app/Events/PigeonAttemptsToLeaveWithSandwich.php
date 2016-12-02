@@ -3,41 +3,39 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Events;
 
+use ConorSmith\Tbtag\Automaton;
 use ConorSmith\Tbtag\Entity;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Holdable;
-use ConorSmith\Tbtag\Inventory;
+use ConorSmith\Tbtag\Registry;
 
 class PigeonAttemptsToLeaveWithSandwich extends GameEvent
 {
-    /** @var Inventory */
-    private $inventory;
+    /** @var Automaton */
+    private $pigeon;
 
-    /** @var Holdable */
-    private $sandwich;
-
-    public function __construct(Inventory $inventory, Holdable $sandwich)
+    public function __construct(Automaton $pigeon)
     {
-        $this->inventory = $inventory;
-        $this->sandwich = $sandwich;
+        $this->pigeon = $pigeon;
     }
 
     public function handle(Game $game)
     {
         $location = $game->findLocationOfAutomaton(Entity::PIGEON);
         $playerIsHere = $game->getCurrentLocation()->equals($location);
+        $sandwich = app(Registry::class)->findHoldable(Holdable::SANDWICH);
 
-        if ($this->inventory->contains($this->sandwich)) {
-            $this->inventory->remove($this->sandwich);
-            $location->addToInventory($this->sandwich);
+        if ($this->pigeon->isHolding($sandwich)) {
+            $this->pigeon->removeFromInventory($sandwich);
+            $location->addToInventory($sandwich);
 
             if ($playerIsHere) {
                 event(new SomethingHappens("You see a determined pigeon drop a sandwich while attempting to fly."));
             }
 
-        } else if ($location->getInventory()->contains($this->sandwich)) {
-            $location->removeFromInventory($this->sandwich);
-            $this->inventory->add($this->sandwich);
+        } else if ($location->getInventory()->contains($sandwich)) {
+            $location->removeFromInventory($sandwich);
+            $this->pigeon->addToInventory($sandwich);
 
             if ($playerIsHere) {
                 event(new SomethingHappens("You notice a pigeon picking a sandwich up off the ground."));

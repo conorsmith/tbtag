@@ -45,7 +45,7 @@ class Entity implements Automaton, Interactive
     public function takeAction()
     {
         foreach ($this->actionEvents as $event) {
-            event($event);
+            event(new $event($this));
         }
     }
 
@@ -59,9 +59,20 @@ class Entity implements Automaton, Interactive
             event(new $event($this, $holdable));
         }
     }
+
     public function addToInventory(Holdable $holdable)
     {
         $this->inventory->add($holdable);
+    }
+
+    public function removeFromInventory(Holdable $holdable)
+    {
+        $this->inventory->remove($holdable);
+    }
+
+    public function isHolding(Holdable $holdable): bool
+    {
+        return $this->inventory->contains($holdable);
     }
 
     public function intercept(Command $command): bool
