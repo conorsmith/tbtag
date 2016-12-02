@@ -73,6 +73,8 @@ class Printer
                 $this->output->writeln("Your inventory is empty");
             }
 
+            $this->output->writeln("");
+
             return;
         }
 
