@@ -172,7 +172,7 @@ class AppServiceProvider extends ServiceProvider
                         "KFC Kitchen",
                         "The grill in the centre of the kitchen is malformed. It almost looks like it has parts of an espresso machine welded to it. Several unused chicken buckets have the Starbucks logo on them.",
                         new Inventory([
-                            //$app[Registry::class]->findHoldable(Holdable::GRAVY),
+                            $app[Registry::class]->findHoldable(Holdable::GRAVY),
                         ])
                     ),
                     "2,7" => $startingLocation = new Location(
@@ -195,10 +195,7 @@ class AppServiceProvider extends ServiceProvider
                             new Egress(new Direction("west"), new LocationId("2,7")),
                         ],
                         "Foster Place",
-                        "You are standing outside the Wax Museum. A number of wax figures are arranged outside the building, as if they are trying to escape. These are truly the most life-like wax figures you've ever seen and each one has a horrified expression.",
-                        new Inventory([
-                            $app[Registry::class]->findHoldable(Holdable::GRAVY),
-                        ])
+                        "You are standing outside the Wax Museum. A number of wax figures are arranged outside the building, as if they are trying to escape. These are truly the most life-like wax figures you've ever seen and each one has a horrified expression."
                     ),
                     "wax:0,0" => new Location(
                         new LocationId("wax:0,0"),
