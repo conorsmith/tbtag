@@ -172,7 +172,7 @@ class AppServiceProvider extends ServiceProvider
                         "KFC Kitchen",
                         "The grill in the centre of the kitchen is malformed. It almost looks like it has parts of an espresso machine welded to it. Several unused chicken buckets have the Starbucks logo on them.",
                         new Inventory([
-                            $app[Registry::class]->findHoldable(Holdable::GRAVY),
+                            //$app[Registry::class]->findHoldable(Holdable::GRAVY),
                         ])
                     ),
                     "2,7" => $startingLocation = new Location(

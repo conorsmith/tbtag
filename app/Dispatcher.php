@@ -18,7 +18,7 @@ class Dispatcher
     public function __invoke(Command $command)
     {
         if (!$this->game->processInteractiveInterceptions($command)) {
-            dispatch($command);
+            $command->handle($this->game);
         }
     }
 }
