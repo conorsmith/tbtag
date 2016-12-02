@@ -3,16 +3,33 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Interceptions;
 
+use ConorSmith\Tbtag\Automaton;
 use ConorSmith\Tbtag\Commands\Command;
 use ConorSmith\Tbtag\Commands\MoveCommand;
 use ConorSmith\Tbtag\Direction;
 use ConorSmith\Tbtag\Events\PlayerDies;
+use ConorSmith\Tbtag\Holdable;
+use ConorSmith\Tbtag\Registry;
 
 class MollyMaloneMove implements Interception
 {
+    /** @var Automaton */
+    private $mollyMalone;
+
+    public function __construct(Automaton $mollyMalone)
+    {
+        $this->mollyMalone = $mollyMalone;
+    }
+
     public function handle(Command $command): bool
     {
         if (!$command instanceof MoveCommand) {
+            return false;
+        }
+
+        $gravy = app(Registry::class)->findHoldable(Holdable::GRAVY);
+
+        if ($this->mollyMalone->isHolding($gravy)) {
             return false;
         }
 

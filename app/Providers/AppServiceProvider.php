@@ -105,7 +105,7 @@ class AppServiceProvider extends ServiceProvider
                             PlayerGivesMollyMaloneGravy::class
                         ],
                         [
-                            new MollyMaloneMove
+                            MollyMaloneMove::class
                         ]
                     ),
                     new Entity(

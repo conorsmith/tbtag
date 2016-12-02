@@ -5,6 +5,7 @@ namespace ConorSmith\Tbtag;
 
 use ConorSmith\Tbtag\Commands\Command;
 use ConorSmith\Tbtag\Events\SomethingHappens;
+use Illuminate\Support\Collection;
 
 class Entity implements Automaton, Interactive
 {
@@ -20,7 +21,7 @@ class Entity implements Automaton, Interactive
     /** @var array */
     private $giveEvents;
 
-    /** @var array */
+    /** @var Collection */
     private $interceptions;
 
     public function __construct(
@@ -28,13 +29,16 @@ class Entity implements Automaton, Interactive
         Inventory $inventory = null,
         array $actionEvents = [],
         array $giveEvents = [],
-        array $interceptions = []
+        array $interceptionClasses = []
     ) {
         $this->name = $name;
         $this->inventory = $inventory ?? Inventory::unoccupied();
         $this->actionEvents = $actionEvents;
         $this->giveEvents = $giveEvents;
-        $this->interceptions = $interceptions;
+        $this->interceptions = collect($interceptionClasses)
+            ->map(function (string $interceptionClass) {
+                return new $interceptionClass($this);
+            });
     }
 
     public function __toString(): string
