@@ -15,7 +15,7 @@ use ConorSmith\Tbtag\Direction;
 use ConorSmith\Tbtag\DirectionFactory;
 use ConorSmith\Tbtag\Egress;
 use ConorSmith\Tbtag\Commands\ExitCommand;
-use ConorSmith\Tbtag\Entity;
+use ConorSmith\Tbtag\Npc;
 use ConorSmith\Tbtag\Events\BarrierDrops;
 use ConorSmith\Tbtag\Events\EmpIsDetonated;
 use ConorSmith\Tbtag\Events\MollyMaloneScansHerSurroundings;
@@ -95,7 +95,7 @@ class AppServiceProvider extends ServiceProvider
 
             return new Registry(
                 [
-                    new Entity(
+                    new Npc(
                         Automaton::MOLLY_MALONE,
                         Inventory::unoccupied(),
                         [
@@ -108,7 +108,7 @@ class AppServiceProvider extends ServiceProvider
                             MollyMaloneMove::class
                         ]
                     ),
-                    new Entity(
+                    new Npc(
                         Automaton::PIGEON,
                         new Inventory([$sandwich]),
                         [
@@ -293,7 +293,7 @@ class AppServiceProvider extends ServiceProvider
                         "Despite being moved back to her usual spot on Grafton Street after the Luas Cross City works were completed, the statue of Molly Malone is back outside the church.",
                         Inventory::unoccupied(),
                         new Manifest([
-                            $app[Registry::class]->findAutomaton(Entity::MOLLY_MALONE),
+                            $app[Registry::class]->findAutomaton(Npc::MOLLY_MALONE),
                         ])
                     ),
                     "4,6" => new Location(
@@ -364,7 +364,7 @@ class AppServiceProvider extends ServiceProvider
                         "The way south is impassable. A mound of chicken nuggets two stories high has spilled out of McDonald's and is blocking the junction with Wicklow Street.",
                         Inventory::unoccupied(),
                         new Manifest([
-                            $app[Registry::class]->findAutomaton(Entity::PIGEON),
+                            $app[Registry::class]->findAutomaton(Npc::PIGEON),
                         ])
                     ),
                 ]),
