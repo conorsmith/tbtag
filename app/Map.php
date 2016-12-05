@@ -35,10 +35,10 @@ class Map
         return !in_array($location->getId(), $this->locationHistory);
     }
 
-    public function findLocationOfAutomaton(string $slug): Location
+    public function findLocationOfAutomaton(AutomatonIdentifier $identifier): Location
     {
         foreach ($this->locations as $location) {
-            if ($location->houses($slug)) {
+            if ($location->houses($identifier)) {
                 return $location;
             }
         }

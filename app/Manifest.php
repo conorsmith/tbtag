@@ -19,10 +19,10 @@ class Manifest
         $this->contents = $contents;
     }
 
-    public function has(string $slug): bool
+    public function has(AutomatonIdentifier $identifier): bool
     {
         foreach ($this->contents as $content) {
-            if (strval($content) === $slug) {
+            if (strval($content) === strval($identifier)) {
                 return true;
             }
         }

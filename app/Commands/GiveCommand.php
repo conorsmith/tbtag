@@ -34,7 +34,7 @@ class GiveCommand extends Command implements ShouldQueue
 
     public function handle(Game $game)
     {
-        if (!$game->getCurrentLocation()->houses(strval($this->automaton))) {
+        if (!$game->getCurrentLocation()->houses($this->automaton->getIdentifier())) {
             event(new SomethingHappens(sprintf("%s is not here.", strval($this->automaton))));
             return;
         }

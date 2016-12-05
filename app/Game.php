@@ -163,9 +163,9 @@ class Game
             });
     }
 
-    public function findLocationOfAutomaton(string $slug): Location
+    public function findLocationOfAutomaton(AutomatonIdentifier $identifier): Location
     {
-        return $this->map->findLocationOfAutomaton($slug);
+        return $this->map->findLocationOfAutomaton($identifier);
     }
 
     public function findLocationOfHoldable(Holdable $holdable): Location

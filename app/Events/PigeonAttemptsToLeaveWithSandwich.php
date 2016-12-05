@@ -8,6 +8,7 @@ use ConorSmith\Tbtag\ItemIdentifier;
 use ConorSmith\Tbtag\Npc;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Holdable;
+use ConorSmith\Tbtag\NpcIdentifier;
 use ConorSmith\Tbtag\Registry;
 
 class PigeonAttemptsToLeaveWithSandwich extends GameEvent
@@ -22,7 +23,7 @@ class PigeonAttemptsToLeaveWithSandwich extends GameEvent
 
     public function handle(Game $game)
     {
-        $location = $game->findLocationOfAutomaton(Npc::PIGEON);
+        $location = $game->findLocationOfAutomaton(NpcIdentifier::pigeon());
         $playerIsHere = $game->getCurrentLocation()->equals($location);
         $sandwich = app(Registry::class)->find(ItemIdentifier::sandwich());
 

@@ -77,6 +77,14 @@ class Registry
     {
         $slug = strtolower(strval($identifier));
 
+        if ($identifier instanceof AutomatonIdentifier) {
+            if (!$this->automatons->has($slug)) {
+                throw new DomainException("Automaton doesn't exist.");
+            }
+
+            return $this->automatons[$slug];
+        }
+
         if ($identifier instanceof BarrierIdentifier) {
             if (!$this->barriers->has($slug)) {
                 throw new DomainException("Barrier doesn't exist.");

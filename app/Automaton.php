@@ -5,9 +5,6 @@ namespace ConorSmith\Tbtag;
 
 interface Automaton
 {
-    const MOLLY_MALONE = "Molly Malone";
-    const PIGEON = "Pigeon";
-
     public function __toString(): string;
 
     /**
@@ -31,4 +28,6 @@ interface Automaton
     public function removeFromInventory(Holdable $holdable);
 
     public function isHolding(Holdable $holdable): bool;
+
+    public function getIdentifier(): AutomatonIdentifier;
 }

@@ -9,8 +9,8 @@ use Illuminate\Support\Collection;
 
 class Npc implements Automaton, Interactive
 {
-    /** @var string */
-    private $name;
+    /** @var NpcIdentifier */
+    private $identifier;
 
     /** @var Inventory */
     private $inventory;
@@ -25,13 +25,13 @@ class Npc implements Automaton, Interactive
     private $interceptions;
 
     public function __construct(
-        string $name,
+        NpcIdentifier $identifier,
         Inventory $inventory = null,
         array $actionEvents = [],
         array $giveEvents = [],
         array $interceptionClasses = []
     ) {
-        $this->name = $name;
+        $this->identifier = $identifier;
         $this->inventory = $inventory ?? Inventory::unoccupied();
         $this->actionEvents = $actionEvents;
         $this->giveEvents = $giveEvents;
@@ -43,7 +43,7 @@ class Npc implements Automaton, Interactive
 
     public function __toString(): string
     {
-        return $this->name;
+        return strval($this->identifier);
     }
 
     public function takeAction()
@@ -56,7 +56,7 @@ class Npc implements Automaton, Interactive
     public function triggerGiveEvents(Holdable $holdable)
     {
         if (count($this->giveEvents) === 0) {
-            event(new SomethingHappens(sprintf("%s refuses to take %s.", $this->name, strval($holdable))));
+            event(new SomethingHappens(sprintf("%s refuses to take %s.", $this->identifier, strval($holdable))));
         }
 
         foreach ($this->giveEvents as $event) {
@@ -88,5 +88,10 @@ class Npc implements Automaton, Interactive
         }
 
         return $commandWasIntercepted;
+    }
+
+    public function getIdentifier(): AutomatonIdentifier
+    {
+        return $this->identifier;
     }
 }
