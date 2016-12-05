@@ -61,7 +61,7 @@ class CommandFactory
                 throw new MissingArgument("Huh? What do you want to get?");
             }
 
-            return new GetCommand($this->registry->findHoldable($args[0]));
+            return new GetCommand($this->registry->findHoldableBySlug($args[0]));
         }
 
         if ($commandName->is(DropCommand::class)) {
@@ -69,7 +69,7 @@ class CommandFactory
                 throw new MissingArgument("Huh? What do you want to drop?");
             }
 
-            return new DropCommand($this->registry->findHoldable($args[0]));
+            return new DropCommand($this->registry->findHoldableBySlug($args[0]));
         }
 
         if ($commandName->is(UseCommand::class)) {
@@ -77,7 +77,7 @@ class CommandFactory
                 throw new MissingArgument("Buh? Use what?");
             }
 
-            return new UseCommand($this->registry->findHoldable($args[0]));
+            return new UseCommand($this->registry->findHoldableBySlug($args[0]));
         }
 
         if ($commandName->is(GiveCommand::class)) {
@@ -108,7 +108,7 @@ class CommandFactory
                     $potentialHoldableSlug[] = array_shift($automatonArgs);
 
                     if ($this->registry->hasHoldable(implode(" ", $potentialHoldableSlug))) {
-                        $holdable = $this->registry->findHoldable(implode(" ", $potentialHoldableSlug));
+                        $holdable = $this->registry->findHoldableBySlug(implode(" ", $potentialHoldableSlug));
                     }
                 }
             } else {
@@ -118,7 +118,7 @@ class CommandFactory
                     $potentialHoldableSlug[] = array_shift($holdableArgs);
 
                     if ($this->registry->hasHoldable(implode(" ", $potentialHoldableSlug))) {
-                        $holdable = $this->registry->findHoldable(implode(" ", $potentialHoldableSlug));
+                        $holdable = $this->registry->findHoldableBySlug(implode(" ", $potentialHoldableSlug));
                     }
                 }
 

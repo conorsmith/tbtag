@@ -15,6 +15,7 @@ use ConorSmith\Tbtag\Direction;
 use ConorSmith\Tbtag\DirectionFactory;
 use ConorSmith\Tbtag\Egress;
 use ConorSmith\Tbtag\Commands\ExitCommand;
+use ConorSmith\Tbtag\ItemIdentifier;
 use ConorSmith\Tbtag\Npc;
 use ConorSmith\Tbtag\Events\BarrierDrops;
 use ConorSmith\Tbtag\Events\EmpIsDetonated;
@@ -91,7 +92,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(Registry::class, function ($app) {
-            $sandwich = new Item(Holdable::SANDWICH);
+            $sandwich = new Item(ItemIdentifier::sandwich());
 
             return new Registry(
                 [
@@ -131,14 +132,14 @@ class AppServiceProvider extends ServiceProvider
                 ],
                 [
                     new Item(
-                        Holdable::EMP,
+                        ItemIdentifier::emp(),
                         PlayerUsesEmp::class
                     ),
-                    new Item(Holdable::GRAVY),
-                    new Item(Holdable::PHONE),
-                    new Item(Holdable::RIFLE),
+                    new Item(ItemIdentifier::gravy()),
+                    new Item(ItemIdentifier::phone()),
+                    new Item(ItemIdentifier::rifle()),
                     $sandwich,
-                    new Item(Holdable::SUNGLASSES)
+                    new Item(ItemIdentifier::sunglasses())
                 ]
             );
         });
@@ -172,7 +173,7 @@ class AppServiceProvider extends ServiceProvider
                         "KFC Kitchen",
                         "The grill in the centre of the kitchen is malformed. It almost looks like it has parts of an espresso machine welded to it. Several unused chicken buckets have the Starbucks logo on them.",
                         new Inventory([
-                            $app[Registry::class]->findHoldable(Holdable::GRAVY),
+                            $app[Registry::class]->findHoldable(ItemIdentifier::gravy()),
                         ])
                     ),
                     "2,7" => $startingLocation = new Location(
@@ -183,7 +184,7 @@ class AppServiceProvider extends ServiceProvider
                         "Central Bank",
                         "A massive Occupy Dame Street camp fills the plaza outside the Central Bank. It looks like the movement even took over the building itself. However, the camp appears to be deserted.",
                         new Inventory([
-                            $app[Registry::class]->findHoldable(Holdable::EMP),
+                            $app[Registry::class]->findHoldable(ItemIdentifier::emp()),
                         ])
                     ),
                     "3,7" => $startingLocation = new Location(
@@ -228,13 +229,13 @@ class AppServiceProvider extends ServiceProvider
                         "Civil War Exhibit",
                         "This special exhibit is untouched by the chaos from the front of the museum. It is very obvious that the historical figures here are just the wax figures of the actors who appeared in Neil Jordan's Michael Collins.",
                         new Inventory([
-                            $app[Registry::class]->findHoldable(Holdable::RIFLE)
+                            $app[Registry::class]->findHoldable(ItemIdentifier::rifle())
                         ]),
                         Manifest::unoccupied(),
                         [],
                         [
                             LocationInventoryEventConfig::noticeable(
-                                $app[Registry::class]->findHoldable(Holdable::RIFLE),
+                                $app[Registry::class]->findHoldable(ItemIdentifier::rifle()),
                                 new SomethingHappens("You can see in Wax Alan Rickman's arms the actual rifle with which Dev shot and killed the Big Fella.")
                             )
                         ]
@@ -250,7 +251,7 @@ class AppServiceProvider extends ServiceProvider
                         "College Green",
                         "You are amidst the wreckage of two Luas trams. It looks like there was some sort of head on collision.",
                         new Inventory([
-                            $app[Registry::class]->findHoldable(Holdable::SUNGLASSES),
+                            $app[Registry::class]->findHoldable(ItemIdentifier::sunglasses()),
                         ])
                     ),
                     "5,7" => new Location(
@@ -310,7 +311,7 @@ class AppServiceProvider extends ServiceProvider
                         [],
                         [
                             LocationInventoryEventConfig::add(
-                                $app[Registry::class]->findHoldable(Holdable::PHONE),
+                                $app[Registry::class]->findHoldable(ItemIdentifier::phone()),
                                 new PlayerDies("As you put your phone down it starts to ring, but with the same sound coming from the Provost's House. You answer and the phone emits a high-powered, high-pitch noise that causes your head to explode instantly. You are no longer alive.")
                             )
                         ]
@@ -370,7 +371,7 @@ class AppServiceProvider extends ServiceProvider
                 ]),
                 $app[Registry::class],
                 $startingLocation,
-                new Inventory([$app[Registry::class]->findHoldable(Holdable::PHONE)])
+                new Inventory([$app[Registry::class]->findHoldable(ItemIdentifier::phone())])
             );
         });
     }

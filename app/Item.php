@@ -7,8 +7,8 @@ class Item implements Holdable, Usable
 {
     const EMP_USED = "EMP_USED";
 
-    /** @var string */
-    private $name;
+    /** @var ItemIdentifier */
+    private $identifier;
 
     /** @var string */
     private $state;
@@ -16,15 +16,15 @@ class Item implements Holdable, Usable
     /** @var string */
     private $useEvent;
 
-    public function __construct(string $name, string $useEvent = null)
+    public function __construct(ItemIdentifier $identifier, string $useEvent = null)
     {
-        $this->name = $name;
+        $this->identifier = $identifier;
         $this->useEvent = $useEvent;
     }
 
     public function __toString()
     {
-        return $this->name;
+        return strval($this->identifier);
     }
 
     public function getPickUpEvents(): array
@@ -39,7 +39,7 @@ class Item implements Holdable, Usable
 
     public function getSlug(): string
     {
-        return strtolower($this->name);
+        return strtolower(strval($this->identifier));
     }
 
     public function triggerUse()
@@ -59,8 +59,8 @@ class Item implements Holdable, Usable
         $this->state = $state;
     }
 
-    public function is(string $slug): bool
+    public function is(EntityIdentifier $identifier): bool
     {
-        return $this->name === $slug;
+        return $this->identifier->equals($identifier);
     }
 }

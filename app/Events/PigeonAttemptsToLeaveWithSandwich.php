@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ConorSmith\Tbtag\Events;
 
 use ConorSmith\Tbtag\Automaton;
+use ConorSmith\Tbtag\ItemIdentifier;
 use ConorSmith\Tbtag\Npc;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Holdable;
@@ -23,7 +24,7 @@ class PigeonAttemptsToLeaveWithSandwich extends GameEvent
     {
         $location = $game->findLocationOfAutomaton(Npc::PIGEON);
         $playerIsHere = $game->getCurrentLocation()->equals($location);
-        $sandwich = app(Registry::class)->findHoldable(Holdable::SANDWICH);
+        $sandwich = app(Registry::class)->findHoldable(ItemIdentifier::sandwich());
 
         if ($this->pigeon->isHolding($sandwich)) {
             $this->pigeon->removeFromInventory($sandwich);

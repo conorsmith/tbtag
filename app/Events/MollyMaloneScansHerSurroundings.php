@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ConorSmith\Tbtag\Events;
 
 use ConorSmith\Tbtag\Automaton;
+use ConorSmith\Tbtag\ItemIdentifier;
 use ConorSmith\Tbtag\Npc;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Holdable;
@@ -22,7 +23,7 @@ class MollyMaloneScansHerSurroundings extends GameEvent
     public function handle(Game $game)
     {
         $location = $game->findLocationOfAutomaton(Npc::MOLLY_MALONE);
-        $gravy = app(Registry::class)->findHoldable(Holdable::GRAVY);
+        $gravy = app(Registry::class)->findHoldable(ItemIdentifier::gravy());
 
         if ($game->getCurrentLocation()->equals($location)
             && !$this->mollyMalone->isHolding($gravy)

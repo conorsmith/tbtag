@@ -6,6 +6,7 @@ namespace ConorSmith\Tbtag\Events;
 use ConorSmith\Tbtag\Automaton;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Holdable;
+use ConorSmith\Tbtag\ItemIdentifier;
 
 class PlayerGivesMollyMaloneGravy extends GameEvent
 {
@@ -23,7 +24,7 @@ class PlayerGivesMollyMaloneGravy extends GameEvent
 
     public function handle(Game $game)
     {
-        if ($this->holdable->is(Holdable::GRAVY)) {
+        if ($this->holdable->is(ItemIdentifier::gravy())) {
             $game->moveFromPlayerToAutomatonInventory($this->automaton, $this->holdable);
             event(new SomethingHappens(
                 "She is pleased by your offer. Immediately she coats her brass cockles and mussels with the thick brown sauce. You have been granted free passage."

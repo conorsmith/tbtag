@@ -9,6 +9,7 @@ use ConorSmith\Tbtag\Commands\MoveCommand;
 use ConorSmith\Tbtag\Direction;
 use ConorSmith\Tbtag\Events\PlayerDies;
 use ConorSmith\Tbtag\Holdable;
+use ConorSmith\Tbtag\ItemIdentifier;
 use ConorSmith\Tbtag\Registry;
 
 class MollyMaloneMove implements Interception
@@ -27,7 +28,7 @@ class MollyMaloneMove implements Interception
             return false;
         }
 
-        $gravy = app(Registry::class)->findHoldable(Holdable::GRAVY);
+        $gravy = app(Registry::class)->findHoldable(ItemIdentifier::gravy());
 
         if ($this->mollyMalone->isHolding($gravy)) {
             return false;

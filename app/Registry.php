@@ -67,9 +67,20 @@ class Registry
         return $this->barriers[$slug];
     }
 
-    public function findHoldable(string $slug): Holdable
+    public function findHoldableBySlug(string $slug): Holdable
     {
         $slug = strtolower($slug);
+
+        if (!$this->holdables->has($slug)) {
+            throw new DomainException("Holdable doesn't exist.");
+        }
+
+        return $this->holdables[$slug];
+    }
+
+    public function findHoldable(HoldableIdentifier $identifier): Holdable
+    {
+        $slug = strtolower(strval($identifier));
 
         if (!$this->holdables->has($slug)) {
             throw new DomainException("Holdable doesn't exist.");

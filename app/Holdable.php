@@ -15,5 +15,5 @@ interface Holdable
     public function getPickUpEvents(): array;
     public function getDropEvents(): array;
     public function getSlug(): string;
-    public function is(string $slug): bool;
+    public function is(EntityIdentifier $identifier): bool;
 }
