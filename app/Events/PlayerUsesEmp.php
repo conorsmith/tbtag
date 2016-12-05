@@ -13,7 +13,7 @@ class PlayerUsesEmp extends GameEvent
 {
     public function handle(Game $game)
     {
-        $emp = app(Registry::class)->findHoldable(ItemIdentifier::emp());
+        $emp = app(Registry::class)->find(ItemIdentifier::emp());
 
         if ($emp->hasState(Item::EMP_USED)) {
             event(new SomethingHappens("The EMP was already detonated. It cannot be used again."));

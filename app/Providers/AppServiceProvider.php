@@ -173,7 +173,7 @@ class AppServiceProvider extends ServiceProvider
                         "KFC Kitchen",
                         "The grill in the centre of the kitchen is malformed. It almost looks like it has parts of an espresso machine welded to it. Several unused chicken buckets have the Starbucks logo on them.",
                         new Inventory([
-                            $app[Registry::class]->findHoldable(ItemIdentifier::gravy()),
+                            $app[Registry::class]->find(ItemIdentifier::gravy()),
                         ])
                     ),
                     "2,7" => $startingLocation = new Location(
@@ -184,7 +184,7 @@ class AppServiceProvider extends ServiceProvider
                         "Central Bank",
                         "A massive Occupy Dame Street camp fills the plaza outside the Central Bank. It looks like the movement even took over the building itself. However, the camp appears to be deserted.",
                         new Inventory([
-                            $app[Registry::class]->findHoldable(ItemIdentifier::emp()),
+                            $app[Registry::class]->find(ItemIdentifier::emp()),
                         ])
                     ),
                     "3,7" => $startingLocation = new Location(
@@ -229,13 +229,13 @@ class AppServiceProvider extends ServiceProvider
                         "Civil War Exhibit",
                         "This special exhibit is untouched by the chaos from the front of the museum. It is very obvious that the historical figures here are just the wax figures of the actors who appeared in Neil Jordan's Michael Collins.",
                         new Inventory([
-                            $app[Registry::class]->findHoldable(ItemIdentifier::rifle())
+                            $app[Registry::class]->find(ItemIdentifier::rifle())
                         ]),
                         Manifest::unoccupied(),
                         [],
                         [
                             LocationInventoryEventConfig::noticeable(
-                                $app[Registry::class]->findHoldable(ItemIdentifier::rifle()),
+                                $app[Registry::class]->find(ItemIdentifier::rifle()),
                                 new SomethingHappens("You can see in Wax Alan Rickman's arms the actual rifle with which Dev shot and killed the Big Fella.")
                             )
                         ]
@@ -251,7 +251,7 @@ class AppServiceProvider extends ServiceProvider
                         "College Green",
                         "You are amidst the wreckage of two Luas trams. It looks like there was some sort of head on collision.",
                         new Inventory([
-                            $app[Registry::class]->findHoldable(ItemIdentifier::sunglasses()),
+                            $app[Registry::class]->find(ItemIdentifier::sunglasses()),
                         ])
                     ),
                     "5,7" => new Location(
@@ -311,7 +311,7 @@ class AppServiceProvider extends ServiceProvider
                         [],
                         [
                             LocationInventoryEventConfig::add(
-                                $app[Registry::class]->findHoldable(ItemIdentifier::phone()),
+                                $app[Registry::class]->find(ItemIdentifier::phone()),
                                 new PlayerDies("As you put your phone down it starts to ring, but with the same sound coming from the Provost's House. You answer and the phone emits a high-powered, high-pitch noise that causes your head to explode instantly. You are no longer alive.")
                             )
                         ]
@@ -371,7 +371,7 @@ class AppServiceProvider extends ServiceProvider
                 ]),
                 $app[Registry::class],
                 $startingLocation,
-                new Inventory([$app[Registry::class]->findHoldable(ItemIdentifier::phone())])
+                new Inventory([$app[Registry::class]->find(ItemIdentifier::phone())])
             );
         });
     }

@@ -28,7 +28,7 @@ class MollyMaloneMove implements Interception
             return false;
         }
 
-        $gravy = app(Registry::class)->findHoldable(ItemIdentifier::gravy());
+        $gravy = app(Registry::class)->find(ItemIdentifier::gravy());
 
         if ($this->mollyMalone->isHolding($gravy)) {
             return false;

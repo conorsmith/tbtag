@@ -5,6 +5,7 @@ namespace ConorSmith\Tbtag;
 
 use DomainException;
 use Illuminate\Support\Collection;
+use LogicException;
 
 class Registry
 {
@@ -67,20 +68,9 @@ class Registry
         return $this->barriers[$slug];
     }
 
-    public function findHoldableBySlug(string $slug): Holdable
+    public function findHoldable(string $slug): Holdable
     {
         $slug = strtolower($slug);
-
-        if (!$this->holdables->has($slug)) {
-            throw new DomainException("Holdable doesn't exist.");
-        }
-
-        return $this->holdables[$slug];
-    }
-
-    public function findHoldable(HoldableIdentifier $identifier): Holdable
-    {
-        $slug = strtolower(strval($identifier));
 
         if (!$this->holdables->has($slug)) {
             throw new DomainException("Holdable doesn't exist.");
@@ -92,5 +82,20 @@ class Registry
     public function hasHoldable(string $slug): bool
     {
         return $this->holdables->has($slug);
+    }
+
+    public function find(EntityIdentifier $identifier)
+    {
+        $slug = strtolower(strval($identifier));
+
+        if ($identifier instanceof HoldableIdentifier) {
+            if (!$this->holdables->has($slug)) {
+                throw new DomainException("Holdable doesn't exist.");
+            }
+
+            return $this->holdables[$slug];
+        }
+
+        throw new LogicException("Unknown identifier");
     }
 }

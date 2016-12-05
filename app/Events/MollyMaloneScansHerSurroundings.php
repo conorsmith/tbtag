@@ -23,7 +23,7 @@ class MollyMaloneScansHerSurroundings extends GameEvent
     public function handle(Game $game)
     {
         $location = $game->findLocationOfAutomaton(Npc::MOLLY_MALONE);
-        $gravy = app(Registry::class)->findHoldable(ItemIdentifier::gravy());
+        $gravy = app(Registry::class)->find(ItemIdentifier::gravy());
 
         if ($game->getCurrentLocation()->equals($location)
             && !$this->mollyMalone->isHolding($gravy)

@@ -24,7 +24,7 @@ class PigeonAttemptsToLeaveWithSandwich extends GameEvent
     {
         $location = $game->findLocationOfAutomaton(Npc::PIGEON);
         $playerIsHere = $game->getCurrentLocation()->equals($location);
-        $sandwich = app(Registry::class)->findHoldable(ItemIdentifier::sandwich());
+        $sandwich = app(Registry::class)->find(ItemIdentifier::sandwich());
 
         if ($this->pigeon->isHolding($sandwich)) {
             $this->pigeon->removeFromInventory($sandwich);
