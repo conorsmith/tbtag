@@ -5,6 +5,7 @@ namespace ConorSmith\Tbtag\Providers;
 use ConorSmith\Tbtag\Automaton;
 use ConorSmith\Tbtag\Barrier;
 use ConorSmith\Tbtag\BarrierEventConfig;
+use ConorSmith\Tbtag\BarrierIdentifier;
 use ConorSmith\Tbtag\CommandRepository;
 use ConorSmith\Tbtag\Commands\DropCommand;
 use ConorSmith\Tbtag\Commands\GetCommand;
@@ -119,7 +120,7 @@ class AppServiceProvider extends ServiceProvider
                 ],
                 [
                     new Barrier(
-                        Barrier::BUS_GATE,
+                        BarrierIdentifier::busGate(),
                         "You are stopped by an invisible energy barrier. The College Green bus gate has advanced its technology.",
                         [
                             new BarrierEventConfig(
@@ -192,7 +193,7 @@ class AppServiceProvider extends ServiceProvider
                         [
                             new Egress(new Direction("in"), new LocationId("wax:0,0")),
                             new Egress(new Direction("south"), new LocationId("3,6")),
-                            new Egress(new Direction("east"), new LocationId("4,7"), $app[Registry::class]->findBarrier(Barrier::BUS_GATE)),
+                            new Egress(new Direction("east"), new LocationId("4,7"), $app[Registry::class]->find(BarrierIdentifier::busGate())),
                             new Egress(new Direction("west"), new LocationId("2,7")),
                         ],
                         "Foster Place",
@@ -246,7 +247,7 @@ class AppServiceProvider extends ServiceProvider
                             new Egress(new Direction("north"), new LocationId("4,8")),
                             new Egress(new Direction("south"), new LocationId("4,6")),
                             /*new Egress(new Direction("east"), new LocationId("5,7")),*/
-                            new Egress(new Direction("west"), new LocationId("3,7"), $app[Registry::class]->findBarrier(Barrier::BUS_GATE)),
+                            new Egress(new Direction("west"), new LocationId("3,7"), $app[Registry::class]->find(BarrierIdentifier::busGate())),
                         ],
                         "College Green",
                         "You are amidst the wreckage of two Luas trams. It looks like there was some sort of head on collision.",

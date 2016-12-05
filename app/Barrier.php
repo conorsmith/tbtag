@@ -7,10 +7,8 @@ use ConorSmith\Tbtag\Events\GameEvent;
 
 class Barrier
 {
-    const BUS_GATE = "Bus Gate";
-
     /** @var string */
-    private $name;
+    private $identifier;
 
     /** @var string */
     private $unnavigableMessage;
@@ -22,11 +20,11 @@ class Barrier
     private $isNavigable;
 
     public function __construct(
-        string $name,
+        BarrierIdentifier $identifier,
         string $unnavigableMessage,
         array $eventConfigs
     ) {
-        $this->name = $name;
+        $this->identifier = $identifier;
         $this->unnavigableMessage = $unnavigableMessage;
         $this->eventConfigs = $eventConfigs;
         $this->isNavigable = false;
@@ -34,7 +32,7 @@ class Barrier
 
     public function __toString(): string
     {
-        return $this->name;
+        return strval($this->identifier);
     }
 
     public function isNavigable(): bool

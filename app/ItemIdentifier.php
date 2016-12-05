@@ -5,52 +5,35 @@ namespace ConorSmith\Tbtag;
 
 class ItemIdentifier implements HoldableIdentifier
 {
-    public static function emp()
+    use IdentifiedByName, EqualsIdentifierWithSameStringValue;
+
+    public static function emp(): self
     {
         return new self("EMP");
     }
 
-    public static function gravy()
+    public static function gravy(): self
     {
         return new self("Gravy");
     }
 
-    public static function phone()
+    public static function phone(): self
     {
         return new self("Phone");
     }
 
-    public static function rifle()
+    public static function rifle(): self
     {
         return new self("Rifle");
     }
 
-    public static function sandwich()
+    public static function sandwich(): self
     {
         return new self("Sandwich");
     }
 
-    public static function sunglasses()
+    public static function sunglasses(): self
     {
         return new self("Sunglasses");
-    }
-
-    /** @var string */
-    private $value;
-
-    private function __construct(string $value)
-    {
-        $this->value = $value;
-    }
-
-    public function __toString(): string
-    {
-        return $this->value;
-    }
-
-    public function equals(EntityIdentifier $identifier): bool
-    {
-        return get_class($this) === get_class($identifier)
-        && strval($this->value) === strval($identifier);
     }
 }

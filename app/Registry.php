@@ -57,17 +57,6 @@ class Registry
         return $this->automatons->has($slug);
     }
 
-    public function findBarrier(string $slug): Barrier
-    {
-        $slug = strtolower($slug);
-
-        if (!$this->barriers->has($slug)) {
-            throw new DomainException("Barrier doesn't exist.");
-        }
-
-        return $this->barriers[$slug];
-    }
-
     public function findHoldable(string $slug): Holdable
     {
         $slug = strtolower($slug);
@@ -87,6 +76,14 @@ class Registry
     public function find(EntityIdentifier $identifier)
     {
         $slug = strtolower(strval($identifier));
+
+        if ($identifier instanceof BarrierIdentifier) {
+            if (!$this->barriers->has($slug)) {
+                throw new DomainException("Barrier doesn't exist.");
+            }
+
+            return $this->barriers[$slug];
+        }
 
         if ($identifier instanceof HoldableIdentifier) {
             if (!$this->holdables->has($slug)) {
