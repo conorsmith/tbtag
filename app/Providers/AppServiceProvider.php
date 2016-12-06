@@ -2,7 +2,6 @@
 
 namespace ConorSmith\Tbtag\Providers;
 
-use ConorSmith\Tbtag\Automaton;
 use ConorSmith\Tbtag\Barrier;
 use ConorSmith\Tbtag\BarrierEventConfig;
 use ConorSmith\Tbtag\BarrierIdentifier;
@@ -29,7 +28,6 @@ use ConorSmith\Tbtag\Events\PlayerWins;
 use ConorSmith\Tbtag\Events\SomethingHappens;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Commands\HelpCommand;
-use ConorSmith\Tbtag\Holdable;
 use ConorSmith\Tbtag\Inventory;
 use ConorSmith\Tbtag\Item;
 use ConorSmith\Tbtag\Listener;
