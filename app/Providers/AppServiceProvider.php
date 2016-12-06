@@ -115,9 +115,7 @@ class AppServiceProvider extends ServiceProvider
                         [
                             PigeonAttemptsToLeaveWithSandwich::class
                         ]
-                    )
-                ],
-                [
+                    ),
                     new Barrier(
                         BarrierIdentifier::busGate(),
                         "You are stopped by an invisible energy barrier. The College Green bus gate has advanced its technology.",
@@ -128,9 +126,7 @@ class AppServiceProvider extends ServiceProvider
                                 "The EMP disables the bus gate energy barrier."
                             ),
                         ]
-                    )
-                ],
-                [
+                    ),
                     new Item(
                         ItemIdentifier::emp(),
                         PlayerUsesEmp::class

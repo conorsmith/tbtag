@@ -9,71 +9,62 @@ use LogicException;
 
 class Registry
 {
-    /** @var Collection */
-    private $automatons;
+    const ENTITY_IDENTIFIER_CLASSES_BY_ENTITY_CLASS = [
+        Automaton::class   => AutomatonIdentifier::class,
+        Barrier::class     => BarrierIdentifier::class,
+        Holdable::class    => HoldableIdentifier::class,
+        Interactive::class => InteractiveIdentifier::class,
+        Usable::class      => UsableIdentifier::class,
+    ];
 
     /** @var Collection */
-    private $barriers;
+    private $entities;
 
     /** @var Collection */
-    private $holdables;
+    private $entitiesByType;
 
-    /** @var Collection */
-    private $allEntities;
-
-    public function __construct(array $automatons, array $barriers, array $holdables)
+    public function __construct(array $entities)
     {
-        $this->automatons = collect($automatons)
-            ->keyBy(function (Automaton $automaton) {
-                return strtolower(strval($automaton));
-            });
+        $this->entities = collect($entities);
 
-        $this->barriers = collect($barriers)
-            ->keyBy(function (Barrier $barrier) {
-                return strtolower(strval($barrier));
+        $this->entitiesByType = collect([
+            Automaton::class,
+            Barrier::class,
+            Holdable::class,
+            Interactive::class,
+            Usable::class
+        ])
+            ->keyBy(function (string $class) {
+                return self::ENTITY_IDENTIFIER_CLASSES_BY_ENTITY_CLASS[$class];
+            })
+            ->map(function (string $class) {
+                return $this->entities
+                    ->filter(function (Entity $entity) use ($class) {
+                        return $entity instanceof $class;
+                    })
+                    ->keyBy(function (Entity $entity) {
+                        return strtolower(strval($entity));
+                    });
             });
-
-        $this->holdables = collect($holdables)
-            ->keyBy(function (Holdable $holdable) {
-                return strtolower(strval($holdable));
-            });
-
-        $this->allEntities = $this->automatons
-            ->merge($this->barriers)
-            ->merge($this->holdables);
     }
 
     public function allAutomatons(): Collection
     {
-        return $this->automatons;
+        return $this->entitiesByType[AutomatonIdentifier::class];
     }
 
     public function find(EntityIdentifier $identifier): Entity
     {
         $slug = strtolower(strval($identifier));
 
-        if ($identifier instanceof AutomatonIdentifier) {
-            if (!$this->automatons->has($slug)) {
-                throw new DomainException("Automaton doesn't exist.");
+        foreach ($this->entitiesByType as $identifierClass => $entities) {
+            if ($identifier instanceof $identifierClass) {
+                if (!$entities->has($slug)) {
+                    throw new DomainException("Entity doesn't exist.");
+                }
+
+                return $entities[$slug];
             }
-
-            return $this->automatons[$slug];
-        }
-
-        if ($identifier instanceof BarrierIdentifier) {
-            if (!$this->barriers->has($slug)) {
-                throw new DomainException("Barrier doesn't exist.");
-            }
-
-            return $this->barriers[$slug];
-        }
-
-        if ($identifier instanceof HoldableIdentifier) {
-            if (!$this->holdables->has($slug)) {
-                throw new DomainException("Holdable doesn't exist.");
-            }
-
-            return $this->holdables[$slug];
         }
 
         throw new LogicException("Unknown identifier");
@@ -81,9 +72,9 @@ class Registry
 
     public function findBySlug(string $class, string $slug): Entity
     {
-        foreach ($this->allEntities as $key => $entity) {
+        foreach ($this->entities as $entity) {
             if ($entity instanceof $class
-                && $key === $slug
+                && strtolower(strval($entity->getId())) === strtolower($slug)
             ) {
                 return $entity;
             }
