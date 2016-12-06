@@ -147,230 +147,240 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(Game::class, function ($app) {
+            $locations = [
+                new Location(
+                    new LocationId("4,8"),
+                    [
+                        new Egress(new Direction("south"), new LocationId("4,7")),
+                        new Egress(new Direction("in"), new LocationId("kfc:0,0")),
+                    ],
+                    "Westmoreland Street",
+                    "You stand outside a KFC. Every other retail unit on the both sides of the street is now a Starbucks"
+                ),
+                new Location(
+                    new LocationId("kfc:0,0"),
+                    [
+                        new Egress(new Direction("out"), new LocationId("4,8")),
+                        new Egress(new Direction("west"), new LocationId("kfc:-1,0")),
+                    ],
+                    "KFC",
+                    "The restaurant is abandoned. Several tables near the door have empty Starbucks cups on them. The order screen just says \"RUN\" over and over again."
+                ),
+                new Location(
+                    new LocationId("kfc:-1,0"),
+                    [
+                        new Egress(new Direction("east"), new LocationId("kfc:0,0")),
+                    ],
+                    "KFC Kitchen",
+                    "The grill in the centre of the kitchen is malformed. It almost looks like it has parts of an espresso machine welded to it. Several unused chicken buckets have the Starbucks logo on them.",
+                    new Inventory([
+                        $app[Registry::class]->find(ItemIdentifier::gravy()),
+                    ])
+                ),
+                new Location(
+                    new LocationId("2,7"),
+                    [
+                        new Egress(new Direction("east"), new LocationId("3,7")),
+                    ],
+                    "Central Bank",
+                    "A massive Occupy Dame Street camp fills the plaza outside the Central Bank. It looks like the movement even took over the building itself. However, the camp appears to be deserted.",
+                    new Inventory([
+                        $app[Registry::class]->find(ItemIdentifier::emp()),
+                    ])
+                ),
+                $startingLocation = new Location(
+                    new LocationId("3,7"),
+                    [
+                        new Egress(new Direction("in"), new LocationId("wax:0,0")),
+                        new Egress(new Direction("south"), new LocationId("3,6")),
+                        new Egress(new Direction("east"), new LocationId("4,7"),
+                            $app[Registry::class]->find(BarrierIdentifier::busGate())),
+                        new Egress(new Direction("west"), new LocationId("2,7")),
+                    ],
+                    "Foster Place",
+                    "You are standing outside the Wax Museum. A number of wax figures are arranged outside the building, as if they are trying to escape. These are truly the most life-like wax figures you've ever seen and each one has a horrified expression."
+                ),
+                new Location(
+                    new LocationId("wax:0,0"),
+                    [
+                        new Egress(new Direction("out"), new LocationId("3,7")),
+                        new Egress(new Direction("east"), new LocationId("wax:1,0")),
+                        new Egress(new Direction("west"), new LocationId("wax:-1,0")),
+                    ],
+                    "Wax Museum",
+                    "Most of the space in the museum's main hall is taken up by a wax rendition of a gargantuan snake-like monster. The celebrity figures surrounding it are either dying or dead. A bisected Joe Dolan can be seen trying to keep his realistically recreated internal organs inside his wax body.\n\nTo the east you see a door marked \"Special Exhibit\". To the west a door that says \"DANGER: Deep Excavations\"."
+                ),
+                new Location(
+                    new LocationId("wax:-1,0"),
+                    [],
+                    "A Big Hole",
+                    "You fall into a big hole.",
+                    Inventory::unoccupied(),
+                    Manifest::unoccupied(),
+                    [
+                        new PlayerDies(
+                            "As you fall towards your messy death you have just enough time to wonder why such a deep hole would be dug indoors."
+                        ),
+                    ]
+                ),
+                new Location(
+                    new LocationId("wax:1,0"),
+                    [
+                        new Egress(new Direction("west"), new LocationId("wax:0,0")),
+                    ],
+                    "Civil War Exhibit",
+                    "This special exhibit is untouched by the chaos from the front of the museum. It is very obvious that the historical figures here are just the wax figures of the actors who appeared in Neil Jordan's Michael Collins.",
+                    new Inventory([
+                        $app[Registry::class]->find(ItemIdentifier::rifle())
+                    ]),
+                    Manifest::unoccupied(),
+                    [],
+                    [
+                        LocationInventoryEventConfig::noticeable(
+                            $app[Registry::class]->find(ItemIdentifier::rifle()),
+                            new SomethingHappens("You can see in Wax Alan Rickman's arms the actual rifle with which Dev shot and killed the Big Fella.")
+                        )
+                    ]
+                ),
+                new Location(
+                    new LocationId("4,7"),
+                    [
+                        new Egress(new Direction("north"), new LocationId("4,8")),
+                        new Egress(new Direction("south"), new LocationId("4,6")),
+                        /*new Egress(new Direction("east"), new LocationId("5,7")),*/
+                        new Egress(new Direction("west"), new LocationId("3,7"),
+                            $app[Registry::class]->find(BarrierIdentifier::busGate())),
+                    ],
+                    "College Green",
+                    "You are amidst the wreckage of two Luas trams. It looks like there was some sort of head on collision.",
+                    new Inventory([
+                        $app[Registry::class]->find(ItemIdentifier::sunglasses()),
+                    ])
+                ),
+                new Location(
+                    new LocationId("5,7"),
+                    [
+                        new Egress(new Direction("south"), new LocationId("5,6")),
+                        new Egress(new Direction("east"), new LocationId("6,7")),
+                        new Egress(new Direction("west"), new LocationId("4,7")),
+                    ],
+                    "Front Square",
+                    "???"
+                ),
+                new Location(
+                    new LocationId("6,7"),
+                    [
+                        new Egress(new Direction("south"), new LocationId("6,6")),
+                        new Egress(new Direction("east"), new LocationId("7,7")),
+                        new Egress(new Direction("west"), new LocationId("5,7")),
+                    ],
+                    "New Square",
+                    "???"
+                ),
+                new Location(
+                    new LocationId("7,7"),
+                    [
+                        new Egress(new Direction("south"), new LocationId("7,6")),
+                        new Egress(new Direction("west"), new LocationId("6,7")),
+                    ],
+                    "Rugby Pitch",
+                    "???"
+                ),
+                new Location(
+                    new LocationId("3,6"),
+                    [
+                        new Egress(new Direction("north"), new LocationId("3,7")),
+                        new Egress(new Direction("south"), new LocationId("3,5")),
+                        new Egress(new Direction("east"), new LocationId("4,6")),
+                    ],
+                    "St Andrew's Church",
+                    "Despite being moved back to her usual spot on Grafton Street after the Luas Cross City works were completed, the statue of Molly Malone is back outside the church.",
+                    Inventory::unoccupied(),
+                    new Manifest([
+                        $app[Registry::class]->find(NpcIdentifier::mollyMalone()),
+                    ])
+                ),
+                new Location(
+                    new LocationId("4,6"),
+                    [
+                        new Egress(new Direction("north"), new LocationId("4,7")),
+                        new Egress(new Direction("south"), new LocationId("4,5")),
+                        new Egress(new Direction("west"), new LocationId("3,6")),
+                    ],
+                    "No 1 Grafton Street",
+                    "The gates to the house of Trinity College's Provost are open. A low rumbling sound can be heard from inside the property. It's a little too close to the brown note for your liking.",
+                    Inventory::unoccupied(),
+                    Manifest::unoccupied(),
+                    [],
+                    [
+                        LocationInventoryEventConfig::add(
+                            $app[Registry::class]->find(ItemIdentifier::phone()),
+                            new PlayerDies("As you put your phone down it starts to ring, but with the same sound coming from the Provost's House. You answer and the phone emits a high-powered, high-pitch noise that causes your head to explode instantly. You are no longer alive.")
+                        )
+                    ]
+                ),
+                new Location(
+                    new LocationId("5,6"),
+                    [
+                        new Egress(new Direction("north"), new LocationId("5,7")),
+                        new Egress(new Direction("east"), new LocationId("6,6")),
+                    ],
+                    "Fellows Square",
+                    "???"
+                ),
+                new Location(
+                    new LocationId("6,6"),
+                    [
+                        new Egress(new Direction("north"), new LocationId("6,7")),
+                        new Egress(new Direction("west"), new LocationId("5,6")),
+                    ],
+                    "Pomedoro Sphere",
+                    "???"
+                ),
+                new Location(
+                    new LocationId("7,6"),
+                    [
+                        new Egress(new Direction("north"), new LocationId("7,7")),
+                        new Egress(new Direction("west"), new LocationId("6,6")),
+                    ],
+                    "Cricket Pitch",
+                    "???"
+                ),
+                new Location(
+                    new LocationId("3,5"),
+                    [
+                        new Egress(new Direction("north"), new LocationId("3,6")),
+                    ],
+                    "Murphy's Ice Cream",
+                    "Somehow in this crazy world the ice cream is still frozen, still on sale and still delicious.",
+                    Inventory::unoccupied(),
+                    Manifest::unoccupied(),
+                    [
+                        new PlayerWins("Congratulations. You got your ice cream. You can go home now."),
+                    ]
+                ),
+                new Location(
+                    new LocationId("4,5"),
+                    [
+                        new Egress(new Direction("north"), new LocationId("4,6")),
+                    ],
+                    "Grafton Street",
+                    "The way south is impassable. A mound of chicken nuggets two stories high has spilled out of McDonald's and is blocking the junction with Wicklow Street.",
+                    Inventory::unoccupied(),
+                    new Manifest([
+                        $app[Registry::class]->find(NpcIdentifier::pigeon()),
+                    ])
+                ),
+            ];
+
             return new Game(
-                new Map([
-                    "4,8" => new Location(
-                        new LocationId("4,8"),
-                        [
-                            new Egress(new Direction("south"), new LocationId("4,7")),
-                            new Egress(new Direction("in"), new LocationId("kfc:0,0")),
-                        ],
-                        "Westmoreland Street",
-                        "You stand outside a KFC. Every other retail unit on the both sides of the street is now a Starbucks"
-                    ),
-                    "kfc:0,0" => new Location(
-                        new LocationId("kfc:0,0"),
-                        [
-                            new Egress(new Direction("out"), new LocationId("4,8")),
-                            new Egress(new Direction("west"), new LocationId("kfc:-1,0")),
-                        ],
-                        "KFC",
-                        "The restaurant is abandoned. Several tables near the door have empty Starbucks cups on them. The order screen just says \"RUN\" over and over again."
-                    ),
-                    "kfc:-1,0" => new Location(
-                        new LocationId("kfc:-1,0"),
-                        [
-                            new Egress(new Direction("east"), new LocationId("kfc:0,0")),
-                        ],
-                        "KFC Kitchen",
-                        "The grill in the centre of the kitchen is malformed. It almost looks like it has parts of an espresso machine welded to it. Several unused chicken buckets have the Starbucks logo on them.",
-                        new Inventory([
-                            $app[Registry::class]->find(ItemIdentifier::gravy()),
-                        ])
-                    ),
-                    "2,7" => $startingLocation = new Location(
-                        new LocationId("2,7"),
-                        [
-                            new Egress(new Direction("east"), new LocationId("3,7")),
-                        ],
-                        "Central Bank",
-                        "A massive Occupy Dame Street camp fills the plaza outside the Central Bank. It looks like the movement even took over the building itself. However, the camp appears to be deserted.",
-                        new Inventory([
-                            $app[Registry::class]->find(ItemIdentifier::emp()),
-                        ])
-                    ),
-                    "3,7" => $startingLocation = new Location(
-                        new LocationId("3,7"),
-                        [
-                            new Egress(new Direction("in"), new LocationId("wax:0,0")),
-                            new Egress(new Direction("south"), new LocationId("3,6")),
-                            new Egress(new Direction("east"), new LocationId("4,7"), $app[Registry::class]->find(BarrierIdentifier::busGate())),
-                            new Egress(new Direction("west"), new LocationId("2,7")),
-                        ],
-                        "Foster Place",
-                        "You are standing outside the Wax Museum. A number of wax figures are arranged outside the building, as if they are trying to escape. These are truly the most life-like wax figures you've ever seen and each one has a horrified expression."
-                    ),
-                    "wax:0,0" => new Location(
-                        new LocationId("wax:0,0"),
-                        [
-                            new Egress(new Direction("out"), new LocationId("3,7")),
-                            new Egress(new Direction("east"), new LocationId("wax:1,0")),
-                            new Egress(new Direction("west"), new LocationId("wax:-1,0")),
-                        ],
-                        "Wax Museum",
-                        "Most of the space in the museum's main hall is taken up by a wax rendition of a gargantuan snake-like monster. The celebrity figures surrounding it are either dying or dead. A bisected Joe Dolan can be seen trying to keep his realistically recreated internal organs inside his wax body.\n\nTo the east you see a door marked \"Special Exhibit\". To the west a door that says \"DANGER: Deep Excavations\"."
-                    ),
-                    "wax:-1,0" => new Location(
-                        new LocationId("wax:-1,0"),
-                        [],
-                        "A Big Hole",
-                        "You fall into a big hole.",
-                        Inventory::unoccupied(),
-                        Manifest::unoccupied(),
-                        [
-                            new PlayerDies(
-                                "As you fall towards your messy death you have just enough time to wonder why such a deep hole would be dug indoors."
-                            ),
-                        ]
-                    ),
-                    "wax:1,0" => new Location(
-                        new LocationId("wax:1,0"),
-                        [
-                            new Egress(new Direction("west"), new LocationId("wax:0,0")),
-                        ],
-                        "Civil War Exhibit",
-                        "This special exhibit is untouched by the chaos from the front of the museum. It is very obvious that the historical figures here are just the wax figures of the actors who appeared in Neil Jordan's Michael Collins.",
-                        new Inventory([
-                            $app[Registry::class]->find(ItemIdentifier::rifle())
-                        ]),
-                        Manifest::unoccupied(),
-                        [],
-                        [
-                            LocationInventoryEventConfig::noticeable(
-                                $app[Registry::class]->find(ItemIdentifier::rifle()),
-                                new SomethingHappens("You can see in Wax Alan Rickman's arms the actual rifle with which Dev shot and killed the Big Fella.")
-                            )
-                        ]
-                    ),
-                    "4,7" => new Location(
-                        new LocationId("4,7"),
-                        [
-                            new Egress(new Direction("north"), new LocationId("4,8")),
-                            new Egress(new Direction("south"), new LocationId("4,6")),
-                            /*new Egress(new Direction("east"), new LocationId("5,7")),*/
-                            new Egress(new Direction("west"), new LocationId("3,7"), $app[Registry::class]->find(BarrierIdentifier::busGate())),
-                        ],
-                        "College Green",
-                        "You are amidst the wreckage of two Luas trams. It looks like there was some sort of head on collision.",
-                        new Inventory([
-                            $app[Registry::class]->find(ItemIdentifier::sunglasses()),
-                        ])
-                    ),
-                    "5,7" => new Location(
-                        new LocationId("5,7"),
-                        [
-                            new Egress(new Direction("south"), new LocationId("5,6")),
-                            new Egress(new Direction("east"), new LocationId("6,7")),
-                            new Egress(new Direction("west"), new LocationId("4,7")),
-                        ],
-                        "Front Square",
-                        "???"
-                    ),
-                    "6,7" => new Location(
-                        new LocationId("6,7"),
-                        [
-                            new Egress(new Direction("south"), new LocationId("6,6")),
-                            new Egress(new Direction("east"), new LocationId("7,7")),
-                            new Egress(new Direction("west"), new LocationId("5,7")),
-                        ],
-                        "New Square",
-                        "???"
-                    ),
-                    "7,7" => new Location(
-                        new LocationId("7,7"),
-                        [
-                            new Egress(new Direction("south"), new LocationId("7,6")),
-                            new Egress(new Direction("west"), new LocationId("6,7")),
-                        ],
-                        "Rugby Pitch",
-                        "???"
-                    ),
-                    "3,6" => new Location(
-                        new LocationId("3,6"),
-                        [
-                            new Egress(new Direction("north"), new LocationId("3,7")),
-                            new Egress(new Direction("south"), new LocationId("3,5")),
-                            new Egress(new Direction("east"), new LocationId("4,6")),
-                        ],
-                        "St Andrew's Church",
-                        "Despite being moved back to her usual spot on Grafton Street after the Luas Cross City works were completed, the statue of Molly Malone is back outside the church.",
-                        Inventory::unoccupied(),
-                        new Manifest([
-                            $app[Registry::class]->find(NpcIdentifier::mollyMalone()),
-                        ])
-                    ),
-                    "4,6" => new Location(
-                        new LocationId("4,6"),
-                        [
-                            new Egress(new Direction("north"), new LocationId("4,7")),
-                            new Egress(new Direction("south"), new LocationId("4,5")),
-                            new Egress(new Direction("west"), new LocationId("3,6")),
-                        ],
-                        "No 1 Grafton Street",
-                        "The gates to the house of Trinity College's Provost are open. A low rumbling sound can be heard from inside the property. It's a little too close to the brown note for your liking.",
-                        Inventory::unoccupied(),
-                        Manifest::unoccupied(),
-                        [],
-                        [
-                            LocationInventoryEventConfig::add(
-                                $app[Registry::class]->find(ItemIdentifier::phone()),
-                                new PlayerDies("As you put your phone down it starts to ring, but with the same sound coming from the Provost's House. You answer and the phone emits a high-powered, high-pitch noise that causes your head to explode instantly. You are no longer alive.")
-                            )
-                        ]
-                    ),
-                    "5,6" => new Location(
-                        new LocationId("5,6"),
-                        [
-                            new Egress(new Direction("north"), new LocationId("5,7")),
-                            new Egress(new Direction("east"), new LocationId("6,6")),
-                        ],
-                        "Fellows Square",
-                        "???"
-                    ),
-                    "6,6" => new Location(
-                        new LocationId("6,6"),
-                        [
-                            new Egress(new Direction("north"), new LocationId("6,7")),
-                            new Egress(new Direction("west"), new LocationId("5,6")),
-                        ],
-                        "Pomedoro Sphere",
-                        "???"
-                    ),
-                    "7,6" => new Location(
-                        new LocationId("7,6"),
-                        [
-                            new Egress(new Direction("north"), new LocationId("7,7")),
-                            new Egress(new Direction("west"), new LocationId("6,6")),
-                        ],
-                        "Cricket Pitch",
-                        "???"
-                    ),
-                    "3,5" => new Location(
-                        new LocationId("3,5"),
-                        [
-                            new Egress(new Direction("north"), new LocationId("3,6")),
-                        ],
-                        "Murphy's Ice Cream",
-                        "Somehow in this crazy world the ice cream is still frozen, still on sale and still delicious.",
-                        Inventory::unoccupied(),
-                        Manifest::unoccupied(),
-                        [
-                            new PlayerWins("Congratulations. You got your ice cream. You can go home now."),
-                        ]
-                    ),
-                    "4,5" => new Location(
-                        new LocationId("4,5"),
-                        [
-                            new Egress(new Direction("north"), new LocationId("4,6")),
-                        ],
-                        "Grafton Street",
-                        "The way south is impassable. A mound of chicken nuggets two stories high has spilled out of McDonald's and is blocking the junction with Wicklow Street.",
-                        Inventory::unoccupied(),
-                        new Manifest([
-                            $app[Registry::class]->find(NpcIdentifier::pigeon()),
-                        ])
-                    ),
-                ]),
+                new Map(
+                    collect($locations)
+                        ->keyBy(function (Location $location) {
+                            return strval($location->getId());
+                        })
+                        ->toArray()
+                ),
                 $app[Registry::class],
                 $startingLocation,
                 new Inventory([$app[Registry::class]->find(ItemIdentifier::phone())])
