@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
-interface Holdable
+interface Holdable extends Entity
 {
     public function getPickUpEvents(): array;
     public function getDropEvents(): array;

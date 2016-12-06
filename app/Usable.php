@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
-interface Usable
+interface Usable extends Entity
 {
     public function triggerUse();
 }

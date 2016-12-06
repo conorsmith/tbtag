@@ -22,6 +22,11 @@ class Item implements Holdable, Usable
         $this->useEvent = $useEvent;
     }
 
+    public function getId(): EntityIdentifier
+    {
+        return $this->identifier;
+    }
+
     public function __toString()
     {
         return strval($this->identifier);

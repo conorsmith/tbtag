@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag;
 
-interface Automaton
+interface Automaton extends Entity
 {
     public function __toString(): string;
 

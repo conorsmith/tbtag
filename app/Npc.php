@@ -41,6 +41,11 @@ class Npc implements Automaton, Interactive
             });
     }
 
+    public function getId(): EntityIdentifier
+    {
+        return $this->identifier;
+    }
+
     public function __toString(): string
     {
         return strval($this->identifier);

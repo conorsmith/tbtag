@@ -5,8 +5,11 @@ namespace ConorSmith\Tbtag\Commands;
 
 use ConorSmith\Tbtag\CommandRepository;
 use ConorSmith\Tbtag\DirectionFactory;
+use ConorSmith\Tbtag\Holdable;
+use ConorSmith\Tbtag\Interactive;
 use ConorSmith\Tbtag\Registry;
 use ConorSmith\Tbtag\Ui\MissingArgument;
+use ConorSmith\Tbtag\Usable;
 use InvalidArgumentException;
 
 class CommandFactory
@@ -61,7 +64,7 @@ class CommandFactory
                 throw new MissingArgument("Huh? What do you want to get?");
             }
 
-            return new GetCommand($this->registry->findHoldable($args[0]));
+            return new GetCommand($this->registry->findBySlug(Holdable::class, $args[0]));
         }
 
         if ($commandName->is(DropCommand::class)) {
@@ -69,7 +72,7 @@ class CommandFactory
                 throw new MissingArgument("Huh? What do you want to drop?");
             }
 
-            return new DropCommand($this->registry->findHoldable($args[0]));
+            return new DropCommand($this->registry->findBySlug(Holdable::class, $args[0]));
         }
 
         if ($commandName->is(UseCommand::class)) {
@@ -77,7 +80,7 @@ class CommandFactory
                 throw new MissingArgument("Buh? Use what?");
             }
 
-            return new UseCommand($this->registry->findHoldable($args[0]));
+            return new UseCommand($this->registry->findBySlug(Usable::class, $args[0]));
         }
 
         if ($commandName->is(GiveCommand::class)) {
@@ -96,8 +99,8 @@ class CommandFactory
             while (is_null($automaton) && count($automatonArgs) > 0) {
                 $potentialAutomatonSlug[] = array_shift($automatonArgs);
 
-                if ($this->registry->hasAutomaton(implode(" ", $potentialAutomatonSlug))) {
-                    $automaton = $this->registry->findAutomaton(implode(" ", $potentialAutomatonSlug));
+                if ($this->registry->hasEntityForSlug(Interactive::class, implode(" ", $potentialAutomatonSlug))) {
+                    $automaton = $this->registry->findBySlug(Interactive::class, implode(" ", $potentialAutomatonSlug));
                 }
             }
 
@@ -107,8 +110,8 @@ class CommandFactory
                 while (is_null($holdable) && count($automatonArgs) > 0) {
                     $potentialHoldableSlug[] = array_shift($automatonArgs);
 
-                    if ($this->registry->hasHoldable(implode(" ", $potentialHoldableSlug))) {
-                        $holdable = $this->registry->findHoldable(implode(" ", $potentialHoldableSlug));
+                    if ($this->registry->hasEntityForSlug(Holdable::class, implode(" ", $potentialHoldableSlug))) {
+                        $holdable = $this->registry->findBySlug(Holdable::class, implode(" ", $potentialHoldableSlug));
                     }
                 }
             } else {
@@ -117,8 +120,8 @@ class CommandFactory
                 while (is_null($holdable) && count($holdableArgs) > 0) {
                     $potentialHoldableSlug[] = array_shift($holdableArgs);
 
-                    if ($this->registry->hasHoldable(implode(" ", $potentialHoldableSlug))) {
-                        $holdable = $this->registry->findHoldable(implode(" ", $potentialHoldableSlug));
+                    if ($this->registry->hasEntityForSlug(Holdable::class, implode(" ", $potentialHoldableSlug))) {
+                        $holdable = $this->registry->findBySlug(Holdable::class, implode(" ", $potentialHoldableSlug));
                     }
                 }
 
@@ -131,8 +134,8 @@ class CommandFactory
                         while (is_null($automaton) && count($holdableArgs) > 0) {
                             $potentialAutomatonSlug[] = array_shift($holdableArgs);
 
-                            if ($this->registry->hasAutomaton(implode(" ", $potentialAutomatonSlug))) {
-                                $automaton = $this->registry->findAutomaton(implode(" ", $potentialAutomatonSlug));
+                            if ($this->registry->hasEntityForSlug(Interactive::class, implode(" ", $potentialAutomatonSlug))) {
+                                $automaton = $this->registry->findBySlug(Interactive::class, implode(" ", $potentialAutomatonSlug));
                             }
                         }
                     }

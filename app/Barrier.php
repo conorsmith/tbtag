@@ -5,7 +5,7 @@ namespace ConorSmith\Tbtag;
 
 use ConorSmith\Tbtag\Events\GameEvent;
 
-class Barrier
+class Barrier implements Entity
 {
     /** @var string */
     private $identifier;
@@ -28,6 +28,11 @@ class Barrier
         $this->unnavigableMessage = $unnavigableMessage;
         $this->eventConfigs = $eventConfigs;
         $this->isNavigable = false;
+    }
+
+    public function getId(): EntityIdentifier
+    {
+        return $this->identifier;
     }
 
     public function __toString(): string

@@ -18,6 +18,9 @@ class Registry
     /** @var Collection */
     private $holdables;
 
+    /** @var Collection */
+    private $allEntities;
+
     public function __construct(array $automatons, array $barriers, array $holdables)
     {
         $this->automatons = collect($automatons)
@@ -34,6 +37,10 @@ class Registry
             ->keyBy(function (Holdable $holdable) {
                 return strtolower(strval($holdable));
             });
+
+        $this->allEntities = $this->automatons
+            ->merge($this->barriers)
+            ->merge($this->holdables);
     }
 
     public function allAutomatons(): Collection
@@ -41,39 +48,7 @@ class Registry
         return $this->automatons;
     }
 
-    public function findAutomaton(string $slug): Automaton
-    {
-        $slug = strtolower($slug);
-
-        if (!$this->automatons->has($slug)) {
-            throw new DomainException("Automaton doesn't exist.");
-        }
-
-        return $this->automatons[$slug];
-    }
-
-    public function hasAutomaton(string $slug): bool
-    {
-        return $this->automatons->has($slug);
-    }
-
-    public function findHoldable(string $slug): Holdable
-    {
-        $slug = strtolower($slug);
-
-        if (!$this->holdables->has($slug)) {
-            throw new DomainException("Holdable doesn't exist.");
-        }
-
-        return $this->holdables[$slug];
-    }
-
-    public function hasHoldable(string $slug): bool
-    {
-        return $this->holdables->has($slug);
-    }
-
-    public function find(EntityIdentifier $identifier)
+    public function find(EntityIdentifier $identifier): Entity
     {
         $slug = strtolower(strval($identifier));
 
@@ -102,5 +77,29 @@ class Registry
         }
 
         throw new LogicException("Unknown identifier");
+    }
+
+    public function findBySlug(string $class, string $slug): Entity
+    {
+        foreach ($this->allEntities as $key => $entity) {
+            if ($entity instanceof $class
+                && $key === $slug
+            ) {
+                return $entity;
+            }
+        }
+
+        throw new LogicException("Unknown identifier");
+    }
+
+    public function hasEntityForSlug(string $class, string $slug): bool
+    {
+        try {
+            $this->findBySlug($class, $slug);
+            return true;
+
+        } catch (LogicException $e) {
+            return false;
+        }
     }
 }
