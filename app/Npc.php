@@ -94,9 +94,4 @@ class Npc implements Automaton, Interactive
 
         return $commandWasIntercepted;
     }
-
-    public function getIdentifier(): AutomatonIdentifier
-    {
-        return $this->identifier;
-    }
 }

@@ -28,6 +28,4 @@ interface Automaton extends Entity
     public function removeFromInventory(Holdable $holdable);
 
     public function isHolding(Holdable $holdable): bool;
-
-    public function getIdentifier(): AutomatonIdentifier;
 }

@@ -164,7 +164,7 @@ class Location
         return $this->inventory->contains($holdable);
     }
 
-    public function houses(AutomatonIdentifier $identifier): bool
+    public function houses(EntityIdentifier $identifier): bool
     {
         return $this->manifest->has($identifier);
     }
