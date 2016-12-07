@@ -40,6 +40,7 @@ use ConorSmith\Tbtag\Map;
 use ConorSmith\Tbtag\Commands\MoveCommand;
 use ConorSmith\Tbtag\Interceptions\MollyMaloneMove;
 use ConorSmith\Tbtag\NpcIdentifier;
+use ConorSmith\Tbtag\Player;
 use ConorSmith\Tbtag\Registry;
 use Illuminate\Support\ServiceProvider;
 
@@ -377,7 +378,7 @@ class AppServiceProvider extends ServiceProvider
                 ),
                 $app[Registry::class],
                 $startingLocation,
-                new Inventory([$app[Registry::class]->find(ItemIdentifier::phone())])
+                new Player(new Inventory([$app[Registry::class]->find(ItemIdentifier::phone())]))
             );
         });
     }

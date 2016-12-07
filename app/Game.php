@@ -26,19 +26,19 @@ class Game
     /** @var Location */
     private $locationOnPreviousTurn;
 
-    /** @var Inventory */
-    private $playerInventory;
+    /** @var Player */
+    private $player;
 
     public function __construct(
         Map $map,
         Registry $registry,
         Location $currentLocation,
-        Inventory $playerInventory
+        Player $player
     ) {
         $this->map = $map;
         $this->registry = $registry;
         $this->currentLocation = $currentLocation;
-        $this->playerInventory = $playerInventory;
+        $this->player = $player;
     }
 
     public function turnComplete()
@@ -102,7 +102,7 @@ class Game
             event($event);
         }
 
-        $this->playerInventory->add($holdable);
+        $this->player->addToInventory($holdable);
 
         event(new PlayerGetsHoldable($holdable));
 
@@ -112,7 +112,7 @@ class Game
     public function removeFromPlayerInventory(Holdable $holdable)
     {
         try {
-            $this->playerInventory->remove($holdable);
+            $this->player->removeFromInventory($holdable);
 
         } catch (DomainException $e) {
             event(new SomethingHappens("You can't drop what you don't have."));
@@ -133,7 +133,7 @@ class Game
     public function moveFromPlayerToAHolder(Holder $holder, Holdable $holdable)
     {
         try {
-            $this->playerInventory->remove($holdable);
+            $this->player->removeFromInventory($holdable);
 
         } catch (DomainException $e) {
             event(new SomethingHappens(sprintf("You don't have %s.", strval($holdable))));
@@ -147,12 +147,12 @@ class Game
 
     public function playerIsHolding(Holdable $holdable)
     {
-        return $this->playerInventory->contains($holdable);
+        return $this->player->isHolding($holdable);
     }
 
     public function inspectPlayerInventory()
     {
-        event(new PlayerInspectsInventory($this->playerInventory));
+        event(new PlayerInspectsInventory($this->player));
     }
 
     public function processAutomatonActions()
@@ -166,7 +166,7 @@ class Game
     public function findLocation(EntityIdentifier $identifier): Location
     {
         if ($identifier instanceof HoldableIdentifier
-            && $this->playerInventory->containsByIdentifier($identifier)
+            && $this->player->isHoldingByIdentifier($identifier)
         ) {
             return $this->currentLocation;
         }
