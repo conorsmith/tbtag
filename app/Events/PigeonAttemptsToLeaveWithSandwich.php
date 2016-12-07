@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace ConorSmith\Tbtag\Events;
 
-use ConorSmith\Tbtag\Automaton;
+use ConorSmith\Tbtag\Holder;
 use ConorSmith\Tbtag\ItemIdentifier;
-use ConorSmith\Tbtag\Npc;
 use ConorSmith\Tbtag\Game;
 use ConorSmith\Tbtag\Holdable;
 use ConorSmith\Tbtag\NpcIdentifier;
@@ -13,10 +12,10 @@ use ConorSmith\Tbtag\Registry;
 
 class PigeonAttemptsToLeaveWithSandwich extends GameEvent
 {
-    /** @var Automaton */
+    /** @var Holdable */
     private $pigeon;
 
-    public function __construct(Automaton $pigeon)
+    public function __construct(Holder $pigeon)
     {
         $this->pigeon = $pigeon;
     }

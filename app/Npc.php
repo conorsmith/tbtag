@@ -7,7 +7,7 @@ use ConorSmith\Tbtag\Commands\Command;
 use ConorSmith\Tbtag\Events\SomethingHappens;
 use Illuminate\Support\Collection;
 
-class Npc implements Automaton, Interactive
+class Npc implements Automaton, Holder, Interactive
 {
     /** @var NpcIdentifier */
     private $identifier;

@@ -130,7 +130,7 @@ class Game
         $this->currentLocation->triggerAddToInventoryEvents();
     }
 
-    public function moveFromPlayerToAutomatonInventory(Automaton $automaton, Holdable $holdable)
+    public function moveFromPlayerToAHolder(Holder $holder, Holdable $holdable)
     {
         try {
             $this->playerInventory->remove($holdable);
@@ -140,9 +140,9 @@ class Game
             return;
         }
 
-        $automaton->addToInventory($holdable);
+        $holder->addToInventory($holdable);
 
-        event(new SomethingHappens(sprintf("You give %s to %s.", strval($holdable), strval($automaton))));
+        event(new SomethingHappens(sprintf("You give %s to %s.", strval($holdable), strval($holder))));
     }
 
     public function playerIsHolding(Holdable $holdable)
