@@ -19,7 +19,7 @@ class EmpIsDetonated extends GameEvent implements Printable
     public function handle(Game $game)
     {
         $this->emp->setState(Item::EMP_USED);
-        $empLocation = $game->findLocationOfHoldable($this->emp);
+        $empLocation = $game->findLocation($this->emp->getId());
         $empLocation->triggerUsableEvents($this);
     }
 

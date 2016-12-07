@@ -169,6 +169,12 @@ class Location
         return $this->manifest->has($identifier);
     }
 
+    public function isLocationOf(EntityIdentifier $identifier): bool
+    {
+        return ($identifier instanceof AutomatonIdentifier && $this->manifest->has($identifier))
+            || ($identifier instanceof HoldableIdentifier && $this->inventory->containsByIdentifier($identifier));
+    }
+
     public function equals(self $other): bool
     {
         return strval($this->id) === strval($other->id);

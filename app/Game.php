@@ -163,18 +163,15 @@ class Game
             });
     }
 
-    public function findLocationOfAutomaton(AutomatonIdentifier $identifier): Location
+    public function findLocation(EntityIdentifier $identifier): Location
     {
-        return $this->map->findLocationOfAutomaton($identifier);
-    }
-
-    public function findLocationOfHoldable(Holdable $holdable): Location
-    {
-        if ($this->playerIsHolding($holdable)) {
+        if ($identifier instanceof HoldableIdentifier
+            && $this->playerInventory->containsByIdentifier($identifier)
+        ) {
             return $this->currentLocation;
         }
 
-        return $this->map->findLocationOfHoldable($holdable);
+        return $this->map->find($identifier);
     }
 
     public function processInteractiveInterceptions(Command $command): bool

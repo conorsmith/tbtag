@@ -61,4 +61,15 @@ class Inventory
 
         return false;
     }
+
+    public function containsByIdentifier(HoldableIdentifier $identifier): bool
+    {
+        foreach ($this->contents as $content) {
+            if ($content->getId()->equals($identifier)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

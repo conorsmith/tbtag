@@ -35,6 +35,17 @@ class Map
         return !in_array($location->getId(), $this->locationHistory);
     }
 
+    public function find(EntityIdentifier $identifier): Location
+    {
+        foreach ($this->locations as $location) {
+            if ($location->isLocationOf($identifier)) {
+                return $location;
+            }
+        }
+
+        throw new OutOfBoundsException(sprintf("The entity '%s' cannot be found in any location.", $identifier));
+    }
+
     public function findLocationOfAutomaton(AutomatonIdentifier $identifier): Location
     {
         foreach ($this->locations as $location) {
